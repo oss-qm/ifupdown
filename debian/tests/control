@@ -1,0 +1,5 @@
+Tests: hotplug
+Depends: ifupdown
+# requires udev, thus does not work in containers
+Restrictions: needs-root, isolation-machine
+
