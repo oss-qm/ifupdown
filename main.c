@@ -226,6 +226,9 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 	FILE *lock_fp = lock_state(argv0);
 	FILE *state_fp = fopen(statefile, no_act ? "r" : "a+");
 
+	*n_ifaces = 0;
+	*ifaces = NULL;
+
 	if (state_fp == NULL) {
 		if (!no_act) {
 			fprintf(stderr, "%s: failed to open statefile %s: %s\n", argv0, statefile, strerror(errno));
@@ -243,9 +246,6 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 			exit(1);
 		}
 	}
-
-	*n_ifaces = 0;
-	*ifaces = NULL;
 
 	char buf[80];
 	char *p;
