@@ -279,6 +279,10 @@ aborts,
 marks the interface as deconfigured,
 and exits with status 0.
 This behavior may change in the future.
+.TP
+.BI description " name"
+Alias interface by
+.I name
 .P
 There exists for each of the above mentioned options a directory
 .IR /etc/network/if\-\fB<option>\fI.d/

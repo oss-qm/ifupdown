@@ -6,6 +6,9 @@ ifupdown (0.8.11) UNRELEASED; urgency=medium
   [ Imre Deak ]
   * Fix read_all_state when no state file exists. Closes: 819287
 
+  [ Arthur Gautier ]
+  * Implement link naming (ip link set alias)
+
  -- Guus Sliepen <guus@debian.org>  Sat, 12 Mar 2016 00:02:27 +0100
 
 ifupdown (0.8.10) unstable; urgency=medium

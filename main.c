@@ -990,6 +990,15 @@ static bool do_interface(const char *target_iface) {
 
 				convert_variables(link.method->conversions, &link);
 
+				for (option_default *o = addr_link.method[0].defaults; o && o->option && o->value; o++) {
+					for (int j = 0; j < currif->n_options; j++) {
+						if (strcmp(currif->option[j].name, o->option) == 0) {
+							set_variable(o->option, currif->option[j].value, &link.option, &link.n_options, &link.max_options);
+							break;
+						}
+					}
+				}
+
 				if (!link.method->up(&link, doit))
 					break;
 

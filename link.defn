@@ -3,6 +3,9 @@ architecture linux
 
 method none
   description
+  options
+    description description -- Link description []
+
   conversion
     iface (get_token . 0 "") =link
     iface (get_token . 1 "") =vlan_id0
@@ -18,23 +21,31 @@ method none
     fi if (iface_has(".") && (!var_set_anywhere("bridge_ports", ifd)))
     -/bin/ip link set up dev %iface% 2>/dev/null \
 	if (iface_is_lo())
+    [[/bin/ip link set %iface0% alias "%description%"]]
   down
     /bin/ip link del %iface% if (iface_has(".") && (!iface_has(":")) && (!var_set_anywhere("bridge_ports", ifd)))
     -/bin/ip link set down dev %iface% 2>/dev/null \
 	if (iface_is_lo())
+    [[/bin/echo "" > /sys/class/net/%iface0%/ifalias]]
 
 architecture kfreebsd
 
 method none
   description
+
+  options
+    description description -- Link description []
+
   up
     -/sbin/ifconfig %iface% 127.0.0.1 up \
 	if (iface_is_lo())
     -/sbin/ifconfig %iface% inet6 ::1 \
 	if (iface_is_lo())
+    [[-/sbin/ifconfig %iface% desc "%description%"]]
   down
     -/sbin/ifconfig %iface% down \
 	if (iface_is_lo())
+    [[-/sbin/ifconfig %iface% -desc]]
 
 architecture hurd
 
