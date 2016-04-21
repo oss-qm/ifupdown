@@ -26,7 +26,7 @@ method none
     /bin/ip link del %iface% if (iface_has(".") && (!iface_has(":")) && (!var_set_anywhere("bridge_ports", ifd)))
     -/bin/ip link set down dev %iface% 2>/dev/null \
 	if (iface_is_lo())
-    [[/bin/echo "" > /sys/class/net/%iface0%/ifalias]]
+    [[-test -n "%description%" && /bin/echo > /sys/class/net/%iface0%/ifalias]]
 
 architecture kfreebsd
 
@@ -45,7 +45,7 @@ method none
   down
     -/sbin/ifconfig %iface% down \
 	if (iface_is_lo())
-    [[-/sbin/ifconfig %iface% -desc]]
+    [[-test -n "%description%" && /sbin/ifconfig %iface% -desc]]
 
 architecture hurd
 
