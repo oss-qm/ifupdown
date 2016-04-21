@@ -1,4 +1,4 @@
-ifupdown (0.8.11) UNRELEASED; urgency=medium
+ifupdown (0.8.11) unstable; urgency=medium
 
   [ Wido den Hollander ]
   * Wait properly for Link-Local Address to go through DAD.
@@ -15,7 +15,7 @@ ifupdown (0.8.11) UNRELEASED; urgency=medium
   [ Guus Sliepen ]
   * Bump Standards-Version.
 
- -- Guus Sliepen <guus@debian.org>  Sat, 12 Mar 2016 00:02:27 +0100
+ -- Guus Sliepen <guus@debian.org>  Thu, 21 Apr 2016 18:22:20 +0200
 
 ifupdown (0.8.10) unstable; urgency=medium
 
