@@ -1,7 +1,8 @@
 [Unit]
 Description=ifup for %I
-After=local-fs.target network-pre.target apparmor.service
-Before=network.target
+After=local-fs.target network-pre.target apparmor.service systemd-sysctl.service
+Before=network.target shutdown.target network-online.target
+Conflicts=shutdown.target
 BindsTo=sys-subsystem-net-devices-%i.device
 DefaultDependencies=no
 IgnoreOnIsolate=yes
