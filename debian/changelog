@@ -12,6 +12,9 @@ ifupdown (0.8.11) UNRELEASED; urgency=medium
   [ Martin Pitt <martin.pitt@ubuntu.com> ]
   * Add autopkgtest for "allow-hotplug" interfaces. Closes: #814312
 
+  [ Guus Sliepen ]
+  * Bump Standards-Version.
+
  -- Guus Sliepen <guus@debian.org>  Sat, 12 Mar 2016 00:02:27 +0100
 
 ifupdown (0.8.10) unstable; urgency=medium
