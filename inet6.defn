@@ -69,7 +69,7 @@ method static
     scope                  -- Address validity scope. Possible values: \
                               global, site, link, host
     preferred-lifetime int -- Time that address remains preferred []
-    dad-attempts           -- Number of attempts to settle DAD (0 to disable) [60]
+    dad-attempts           -- Number of attempts to settle DAD (0 to disable DAD) [60]
     dad-interval           -- DAD state polling interval in seconds [0.1]
 
   conversion
@@ -86,7 +86,10 @@ method static
     -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.autoconf=%autoconf%]]
     -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.mtu=%mtu%]]
     /bin/ip link set dev %iface% [[address %hwaddress%]] up
-    /bin/ip -6 addr add %address%[[/%netmask%]] [[scope %scope%]] dev %iface% [[preferred_lft %preferred-lifetime%]]
+    /bin/ip -6 addr add %address%[[/%netmask%]] [[scope %scope%]] dev %iface% [[preferred_lft %preferred-lifetime%]] \
+                if (!var_set("dad-attempts", ifd) || var_true("dad-attempts", ifd))
+    /bin/ip -6 addr add %address%[[/%netmask%]] [[scope %scope%]] dev %iface% [[preferred_lft %preferred-lifetime%]] nodad \
+                if (var_set("dad-attempts", ifd) && !var_true("dad-attempts", ifd))
     [[ /bin/ip -6 route add default via %gateway% [[metric %metric%]] dev %iface% onlink ]]
     /lib/ifupdown/settle-dad.sh if (!no_act && execable("/lib/ifupdown/settle-dad.sh") && (var_true("dad-attempts", ifd)))
 

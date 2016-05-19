@@ -245,7 +245,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0 
+/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth0=eth0 (inet6)
@@ -256,7 +256,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 3ffe:ffff:100:f101::2/64  dev eth0 
+/bin/ip -6 addr add 3ffe:ffff:100:f101::2/64  dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth0=eth0 (inet6)
@@ -267,7 +267,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 3ffe:ffff:100:f101::3/64  dev eth0 
+/bin/ip -6 addr add 3ffe:ffff:100:f101::3/64  dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth0=eth0 (inet6)
@@ -278,7 +278,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 3ffe:ffff:100:f101::4  dev eth0 
+/bin/ip -6 addr add 3ffe:ffff:100:f101::4  dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth0=eth0 (inet6)
@@ -289,7 +289,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 3ffe:ffff:100:f101::5/128  dev eth0 
+/bin/ip -6 addr add 3ffe:ffff:100:f101::5/128  dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth0=eth0 (inet6)
@@ -300,7 +300,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 64  dev eth0 
+/bin/ip -6 addr add 64  dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth0=eth0 (inet6)
@@ -315,7 +315,7 @@ Configuring interface eth1=eth1 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth1.autoconf=0
 
 /bin/ip link set dev eth1   up
-/bin/ip -6 addr add 3ffe:ffff:100:f102::1/64  dev eth1 
+/bin/ip -6 addr add 3ffe:ffff:100:f102::1/64  dev eth1 nodad
  /bin/ip -6 route add default via 3ffe:ffff:100:f102::fff  dev eth1 onlink
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface eth1=eth1 (inet6)
@@ -326,7 +326,7 @@ Configuring interface eth1=eth1 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth1.autoconf=0
 
 /bin/ip link set dev eth1   up
-/bin/ip -6 addr add 3ffe:ffff:100:f102::6/64  dev eth1 
+/bin/ip -6 addr add 3ffe:ffff:100:f102::6/64  dev eth1 nodad
  /bin/ip -6 route add default via 3ffe:ffff:100:f102::fff  dev eth1 onlink
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
@@ -443,7 +443,7 @@ Configuring interface eth0=eth0 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
 
 /bin/ip link set dev eth0   up
-/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64 dev eth0
+/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64 dev eth0 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.1 ;     then         /bin/ip link set up dev eth0;         /bin/ip link add link eth0 name eth0.1 type vlan id 1;     fi
@@ -456,7 +456,7 @@ Configuring interface eth0.1=eth0.1 (inet6)
 /sbin/sysctl -q -e -w net.ipv6.conf.eth0/1.autoconf=0
 
 /bin/ip link set dev eth0.1   up
-/bin/ip -6 addr add 3ffe:ffff:120:f101::1/64 dev eth0.1
+/bin/ip -6 addr add 3ffe:ffff:120:f101::1/64 dev eth0.1 nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.0201 ;     then         /bin/ip link set up dev eth0;         /bin/ip link add link eth0 name eth0.0201 type vlan id 201;     fi
