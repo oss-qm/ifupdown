@@ -2,6 +2,7 @@ ifupdown (0.8.12) UNRELEASED; urgency=medium
 
   * Add "nodad" to ip -6 addr add if dad-attempts is set to zero.
     Closes: #824686
+  * Bump Standards-Version.
 
  -- Guus Sliepen <guus@debian.org>  Thu, 19 May 2016 12:06:52 +0200
 
