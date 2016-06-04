@@ -11,7 +11,7 @@
 .  fi
 .  PP
 ..
-.TH INTERFACES 5 "29 November 2014" "ifupdown" "File formats"
+.TH INTERFACES 5 "4 June 2016" "ifupdown" "File formats"
 .SH NAME
 /etc/network/interfaces \- network interface configuration for ifup and ifdown
 .SH DESCRIPTION
@@ -302,30 +302,31 @@ directories instead.
 All of these commands have access to the following environment variables.
 .TP
 .B IFACE
-physical name of the interface being processed
+The physical name of the interface being processed, or "--all" (see below).
 .TP
 .B LOGICAL
-logical name of the interface being processed
+The logical name of the interface being processed, or "auto" (see below).
 .TP
 .B ADDRFAM
-address family of the interface
+The address family of the interface, or "meta" (see below).
 .TP
 .B METHOD
-method of the interface (e.g.,
-.IR static )
+The method of the interface (e.g.,
+.IR static ),
+or "none" (see below).
 .TP
 .B MODE
-.IR start " if run from ifup, " stop " if run from ifdown"
+.IR start " if run from ifup, " stop " if run from ifdown".
 .TP
 .B PHASE
-as per MODE, but with finer granularity, distinguishing the
+As per MODE, but with finer granularity, distinguishing the
 \fIpre-up\fR, \fIpost-up\fR, \fIpre-down\fR and \fIpost-down\fR phases.
 .TP
 .B VERBOSITY
-indicates whether \fB\-\-verbose\fR was used; set to 1 if so, 0 if not.
+Indicates whether \fB\-\-verbose\fR was used; set to 1 if so, 0 if not.
 .TP
 .B PATH
-the command search path:
+The command search path:
 .I /usr/local/sbin:\%/usr/local/bin:\%/usr/sbin:\%/usr/bin:\%/sbin:\%/bin
 .P
 Additionally, all options given in an interface definition stanza are
