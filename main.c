@@ -36,7 +36,7 @@ static void version() {
 		"\n"
 		"Copyright (c) 1999-2009 Anthony Towns\n"
 		"              2010-2015 Andrew Shadura\n"
-		"              2015      Guus Sliepen\n"
+		"              2015-2016 Guus Sliepen\n"
 		"\n"
 		"This program is free software; you can redistribute it and/or modify\n"
 		"it under the terms of the GNU General Public License as published by\n"
