@@ -553,7 +553,11 @@ static int popen2(FILE **in, FILE **out, char *command, ...) {
 
 	case 0:		/* child */
 		/* release the current directory */
-		chdir("/");
+		if(chdir("/") == -1) {
+			// VERY unlikely, but if this fails we probably don't want to continue anyway.
+			fprintf(stderr, "Could not chdir to /: %s\n", strerror(errno));
+			exit(127);
+		}
 		dup2(infd[0], 0);
 		dup2(outfd[1], 1);
 		close(infd[0]);

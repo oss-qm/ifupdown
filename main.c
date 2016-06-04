@@ -272,9 +272,12 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 }
 
 static void update_state(const char *iface, const char *state, FILE *lock_fp) {
-	if (lock_fp) {
+	if (lock_fp && !no_act) {
 		rewind(lock_fp);
-		ftruncate(fileno(lock_fp), 0);
+		if(ftruncate(fileno(lock_fp), 0) == -1) {
+			fprintf(stderr, "%s: failed to truncate lockfile: %s\n", argv0, strerror(errno));
+			exit(1);
+		}
 		fprintf(lock_fp, "%s\n", state ? state : "");
 		fflush(lock_fp);
 	}
