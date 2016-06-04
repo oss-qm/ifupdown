@@ -1,3 +1,9 @@
+ifupdown (0.8.13) UNRELEASED; urgency=medium
+
+  * Fix test suite on kFreeBSD. Closes: #826062
+
+ -- Guus Sliepen <guus@debian.org>  Sat, 04 Jun 2016 13:34:07 +0200
+
 ifupdown (0.8.12) unstable; urgency=medium
 
   * Add "nodad" to ip -6 addr add if dad-attempts is set to zero.
