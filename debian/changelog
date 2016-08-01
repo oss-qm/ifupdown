@@ -1,3 +1,10 @@
+ifupdown (0.8.14) UNRELEASED; urgency=medium
+
+  [ Benjamin Drung ]
+  * Add InfiniBand parititon key support. Closes: #830212
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 01 Aug 2016 15:05:59 +0200
+
 ifupdown (0.8.13) unstable; urgency=medium
 
   * Fix test suite on kFreeBSD. Closes: #826062
