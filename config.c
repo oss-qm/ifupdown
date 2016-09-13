@@ -395,7 +395,7 @@ static void add_to_list(char ***list, int *count, const char *item) {
 		perror("realloc");
 		exit(1);
 	}
-	*list[*count - 1] = strdup(item);
+	(*list)[*count - 1] = strdup(item);
 	if (!(*list)[*count - 1]) {
 		perror("strdup");
 		exit(1);
