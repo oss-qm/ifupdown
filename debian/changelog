@@ -11,6 +11,10 @@ ifupdown (0.8.14) UNRELEASED; urgency=medium
   * Ignore link state when bringing up hotplug interfaces at boot.
     Closes: #814785, #834820
 
+  [ Guus Sliepen ]
+  * Add a test case for the no-scripts keyword.
+  * Flush automatically assigned addresses on ifup when accept_ra=0.
+
  -- Guus Sliepen <guus@debian.org>  Mon, 01 Aug 2016 15:05:59 +0200
 
 ifupdown (0.8.13) unstable; urgency=medium
