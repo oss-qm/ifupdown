@@ -1,4 +1,4 @@
-ifupdown (0.8.14) UNRELEASED; urgency=medium
+ifupdown (0.8.14) unstable; urgency=medium
 
   [ Benjamin Drung ]
   * Add InfiniBand parititon key support. Closes: #830212
@@ -15,7 +15,7 @@ ifupdown (0.8.14) UNRELEASED; urgency=medium
   * Add a test case for the no-scripts keyword.
   * Flush automatically assigned addresses on ifup when accept_ra=0.
 
- -- Guus Sliepen <guus@debian.org>  Mon, 01 Aug 2016 15:05:59 +0200
+ -- Guus Sliepen <guus@debian.org>  Sat, 17 Sep 2016 11:40:39 +0200
 
 ifupdown (0.8.13) unstable; urgency=medium
 
