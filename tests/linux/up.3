@@ -1,0 +1,105 @@
+====stdout====
+Failed to bring up eth0.
+====stderr====
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+
+Configuring interface eth0=eth0 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
+/bin/ip link set dev eth0   up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip link set dev eth0   up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0 nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip link set dev eth0   up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::2/64  dev eth0 nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip link set dev eth0   up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::3/64  dev eth0 nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip link set dev eth0   up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::4  dev eth0 nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip link set dev eth0   up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::5/128  dev eth0 nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip link set dev eth0   up
+/bin/ip -6 addr add 64  dev eth0 nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth0=eth0 (inet6)
+Missing required variable: address
+Missing required configuration variables for interface eth0/inet6.
+
+Configuring interface eth1=eth1 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth1.accept_ra=0
+/sbin/sysctl -q -e -w net.ipv6.conf.eth1.autoconf=0
+
+/bin/ip addr flush dev eth1 mngtmpaddr
+/bin/ip link set dev eth1   up
+/bin/ip -6 addr add 3ffe:ffff:100:f102::1/64  dev eth1 nodad
+ /bin/ip -6 route add default via 3ffe:ffff:100:f102::fff  dev eth1 onlink
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth1=eth1 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth1.accept_ra=1
+/sbin/sysctl -q -e -w net.ipv6.conf.eth1.autoconf=0
+
+/bin/ip link set dev eth1   up
+/bin/ip -6 addr add 3ffe:ffff:100:f102::6/64  dev eth1 nodad
+ /bin/ip -6 route add default via 3ffe:ffff:100:f102::fff  dev eth1 onlink
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

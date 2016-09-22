@@ -1,0 +1,10 @@
+====stdout====
+====stderr====
+Configuring interface /dev/eth0=work (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+
+inetutils-ifconfig --interface /dev/eth0 --address 1.2.3.4 --netmask 255.255.255.0           --up
+
+echo hi
+echo hello
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

@@ -1,0 +1,3 @@
+# RUN: -a
+source /dev/null
+source null

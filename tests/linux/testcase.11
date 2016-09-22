@@ -1,0 +1,9 @@
+# RUN: -a
+auto lo eth0
+
+iface eth0 inet static
+  address 1.2.3.4/24
+
+iface lo inet loopback
+  pre-up configure lo
+  post-down deconfigure lo

@@ -1,0 +1,39 @@
+# RUN: -a
+auto eth0 eth1
+iface eth0 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::1
+  netmask 64
+  dad-attempts 0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::2/64
+  dad-attempts 0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::3/64
+  netmask 64
+  dad-attempts 0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::4/
+  dad-attempts 0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::5/64
+  netmask 128
+  dad-attempts 0
+iface eth0 inet6 static
+  address /64
+  dad-attempts 0
+iface eth0 inet6 static
+  address /
+  dad-attempts 0
+
+iface eth1 inet6 static
+  address 3ffe:ffff:100:f102::1/64
+  gateway 3ffe:ffff:100:f102::fff
+  dad-attempts 0
+iface eth1 inet6 static
+  address 3ffe:ffff:100:f102::6/64
+  gateway 3ffe:ffff:100:f102::fff
+  accept_ra 1
+  dad-attempts 0

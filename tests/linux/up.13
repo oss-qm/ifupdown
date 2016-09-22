@@ -1,0 +1,10 @@
+====stdout====
+====stderr====
+warning: couldn't open interfaces file "tests/linux/testcase.13"
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip link set up dev lo 2>/dev/null
+
+Configuring interface lo=lo (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

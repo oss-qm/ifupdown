@@ -1,0 +1,59 @@
+====stdout====
+====stderr====
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip link set up dev lo 2>/dev/null
+
+Configuring interface lo=lo (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+
+Configuring interface eth0=eth0 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255     dev eth0 label eth0
+/bin/ip link set dev eth0   up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+
+Configuring interface eth1=eth1 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255     dev eth1 label eth1
+/bin/ip link set dev eth1 mtu 1500 address 12:34:56:89:0a:bc up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth1=eth1 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth1.autoconf=0
+/sbin/sysctl -q -e -w net.ipv6.conf.eth1.mtu=1492
+/bin/ip link set dev eth1 address 12:34:ff:fe:0a:bc up
+/bin/ip -6 addr add 3ffe:ffff:120::fffe:1/64  dev eth1 
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+
+Configuring interface eth2=eth2 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.5/255.255.255.0 broadcast 1.2.3.255 	  dev eth2 label eth2
+/bin/ip link set dev eth2 mtu 1500 address 12:34:56:89:0a:bc up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface eth2=eth2 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+
+
+/sbin/sysctl -q -e -w net.ipv6.conf.eth2.autoconf=0
+/sbin/sysctl -q -e -w net.ipv6.conf.eth2.mtu=1492
+/bin/ip link set dev eth2 address 12:34:ff:fe:0a:bc up
+/bin/ip -6 addr add 3ffe:ffff:120::fffe:1/64  dev eth2 
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+
+Configuring interface eth3=eth3 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.5/255.255.255.0 broadcast 1.2.3.255 	  dev eth3 label eth3
+/bin/ip link set dev eth3 mtu 1500 address 12:34:56:89:0a:bc up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

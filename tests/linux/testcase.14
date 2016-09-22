@@ -1,0 +1,14 @@
+auto eth0 eth1 eth2 eth3
+
+iface eth0 inet static
+    address 1.2.3.4/24
+
+iface eth1 inet static wrong
+
+iface eth2 inet static inherits eth0
+
+iface eth3 inet inherits eth0
+
+iface eth4 inherits eth0
+
+iface eth5 inet static inherits 

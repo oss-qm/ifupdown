@@ -1,0 +1,8 @@
+auto eth0 eth1 eth2 eth3
+no-scripts eth0 eth1
+no-scripts eth2
+
+iface eth0 inet manual
+iface eth1 inet manual
+iface eth2 inet manual
+iface eth3 inet manual

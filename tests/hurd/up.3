@@ -1,0 +1,16 @@
+====stdout====
+====stderr====
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+Configuring interface /dev/eth0=/dev/eth0 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+
+inetutils-ifconfig --interface /dev/eth0 --address 1.2.3.4 --netmask 255.255.255.0           --up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface /dev/eth0=/dev/eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+FIXME: Add proper commands here for ipv6
+
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

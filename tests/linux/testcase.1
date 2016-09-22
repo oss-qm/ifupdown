@@ -1,0 +1,40 @@
+# RUN: -a
+auto eth0 eth1 eth2 eth3
+iface eth0 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+  broadcast 1.2.3.255
+  up echo hi
+  post-up echo hello
+
+iface eth1 inet static
+  address 1.2.3.4/14
+  broadcast 1.3.255.255
+  up echo hi
+  post-up echo hello
+
+iface eth2 inet static
+  address 1.2.3.4/14
+  netmask 255.255.255.128
+  broadcast 1.2.3.127
+  up echo hi
+  post-up echo hello
+
+iface eth3 inet static
+  address 1.2.3.4/24
+  broadcast -
+  up true
+
+iface eth3 inet static
+  address 1.2.3.4/30
+  broadcast -
+  up true
+
+iface eth3 inet static
+  address 1.2.3.4/31
+  up true
+
+iface eth3 inet static
+  address 1.2.3.4/31
+  broadcast -
+  up true

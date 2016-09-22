@@ -1,0 +1,6 @@
+auto eth0 eth3
+
+iface eth0 inet static
+    address 1.2.3.4/24
+
+iface eth3 inet static inherits

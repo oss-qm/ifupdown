@@ -1,0 +1,11 @@
+====stdout====
+====stderr====
+
+Configuring interface tunnel=tunnel (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+/bin/ip tunnel add tunnel mode sit remote any local 2.3.4.5        
+/bin/ip link set tunnel up 
+/bin/ip addr add 2002:0203:0405::1/16 dev tunnel
+/bin/ip route add 2000::/3 via ::192.88.99.1 dev tunnel
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

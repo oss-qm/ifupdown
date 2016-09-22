@@ -1,0 +1,19 @@
+# RUN: -a
+auto eth1 eth1:1 eth2.2 eth2.2:3
+iface eth1 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+  up echo hi
+  post-up echo hello
+
+iface eth1:1 inet static
+  address 1.5.3.4
+  netmask 255.255.255.0
+  up echo hihi
+  post-up echo hellolo
+
+iface eth2.2 inet static
+  address 2.3.4.5/24
+
+iface eth2.2:3 inet static
+  address 3.4.5.6/23

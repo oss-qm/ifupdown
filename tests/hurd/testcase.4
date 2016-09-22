@@ -1,0 +1,8 @@
+# RUN: /dev/eth0=work
+mapping /dev/eth0
+  script tests/map.eth0.work
+iface work inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+  up echo hi
+  post-up echo hello

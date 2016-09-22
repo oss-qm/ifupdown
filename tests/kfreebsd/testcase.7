@@ -1,0 +1,15 @@
+# RUN: -a
+auto eth0 eth0.1 tunnel
+iface eth0 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::1
+  netmask 64
+  privext 2
+  accept_ra 0
+iface eth0.1 inet6 static
+  address 3ffe:ffff:120:f101::1
+  netmask 64
+iface tunnel inet6 6to4
+  local 1.2.3.4

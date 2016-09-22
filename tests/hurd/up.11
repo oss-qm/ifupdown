@@ -1,0 +1,15 @@
+====stdout====
+====stderr====
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+Configuring interface lo=lo (inet)
+configure lo
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+inetutils-ifconfig --interface lo --address 127.0.0.1 --up
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+Configuring interface /dev/eth0=/dev/eth0 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+
+inetutils-ifconfig --interface /dev/eth0 --address 1.2.3.4/24        --up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

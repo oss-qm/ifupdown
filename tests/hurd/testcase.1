@@ -1,0 +1,9 @@
+# RUN: -a
+auto /dev/eth0
+iface /dev/eth0 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+  up echo hi
+  post-up echo hello
+
+# iface /dev/eth0 inet dhcp

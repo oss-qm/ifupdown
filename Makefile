@@ -33,7 +33,7 @@ clean :
 	rm -f *.o $(patsubst %.defn,%.c,$(DEFNFILES)) *~
 	rm -f $(patsubst %.defn,%.man,$(DEFNFILES))
 	rm -f ifup ifdown ifquery interfaces.5 ifdown.8 ifquery.8
-	-rm -f ./tests/testcase.* ./tests/up*
+	-rm -f ./tests/*/*-res*
 
 distclean : clean
 
@@ -47,7 +47,7 @@ ifquery: ifup
 	ln -sf ifup ifquery
 
 ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
-check:
+check: ifup ifdown
 	@echo running ./tests/testbuild-$(ARCH)
 	@if ! exec ./tests/testbuild-$(ARCH); then \
 	     echo '=================================================='; \

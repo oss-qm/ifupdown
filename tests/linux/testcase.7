@@ -1,0 +1,22 @@
+# RUN: -a
+auto eth0 eth0.1 eth0.0201 br0.0201 br0.0202 tunnel
+iface eth0 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+iface eth0 inet6 static
+  address 3ffe:ffff:100:f101::1
+  netmask 64
+  privext 2
+  accept_ra 0
+  dad-attempts 0
+iface eth0.1 inet6 static
+  address 3ffe:ffff:120:f101::1
+  netmask 64
+  dad-attempts 0
+iface eth0.0201 inet static
+  address 192.168.0.1/25
+iface br0.0201 inet manual
+  bridge_ports eth0.0201
+iface br0.0202 inet manual
+iface tunnel inet6 6to4
+  local 1.2.3.4

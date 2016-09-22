@@ -1,0 +1,28 @@
+# RUN: -a
+auto eth0 eth1 eth2
+auto eth3 eth4 eth5
+allow-hotplug eth6
+iface eth0 inet static
+  address 1.2.3.4
+  netmask 255.255.255.0
+iface eth1 inet static
+  address 1.3.4.5
+  netmask 255.255.255.0
+iface eth2 inet static
+  address 1.4.5.6
+  netmask 255.255.255.0
+iface eth3 inet static
+  address 1.5.6.7
+  netmask 255.255.255.0
+iface eth4 inet static
+  address 1.7.8.9
+  netmask 255.255.255.0
+iface eth5 inet static
+  address 1.8.9.10
+  netmask 255.255.255.0
+iface eth6 inet static
+  address 1.11.12.13
+  netmask 255.255.255.0
+iface eth7 inet static
+  address 1.14.15.16
+  netmask 255.255.255.0

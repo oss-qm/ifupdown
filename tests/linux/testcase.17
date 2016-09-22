@@ -1,0 +1,10 @@
+auto eth0 eth1 eth2
+
+iface eth0 inet manual
+    description foo
+
+iface eth1 inet manual
+    description foo bar with spaces
+
+iface eth2 inet manual
+    description works with ipv6 too

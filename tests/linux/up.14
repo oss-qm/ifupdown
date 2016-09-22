@@ -1,0 +1,5 @@
+====stdout====
+====stderr====
+tests/linux/testcase.14:6: extra parameter for the iface line not understood and ignored: wrong
+tests/linux/testcase.14:14: 'inherits' keyword is missing a parameter
+./ifup: couldn't read interfaces file "tests/linux/testcase.14"
