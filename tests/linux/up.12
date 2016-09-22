@@ -1,4 +1,4 @@
 ====stdout====
 ====stderr====
-tests/linux/testcase.12:3: too few parameters for iface line
+tests/linux/testcase.12:4: too few parameters for iface line
 ./ifup: couldn't read interfaces file "tests/linux/testcase.12"

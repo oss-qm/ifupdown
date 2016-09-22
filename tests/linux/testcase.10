@@ -1,3 +1,3 @@
-# RUN: -a
+# RUN: --no-loopback -a
 source /dev/null
 source null

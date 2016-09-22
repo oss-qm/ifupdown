@@ -1,3 +1,4 @@
+# RUN: -a
 auto eth0 eth1 eth2
 
 iface eth0 inet manual

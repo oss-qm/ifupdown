@@ -1,3 +1,4 @@
+# RUN: -a
 auto lo eth0
 
 iface
