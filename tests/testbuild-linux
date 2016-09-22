@@ -11,10 +11,12 @@ for test in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do
 	fi
         echo "Testcase $test: $args"
 
+	exitcode=0
         ./ifup -nv --force -i $dir/testcase.$test $args \
-                >$dir/up-res-out.$test 2>$dir/up-res-err.$test ||
-                true
-        (echo "====stdout===="; cat $dir/up-res-out.$test
+                >$dir/up-res-out.$test 2>$dir/up-res-err.$test || exitcode=$?
+
+        (echo "exit code: $exitcode";
+         echo "====stdout===="; cat $dir/up-res-out.$test
          echo "====stderr===="; cat $dir/up-res-err.$test) > $dir/up-res.$test
 
         if diff -ub $dir/up.$test $dir/up-res.$test; then

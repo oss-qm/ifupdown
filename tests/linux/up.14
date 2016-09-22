@@ -1,3 +1,4 @@
+exit code: 1
 ====stdout====
 ====stderr====
 tests/linux/testcase.14:7: extra parameter for the iface line not understood and ignored: wrong

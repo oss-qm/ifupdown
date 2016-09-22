@@ -1,3 +1,4 @@
+exit code: 1
 ====stdout====
 ====stderr====
 tests/linux/testcase.15:7: 'inherits' keyword is missing a parameter
