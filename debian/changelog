@@ -1,3 +1,9 @@
+ifupdown (0.8.16) UNRELEASED; urgency=medium
+
+  * Fix FTBFS due to testcases using the host's state information.
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 22 Sep 2016 13:19:28 +0200
+
 ifupdown (0.8.15) unstable; urgency=medium
 
   * Fix ifdown complaining about vlan_id1. Closes: #838312
