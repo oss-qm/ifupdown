@@ -10,6 +10,7 @@
 #include <fnmatch.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <limits.h>
 
 #include "header.h"
 
@@ -22,9 +23,10 @@ bool ignore_failures = false;
 
 interfaces_file *defn;
 
-static char lockfile[] = RUN_DIR ".ifstate.lock";
-static char statefile[] = RUN_DIR "ifstate";
-static char tmpstatefile[] = RUN_DIR ".ifstate.tmp";
+static char statedir[PATH_MAX] = RUN_DIR;
+static char lockfile[PATH_MAX] = RUN_DIR ".ifstate.lock";
+static char statefile[PATH_MAX] = RUN_DIR "ifstate";
+static char tmpstatefile[PATH_MAX] = RUN_DIR ".ifstate.tmp";
 
 static void usage() {
 	fprintf(stderr, "%s: Use --help for help\n", argv0);
@@ -61,6 +63,7 @@ static void help(int (*cmds) (interface_defn *)) {
 		"\t-a, --all              process all interfaces marked \"auto\"\n"
 		"\t--allow CLASS          ignore non-\"allow-CLASS\" interfaces\n"
 		"\t-i, --interfaces FILE  use FILE for interface definitions\n"
+		"\t--state-dir DIR        use DIR to store state information\n"
 		"\t-X, --exclude PATTERN  exclude interfaces from the list of\n"
 		"\t                       interfaces to operate on by a PATTERN\n");
 
@@ -481,6 +484,7 @@ static void parse_options(int *argc, char **argv[]) {
 		{"list", no_argument, NULL, 'l'},
 		{"state", no_argument, NULL, 6},
 		{"read-environment", no_argument, NULL, 8},
+		{"state-dir", required_argument, NULL, 9},
 		{0, 0, 0, 0}
 	};
 
@@ -593,6 +597,13 @@ static void parse_options(int *argc, char **argv[]) {
 
 		case 8: /* --read-environment */
 			parse_environment_variables();
+			break;
+
+		case 9:
+			snprintf(statedir, sizeof statedir, "%s", optarg);
+			snprintf(statefile, sizeof statefile, "%s/ifstate", optarg);
+			snprintf(tmpstatefile, sizeof tmpstatefile, "%s/.ifstate.tmp", optarg);
+			snprintf(lockfile, sizeof lockfile, "%s/.ifstate.lock", optarg);
 			break;
 
 		default:
@@ -1188,7 +1199,7 @@ int main(int argc, char *argv[]) {
 
 	parse_options(&argc, &argv);
 
-	mkdir(RUN_DIR, 0755);
+	mkdir(statedir, 0755);
 
 	if (state_query)
 		return do_state(argc, argv);

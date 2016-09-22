@@ -11,6 +11,7 @@ ifquery \- parse interface configuration
 [\fB\-\-no\-act\fR]
 [\fB\-\-verbose\fR]
 [\fB\-i\fR \fIFILE\fR|\fB\-\-interfaces=\fR\fIFILE\fR]
+[\fB\-\-state-dir=\fR\fIDIR\fR]
 [\fB\-\-allow\fR \fICLASS\fR]
 \fB\-a\fR|\fIIFACE\fR...
 .br
@@ -25,6 +26,7 @@ ifquery \- parse interface configuration
 [\fB\-\-no\-act\fR]
 [\fB\-\-verbose\fR]
 [\fB\-i\fR \fIFILE\fR|\fB\-\-interfaces=\fR\fIFILE\fR]
+[\fB\-\-state-dir=\fR\fIDIR\fR]
 [\fB\-\-allow\fR \fICLASS\fR]
 \fB\-a\fR|\fIIFACE\fR...
 .PP
@@ -33,6 +35,7 @@ ifquery \- parse interface configuration
 [\fB\-\-no\-act\fR]
 [\fB\-\-verbose\fR]
 [\fB\-i\fR \fIFILE\fR|\fB\-\-interfaces=\fR\fIFILE\fR]
+[\fB\-\-state-dir=\fR\fIDIR\fR]
 [\fB\-\-allow\fR \fICLASS\fR]
 \fB\-a\fR|\fIIFACE\fR...
 .PP
@@ -42,6 +45,7 @@ ifquery \- parse interface configuration
 [\fB\-\-no\-act\fR]
 [\fB\-\-verbose\fR]
 [\fB\-i\fR \fIFILE\fR|\fB\-\-interfaces=\fR\fIFILE\fR]
+[\fB\-\-state-dir=\fR\fIDIR\fR]
 [\fB\-\-allow\fR \fICLASS\fR]
 \fB\-a\fR|\fIIFACE\fR...
 .PP
@@ -92,6 +96,12 @@ Read interface definitions from
 .I FILE
 instead of from
 .IR /etc/network/interfaces "."
+.TP
+\fB\-\-interfaces=\fR\fIDIR\fR
+Keep interface state in
+.I DIR
+instead of in
+.IR /run/network "."
 .TP
 .BI \-X " PATTERN\fR, " "\-\-exclude=" PATTERN
 Exclude interfaces from the list of interfaces to operate on by the \fIPATTERN\fR.
