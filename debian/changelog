@@ -1,3 +1,9 @@
+ifupdown (0.8.15) UNRELEASED; urgency=medium
+
+  * Fix ifdown complaining about vlan_id1. Closes: #838312
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 22 Sep 2016 11:20:07 +0200
+
 ifupdown (0.8.14) unstable; urgency=medium
 
   [ Benjamin Drung ]

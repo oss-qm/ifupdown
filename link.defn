@@ -31,7 +31,7 @@ method none
         echo 0x%vlan_id1% > /sys/class/net/%link%/delete_child; \
     else \
         /bin/ip link del %iface%; \
-    fi if (iface_has(".") && (!iface_has(":")) && (!var_set_anywhere("bridge_ports", ifd)));
+    fi if (iface_has(".") && (!iface_has(":")) && (!var_set_anywhere("bridge_ports", ifd)))
     -/bin/ip link set down dev %iface% 2>/dev/null \
 	if (iface_is_lo())
     [[-test -n "%description%" && /bin/echo > /sys/class/net/%iface0%/ifalias]]
