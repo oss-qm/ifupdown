@@ -146,6 +146,7 @@ extern address_family addr_ipx;
 extern address_family addr_can;
 extern address_family addr_meta;
 
+extern char *allow_class;
 extern char **no_auto_down_int;
 extern int no_auto_down_ints;
 extern char **no_scripts_int;

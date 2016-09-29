@@ -315,6 +315,11 @@ The method of the interface (e.g.,
 .IR static ),
 or "none" (see below).
 .TP
+.B CLASS
+The class of interfaces being processed.
+This is a copy of the value given to the \fB-\-allow\fP option when running ifup or ifdown,
+otherwise it is set to "auto" when the \fB-\-all\fP option is used.
+.TP
 .B MODE
 .IR start " if run from ifup, " stop " if run from ifdown".
 .TP
