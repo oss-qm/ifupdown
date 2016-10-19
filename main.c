@@ -28,12 +28,12 @@ static char lockfile[PATH_MAX] = RUN_DIR ".ifstate.lock";
 static char statefile[PATH_MAX] = RUN_DIR "ifstate";
 static char tmpstatefile[PATH_MAX] = RUN_DIR ".ifstate.tmp";
 
-static void usage() {
+static void usage(void) {
 	fprintf(stderr, "%s: Use --help for help\n", argv0);
 	exit(1);
 }
 
-static void version() {
+static void version(void) {
 	printf("%s version " IFUPDOWN_VERSION "\n"
 		"\n"
 		"Copyright (c) 1999-2009 Anthony Towns\n"
@@ -103,7 +103,7 @@ static int lock_fd(int fd) {
 	return 0;
 }
 
-static FILE *lock_state() {
+static FILE *lock_state(void) {
 	FILE *lock_fp = fopen(lockfile, no_act ? "r" : "a+");
 
 	if (lock_fp == NULL) {
@@ -226,7 +226,7 @@ static FILE *lock_interface(const char *iface, char **state) {
 }
 
 static void read_all_state(char ***ifaces, int *n_ifaces) {
-	FILE *lock_fp = lock_state(argv0);
+	FILE *lock_fp = lock_state();
 	FILE *state_fp = fopen(statefile, no_act ? "r" : "a+");
 
 	*n_ifaces = 0;
@@ -285,7 +285,7 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 		fflush(lock_fp);
 	}
 
-	lock_fp = lock_state(argv0);
+	lock_fp = lock_state();
 	FILE *state_fp = fopen(statefile, no_act ? "r" : "a+");
 
 	if (state_fp == NULL) {
