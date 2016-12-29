@@ -300,7 +300,7 @@ static int directory_filter(const struct dirent *d) {
 		return 0;
 
 	for (const char *p = d->d_name; *p; p++)
-		if (!(((*p >= 'a') && (*p <= 'z')) || ((*p >= 'A') && (*p <= 'Z')) || ((*p >= '0') && (*p <= '9')) || (*p == '_') || (*p == '-')))
+		if (!(isalnum(*p) || *p == '_' || *p == '-'))
 			return 0;
 
 	return 1;
