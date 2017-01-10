@@ -9,6 +9,7 @@ ifupdown (0.8.17) UNRELEASED; urgency=medium
   * Add a bug-script.
   * Depend on freebsd-net-tools instead of net-tools.
   * Also configure VLANs on bridge interfaces (see #818849).
+  * Improve manpage: simplify example, add more section headers.
 
   [ Martin Pitt ]
   * ifup@.service: start After the corresponding
