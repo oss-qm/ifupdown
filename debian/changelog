@@ -1,4 +1,4 @@
-ifupdown (0.8.17) UNRELEASED; urgency=medium
+ifupdown (0.8.17) unstable; urgency=medium
 
   [ Scott Moser ]
   * Don't bring down the loopback interface when networking.service stops.
@@ -19,7 +19,7 @@ ifupdown (0.8.17) UNRELEASED; urgency=medium
   * ifup@.service: start After the corresponding
     sys-subsystem-net-devices device.
 
- -- Guus Sliepen <guus@debian.org>  Wed, 19 Oct 2016 20:22:50 +0200
+ -- Guus Sliepen <guus@debian.org>  Tue, 10 Jan 2017 17:25:18 +0100
 
 ifupdown (0.8.16) unstable; urgency=medium
 

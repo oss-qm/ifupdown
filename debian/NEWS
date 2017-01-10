@@ -1,4 +1,4 @@
-ifupdown (0.8.17) UNRELEASED; urgency=medium
+ifupdown (0.8.17) unstable; urgency=medium
 
   Ifupdown now also configures VLANs for bridge interfaces. (Previously, the
   bridge-utils package integrated with the vlan package to do this via if-up
