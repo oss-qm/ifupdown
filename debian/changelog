@@ -10,6 +10,9 @@ ifupdown (0.8.17) UNRELEASED; urgency=medium
   * Depend on freebsd-net-tools instead of net-tools.
   * Also configure VLANs on bridge interfaces (see #818849).
   * Improve manpage: simplify example, add more section headers.
+    Closes: #840579
+  * Provide IPv6 examples in /u/s/d/ifupdown/examples/network-interfaces.
+    Closes: #703568
   * Use -4 option for IPv4 dhclient. Closes: #844592
 
   [ Martin Pitt ]
