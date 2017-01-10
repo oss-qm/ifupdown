@@ -1,3 +1,20 @@
+ifupdown (0.8.17) UNRELEASED; urgency=medium
+
+  [ Scott Moser ]
+  * Don't bring down the loopback interface when networking.service stops.
+    Closes: #841106, #841107
+
+  [ Guus Sliepen ]
+  * Export $CLASS to scripts.
+  * Add a bug-script.
+  * Depend on freebsd-net-tools instead of net-tools.
+
+  [ Martin Pitt ]
+  * ifup@.service: start After the corresponding
+    sys-subsystem-net-devices device.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 19 Oct 2016 20:22:50 +0200
+
 ifupdown (0.8.16) unstable; urgency=medium
 
   * Fix FTBFS due to testcases using the host's state information.
