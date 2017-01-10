@@ -22,7 +22,7 @@ method none
             /bin/ip link set up dev %link%; \
             /bin/ip link add link %link% name %iface0% type vlan id %vlan_id%; \
 	fi; \
-    fi if (iface_has(".") && (!var_set_anywhere("bridge_ports", ifd)))
+    fi if (iface_has("."))
     -/bin/ip link set up dev %iface% 2>/dev/null \
 	if (iface_is_lo())
     [[/bin/ip link set %iface0% alias "%description%"]]
@@ -31,7 +31,7 @@ method none
         echo 0x%vlan_id1% > /sys/class/net/%link%/delete_child; \
     else \
         /bin/ip link del %iface%; \
-    fi if (iface_has(".") && (!iface_has(":")) && (!var_set_anywhere("bridge_ports", ifd)))
+    fi if (iface_has(".") && !iface_has(":"))
     -/bin/ip link set down dev %iface% 2>/dev/null \
 	if (iface_is_lo())
     [[-test -n "%description%" && /bin/echo > /sys/class/net/%iface0%/ifalias]]

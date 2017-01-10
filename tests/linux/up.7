@@ -42,6 +42,7 @@ Configuring interface eth0.0201=eth0.0201 (inet)
 /bin/ip link set dev eth0.0201   up
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+if test -d /sys/class/net/br0 -a             ! -d /sys/class/net/br0.0201 ;     then         if test -d /sys/class/net/br0/device/infiniband; then             echo 0x0201 > /sys/class/net/br0/create_child;         else             /bin/ip link set up dev br0;             /bin/ip link add link br0 name br0.0201 type vlan id 201; 	fi;     fi
 
 Configuring interface br0.0201=br0.0201 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
