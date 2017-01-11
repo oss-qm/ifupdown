@@ -1,6 +1,11 @@
+exit code: 0
 ====stdout====
 ====stderr====
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+inetutils-ifconfig --interface lo --address 127.0.0.1 --up
+Configuring interface lo=lo (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 Configuring interface /dev/eth0=/dev/eth0 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 Warning: Option hwaddress: 00:DE:AD:00:BE:AF not yet supported
