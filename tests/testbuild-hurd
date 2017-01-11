@@ -6,11 +6,23 @@ dir=tests/hurd
 result=true
 for test in 1 2 3 4 5 6 11; do
         args="$(cat $dir/testcase.$test | sed -n 's/^# RUN: //p')"
-        ./ifup --no-loopback -nv --force -i $dir/testcase.$test $args \
-                >$dir/up-res-out.$test 2>$dir/up-res-err.$test ||
-                true
-        (echo "====stdout===="; cat $dir/up-res-out.$test
+
+	exitcode=0
+        ./ifup -nv --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
+                >$dir/up-res-out.$test 2>$dir/up-res-err.$test || exitcode=$?
+
+        (echo "exit code: $exitcode";
+	 echo "====stdout===="; cat $dir/up-res-out.$test
          echo "====stderr===="; cat $dir/up-res-err.$test) > $dir/up-res.$test
+
+	exitcode=0
+        ./ifdown -nv --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
+               >$dir/down-res-out.$test 2>$dir/down-res-err.$test || exitcode=$?
+
+        (echo "exit code: $exitcode";
+         echo "====stdout===="; cat $dir/down-res-out.$test
+         echo "====stderr===="; cat $dir/down-res-err.$test) > $dir/down-res.$test
+
 
         echo "Testcase $test: $args"
 
