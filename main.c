@@ -17,7 +17,7 @@
 
 #include "header.h"
 
-const char *argv0;
+static const char *argv0;
 bool no_act = false;
 bool run_scripts = true;
 bool verbose = false;
@@ -32,8 +32,7 @@ static char *statefile;
 static char *tmpstatefile;
 
 static void usage(void) {
-	fprintf(stderr, "%s: Use --help for help\n", argv0);
-	exit(1);
+	errx(1, "Use --help for help");
 }
 
 static void version(void) {
@@ -110,26 +109,20 @@ static FILE *lock_state(void) {
 	FILE *lock_fp = fopen(lockfile, no_act ? "r" : "a+");
 
 	if (lock_fp == NULL) {
-		if (!no_act) {
-			fprintf(stderr, "%s: failed to open lockfile %s: %s\n", argv0, lockfile, strerror(errno));
-			exit(1);
-		} else {
+		if (!no_act)
+			err(1, "failed to open lockfile %s", lockfile);
+		else
 			return NULL;
-		}
 	}
 
 	int flags = fcntl(fileno(lock_fp), F_GETFD);
 
-	if (flags < 0 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) < 0) {
-		fprintf(stderr, "%s: failed to set FD_CLOEXEC on lockfile %s: %s\n", argv0, lockfile, strerror(errno));
-		exit(1);
-	}
+	if (flags < 0 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+		err(1, "failed to set FD_CLOEXEC on lockfile %s", lockfile);
 
 	if (lock_fd(fileno(lock_fp)) < 0) {
-		if (!no_act) {
-			fprintf(stderr, "%s: failed to lock lockfile %s: %s\n", argv0, lockfile, strerror(errno));
-			exit(1);
-		}
+		if (!no_act)
+			err(1, "failed to lock lockfile %s", lockfile);
 	}
 
 	return lock_fp;
@@ -195,8 +188,7 @@ static FILE *lock_interface(const char *iface, char **state) {
 
 	if (lock_fp == NULL) {
 		if (!no_act) {
-			fprintf(stderr, "%s: failed to open lockfile %s: %s\n", argv0, filename, strerror(errno));
-			exit(1);
+			err(1, "failed to open lockfile %s", filename);
 		} else {
 			free(filename);
 			return NULL;
@@ -205,25 +197,20 @@ static FILE *lock_interface(const char *iface, char **state) {
 
 	int flags = fcntl(fileno(lock_fp), F_GETFD);
 
-	if (flags < 0 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) < 0) {
-		fprintf(stderr, "%s: failed to set FD_CLOEXEC on lockfile %s: %s\n", argv0, filename, strerror(errno));
-		exit(1);
-	}
+	if (flags < 0 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+		err(1, "failed to set FD_CLOEXEC on lockfile %s", filename);
 
 	struct flock lock = {.l_type = F_WRLCK, .l_whence = SEEK_SET};
 
 	if (fcntl(fileno(lock_fp), F_SETLK, &lock) < 0) {
 		if (errno == EACCES || errno == EAGAIN) {
-			fprintf(stderr, "%s: waiting for lock on %s\n", argv0, filename);
+			warnx("waiting for lock on %s", filename);
 			if (fcntl(fileno(lock_fp), F_SETLKW, &lock) < 0) {
-				if (!no_act) {
-					fprintf(stderr, "%s: failed to lock lockfile %s: %s\n", argv0, filename, strerror(errno));
-					exit(1);
-				}
+				if (!no_act)
+					err(1, "failed to lock lockfile %s", filename);
 			}
 		} else if (!no_act) {
-			fprintf(stderr, "%s: failed to lock lockfile %s: %s\n", argv0, filename, strerror(errno));
-			exit(1);
+			err(1, "failed to lock lockfile %s", filename);
 		}
 	}
 
@@ -250,21 +237,17 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 	*ifaces = NULL;
 
 	if (state_fp == NULL) {
-		if (!no_act) {
-			fprintf(stderr, "%s: failed to open statefile %s: %s\n", argv0, statefile, strerror(errno));
-			exit(1);
-		} else {
+		if (!no_act)
+			err(1, "failed to open statefile %s", statefile);
+		else
 			goto end;
-		}
 	}
 
 	if (!no_act) {
 		int flags = fcntl(fileno(state_fp), F_GETFD);
 
-		if (flags < 0 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) < 0) {
-			fprintf(stderr, "%s: failed to set FD_CLOEXEC on statefile %s: %s\n", argv0, statefile, strerror(errno));
-			exit(1);
-		}
+		if (flags < 0 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+			err(1, "failed to set FD_CLOEXEC on statefile %s", statefile);
 	}
 
 	char buf[80];
@@ -294,10 +277,8 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 	if (lock_fp && !no_act) {
 		rewind(lock_fp);
-		if(ftruncate(fileno(lock_fp), 0) == -1) {
-			fprintf(stderr, "%s: failed to truncate lockfile: %s\n", argv0, strerror(errno));
-			exit(1);
-		}
+		if(ftruncate(fileno(lock_fp), 0) == -1)
+			err(1, "failed to truncate lockfile");
 		fprintf(lock_fp, "%s\n", state ? state : "");
 		fflush(lock_fp);
 	}
@@ -306,12 +287,10 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 	FILE *state_fp = fopen(statefile, no_act ? "r" : "a+");
 
 	if (state_fp == NULL) {
-		if (!no_act) {
-			fprintf(stderr, "%s: failed to open statefile %s: %s\n", argv0, statefile, strerror(errno));
-			exit(1);
-		} else {
+		if (!no_act)
+			err(1, "failed to open statefile %s", statefile);
+		else
 			goto end;
-		}
 	}
 
 	if (no_act)
@@ -319,22 +298,16 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 
 	int flags = fcntl(fileno(state_fp), F_GETFD);
 
-	if (flags < 0 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) < 0) {
-		fprintf(stderr, "%s: failed to set FD_CLOEXEC on statefile %s: %s\n", argv0, statefile, strerror(errno));
-		exit(1);
-	}
+	if (flags < 0 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+		err(1, "failed to set FD_CLOEXEC on statefile %s", statefile);
 
-	if (lock_fd(fileno(state_fp)) < 0) {
-		fprintf(stderr, "%s: failed to lock statefile %s: %s\n", argv0, statefile, strerror(errno));
-		exit(1);
-	}
+	if (lock_fd(fileno(state_fp)) < 0)
+		err(1, "failed to lock statefile %s", statefile);
 
 	FILE *tmp_fp = fopen(tmpstatefile, "w");
 
-	if (tmp_fp == NULL) {
-		fprintf(stderr, "%s: failed to open temporary statefile %s: %s\n", argv0, tmpstatefile, strerror(errno));
-		exit(1);
-	}
+	if (tmp_fp == NULL)
+		err(1, "failed to open temporary statefile %s", tmpstatefile);
 
 	char buf[80];
 	char *p;
@@ -361,10 +334,8 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 
 	fclose(tmp_fp);
 
-	if (rename(tmpstatefile, statefile)) {
-		fprintf(stderr, "%s: failed to overwrite statefile %s: %s\n", argv0, statefile, strerror(errno));
-		exit(1);
-	}
+	if (rename(tmpstatefile, statefile))
+		err(1, "failed to overwrite statefile %s", statefile);
 
  end:
 	if (state_fp)
@@ -391,14 +362,11 @@ static void check_stdio(void) {
 		if (fcntl(i, F_GETFD) == -1) {
 			if (errno == EBADF) {
 				/* filedescriptor closed, try to open /dev/null in its place */
-				if (open("/dev/null", 0) != i) {
-					fprintf(stderr, "%s: fd %d not available; aborting\n", argv0, i);
-					exit(2);
-				}
+				if (open("/dev/null", 0) != i)
+					errx(2, "fd %d not available; aborting", i);
 			} else {
 				/* some other problem -- eeek */
-				perror(argv0);
-				exit(2);
+				err(2, "fcntl on fd %d", i);
 			}
 		}
 	}
@@ -408,12 +376,7 @@ typedef int (*cmds_t)(interface_defn *);
 
 /* Determine whether we are being called as ifup, ifdown or ifquery */
 static cmds_t determine_command(void) {
-	const char *command;
-
-	if ((command = strrchr(argv0, '/')))
-		command++;	/* first char after / */
-	else
-		command = argv0;	/* no /'s in argv0 */
+	const char *command = argv0;
 
 	if (strcmp(command, "ifup") == 0) {
 		return iface_up;
@@ -424,8 +387,7 @@ static cmds_t determine_command(void) {
 		no_act = true;
 		return iface_query;
 	} else {
-		fprintf(stderr, "This command should be called as ifup, ifdown, or ifquery\n");
-		exit(1);
+		errx(1, "this command should be called as ifup, ifdown, or ifquery");
 	}
 }
 
@@ -464,10 +426,8 @@ static void parse_environment_variables(void) {
 		for(char *tok = strtok(excludes, " \t\n"); tok; tok = strtok(NULL, " \t\n")) {
 			excludeints++;
 			excludeint = realloc(excludeint, excludeints * sizeof *excludeint);
-			if (excludeint == NULL) {
-				perror(argv0);
-				exit(1);
-			}
+			if (excludeint == NULL)
+				err(1, "realloc");
 			excludeint[excludeints - 1] = tok;
 		}
 		free(excludes);
@@ -552,10 +512,8 @@ static void parse_options(int *argc, char **argv[]) {
 		case 'X':
 			excludeints++;
 			excludeint = realloc(excludeint, excludeints * sizeof *excludeint);
-			if (excludeint == NULL) {
-				perror(argv0);
-				exit(1);
-			}
+			if (excludeint == NULL)
+				err(1, "realloc");
 			excludeint[excludeints - 1] = strdup(optarg);
 			break;
 
@@ -564,10 +522,9 @@ static void parse_options(int *argc, char **argv[]) {
 				char *name = strdup(optarg);
 				char *val = strchr(name, '=');
 
-				if (val == NULL) {
-					fprintf(stderr, "Error in --option \"%s\" -- no \"=\" character\n", optarg);
-					exit(1);
-				}
+				if (val == NULL)
+					errx(1, "error in --option \"%s\" -- no \"=\" character", optarg);
+
 				*val++ = '\0';
 
 				if (strcmp(name, "post-up") == 0)
@@ -667,12 +624,12 @@ static int do_state(int n_target_ifaces, char *target_iface[]) {
 /* Check non-option arguments and build a list of interfaces to act upon */
 static void select_interfaces(int argc, char *argv[]) {
 	if (argc > 0 && (do_all || list)) {
-		fprintf(stderr, "%s: either use the --all/--list options, or specify interface(s), but not both\n", argv0);
+		warnx("either use the --all/--list options, or specify interface(s), but not both");
 		usage();
 	}
 
 	if (argc == 0 && !do_all && !list) {
-		fprintf(stderr, "%s: no interface(s) specified\n", argv0);
+		warnx("no interface(s) specified");
 		usage();
 	}
 
@@ -681,10 +638,8 @@ static void select_interfaces(int argc, char *argv[]) {
 
 	defn = read_interfaces(interfaces);
 
-	if (!defn) {
-		fprintf(stderr, "%s: couldn't read interfaces file \"%s\"\n", argv0, interfaces);
-		exit(1);
-	}
+	if (!defn)
+		errx(1, "couldn't read interfaces file \"%s\"", interfaces);
 
 	if (do_all || list) {
 		if ((cmds == iface_list) || (cmds == iface_up)) {
@@ -695,7 +650,7 @@ static void select_interfaces(int argc, char *argv[]) {
 		} else if (cmds == iface_down) {
 			read_all_state(&target_iface, &n_target_ifaces);
 		} else {
-			fprintf(stderr, "%s: can't tell if interfaces are going up or down\n", argv0);
+			warnx("can't tell if interfaces are going up or down");
 			usage();
 		}
 	} else {
@@ -726,10 +681,8 @@ static void do_pre_all(void) {
 	if (cmds == iface_down)
 		okay = iface_predown(&meta_iface);
 
-	if (!okay) {
-		fprintf(stderr, "%s: pre-%s script failed.\n", argv0, cmds == iface_up ? "up" : "down");
-		exit(1);
-	}
+	if (!okay)
+		errx(1, "pre-%s script failed", cmds == iface_up ? "up" : "down");
 }
 
 /* Run post hooks for the meta interface when calling ifup/down with --all */
@@ -742,10 +695,8 @@ static void do_post_all(void) {
 	if (cmds == iface_down)
 		okay = iface_postdown(&meta_iface);
 
-	if (!okay) {
-		fprintf(stderr, "%s: post-%s script failed.\n", argv0, cmds == iface_up ? "up" : "down");
-		exit(1);
-	}
+	if (!okay)
+		errx(1, "post-%s script failed", cmds == iface_up ? "up" : "down");
 }
 
 bool match_patterns(const char *string, int argc, char *argv[]) {
@@ -849,7 +800,7 @@ static bool do_interface(const char *target_iface) {
 	}
 
 	if (!found) {
-		fprintf(stderr, "Unknown interface %s\n", liface);
+		warnx("unknown interface %s", liface);
 		return false;
 	}
 
@@ -861,7 +812,7 @@ static bool do_interface(const char *target_iface) {
 	sanitize_env_name(envname + 9);
 	char *envval = getenv(envname);
 	if(envval && is_locked(iface)) {
-		fprintf(stderr, "%s: recursion detected for interface %s in %s phase\n", argv0, iface, envval);
+		warnx("recursion detected for interface %s in %s phase", iface, envval);
 		return false;
 	}
 
@@ -876,7 +827,7 @@ static bool do_interface(const char *target_iface) {
 		sanitize_env_name(envname + 9);
 		char *envval = getenv(envname);
 		if(envval && is_locked(piface)) {
-			fprintf(stderr, "%s: recursion detected for parent interface %s in %s phase\n", argv0, piface, envval);
+			warnx("recursion detected for parent interface %s in %s phase", piface, envval);
 			return false;
 		}
 
@@ -897,7 +848,7 @@ static bool do_interface(const char *target_iface) {
 		if (cmds == iface_up) {
 			if (current_state != NULL) {
 				if (!do_all)
-					fprintf(stderr, "%s: interface %s already configured\n", argv0, iface);
+					warnx("interface %s already configured", iface);
 
 				success = true;
 				goto end;
@@ -905,7 +856,7 @@ static bool do_interface(const char *target_iface) {
 		} else if (cmds == iface_down) {
 			if (current_state == NULL) {
 				if (!do_all)
-					fprintf(stderr, "%s: interface %s not configured\n", argv0, iface);
+					warnx("interface %s not configured", iface);
 
 				success = true;
 				goto end;
@@ -936,14 +887,14 @@ static bool do_interface(const char *target_iface) {
 
 				if ((cmds == iface_query) && !run_mappings) {
 					if (verbose)
-						fprintf(stderr, "Not running mapping scripts for %s\n", liface);
+						warnx("not running mapping scripts for %s", liface);
 
 					have_mapping = true;
 					break;
 				}
 
 				if (verbose)
-					fprintf(stderr, "Running mapping script %s on %s\n", currmap->script, liface);
+					warnx("running mapping script %s on %s", currmap->script, liface);
 
 				if(!run_mapping(iface, liface, sizeof(liface), currmap))
 					goto end;
@@ -1082,16 +1033,9 @@ static bool do_interface(const char *target_iface) {
 			convert_variables(currif->method->conversions, currif);
 
 			if (verbose)
-				fprintf(stderr, "%s interface %s=%s (%s)\n", (cmds == iface_query) ? "Querying" : "Configuring", iface, liface, currif->address_family->name);
+				warnx("%s interface %s=%s (%s)", (cmds == iface_query) ? "querying" : "configuring", iface, liface, currif->address_family->name);
 
-			const char *command;
-
-			if ((command = strrchr(argv0, '/')))
-				command++;	/* first char after / */
-			else
-				command = argv0;	/* no /'s in argv0 */
-
-			char *pidfilename = make_pidfile_name(command, currif);
+			char *pidfilename = make_pidfile_name(argv0, currif);
 
 			if (!no_act) {
 				FILE *pidfile = fopen(pidfilename, "w");
@@ -1100,13 +1044,13 @@ static bool do_interface(const char *target_iface) {
 					fprintf(pidfile, "%d", getpid());
 					fclose(pidfile);
 				} else {
-					fprintf(stderr, "%s: failed to open pid file %s: %s\n", command, pidfilename, strerror(errno));
+					warn("failed to open pid file %s", pidfilename);
 				}
 			}
 
 			switch (cmds(currif)) {
 			case -1:
-				fprintf(stderr, "Missing required configuration variables for interface %s/%s.\n", liface, currif->address_family->name);
+				warnx("missing required configuration variables for interface %s/%s", liface, currif->address_family->name);
 				failed = true;
 				break;
 
@@ -1121,7 +1065,7 @@ static bool do_interface(const char *target_iface) {
 				/* successful */
 
 			default:
-				fprintf(stderr, "Unexpected value when configuring interface %s/%s; considering it failed.\n", liface, currif->address_family->name);
+				warnx("unexpected value when configuring interface %s/%s; considering it failed", liface, currif->address_family->name);
 				failed = true;
 				/* what happened here? */
 			}
@@ -1166,7 +1110,7 @@ static bool do_interface(const char *target_iface) {
 				okay = true;
 
 		if (!okay) {
-			fprintf(stderr, "Unknown interface %s\n", iface);
+			warnx("unknown interface %s", iface);
 			goto end;
 		}
 	}
@@ -1174,13 +1118,13 @@ static bool do_interface(const char *target_iface) {
 	/* Update the state */
 
 	if (!okay && !force) {
-		fprintf(stderr, "Ignoring unknown interface %s=%s.\n", iface, liface);
+		warnx("ignoring unknown interface %s=%s", iface, liface);
 		update_state(iface, NULL, lock);
 	} else {
 		if (cmds == iface_up) {
 			if ((current_state == NULL) || (no_act)) {
 				if (failed == true) {
-					printf("Failed to bring up %s.\n", liface);
+					warnx("failed to bring up %s", liface);
 					update_state(iface, NULL, lock);
 					goto end;
 				} else {
@@ -1209,7 +1153,11 @@ end:
 }
 
 int main(int argc, char *argv[]) {
-	argv0 = argv[0];
+	argv0 = strrchr(argv[0], '/');
+	if(argv0)
+		argv0++;
+	else
+		argv0 = argv[0];
 
 	check_stdio();
 

@@ -1,5 +1,5 @@
 exit code: 1
 ====stdout====
 ====stderr====
-tests/linux/testcase.12:4: too few parameters for iface line
-./ifdown: couldn't read interfaces file "tests/linux/testcase.12"
+ifdown: tests/linux/testcase.12:4: too few parameters for iface line
+ifdown: couldn't read interfaces file "tests/linux/testcase.12"

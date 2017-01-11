@@ -1,6 +1,6 @@
 exit code: 1
 ====stdout====
 ====stderr====
-tests/linux/testcase.14:7: extra parameter for the iface line not understood and ignored: wrong
-tests/linux/testcase.14:15: 'inherits' keyword is missing a parameter
-./ifdown: couldn't read interfaces file "tests/linux/testcase.14"
+ifdown: tests/linux/testcase.14:7: extra parameter for the iface line not understood and ignored: wrong
+ifdown: tests/linux/testcase.14:15: 'inherits' keyword is missing a parameter
+ifdown: couldn't read interfaces file "tests/linux/testcase.14"

@@ -2,7 +2,7 @@ exit code: 0
 ====stdout====
 ====stderr====
 
-Configuring interface tunnel=tunnel (inet6)
+ifup: configuring interface tunnel=tunnel (inet6)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 /sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
 /bin/ip tunnel add tunnel mode sit remote any local 2.3.4.5        

@@ -3,10 +3,10 @@ exit code: 0
 ====stderr====
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 inetutils-ifconfig --interface lo --address 127.0.0.1 --up
-Configuring interface lo=lo (inet)
+ifup: configuring interface lo=lo (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-Configuring interface /dev/eth0=/dev/eth0 (inet)
+ifup: configuring interface /dev/eth0=/dev/eth0 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 
 inetutils-ifconfig --interface /dev/eth0 --address 1.2.3.4 --netmask 255.255.255.0           --up

@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <err.h>
 
 #include "header.h"
 
@@ -168,9 +169,11 @@ static allowup_defn *get_allowup(allowup_defn **allowups, const char *name) {
 	if (*allowups == NULL) {
 		*allowups = calloc(1, sizeof **allowups);
 		if (*allowups == NULL)
-			return NULL;
+			err(1, "calloc");
 
 		(*allowups)->when = strdup(name);
+		if ((*allowups)->when == NULL)
+			err(1, "strdup");
 	}
 
 	return *allowups;
@@ -188,10 +191,8 @@ static allowup_defn *add_allow_up(const char *filename, int line, allowup_defn *
 		allow_up->max_interfaces++;
 
 		tmp = realloc(allow_up->interfaces, sizeof(*tmp) * allow_up->max_interfaces);
-		if (tmp == NULL) {
-			perror(filename);
-			return NULL;
-		}
+		if (tmp == NULL)
+			err(1, "realloc");
 
 		allow_up->interfaces = tmp;
 	}
@@ -228,10 +229,8 @@ variable *set_variable(const char *name, const char *value, variable **var, int 
 				free((*var)[j].value);
 				(*var)[j].value = strdup(value);
 
-				if (!(*var)[j].value) {
-					perror(argv0);
-					return NULL;
-				}
+				if (!(*var)[j].value)
+					err(1, "strdup");
 
 				return &((*var)[j]);
 			}
@@ -244,10 +243,8 @@ variable *set_variable(const char *name, const char *value, variable **var, int 
 		*max_vars += 10;
 		new_var = realloc(*var, sizeof *new_var * *max_vars);
 
-		if (new_var == NULL) {
-			perror(argv0);
-			return NULL;
-		}
+		if (new_var == NULL)
+			err(1, "realloc");
 
 		*var = new_var;
 	}
@@ -255,15 +252,8 @@ variable *set_variable(const char *name, const char *value, variable **var, int 
 	(*var)[*n_vars].name = strndup(name, len);
 	(*var)[*n_vars].value = strdup(value);
 
-	if (!(*var)[*n_vars].name) {
-		perror(argv0);
-		return NULL;
-	}
-
-	if (!(*var)[*n_vars].value) {
-		perror(argv0);
-		return NULL;
-	}
+	if (!(*var)[*n_vars].name || !(*var)[*n_vars].value)
+		err(1, "strdup");
 
 	(*n_vars)++;
 	return &((*var)[(*n_vars) - 1]);
@@ -318,17 +308,12 @@ static bool already_seen(const char *filename) {
 				return true;
 
 	struct seen_file *seen = malloc(sizeof *seen);
-	if(!seen) {
-		perror("malloc");
-		return false;
-	}
+	if(!seen)
+		err(1, "malloc");
 
 	seen->filename = strdup(filename);
-	if(!seen->filename) {
-		free(seen);
-		perror("strdup");
-		return false;
-	}
+	if(!seen->filename)
+		err(1, "strdup");
 
 	seen->next = seen_files;
 	seen_files = seen;
@@ -361,10 +346,8 @@ static interface_defn *copy_variables(interface_defn *destif, interface_defn *sr
 		variable *new_option;
 		new_option = realloc(destif->option, sizeof *new_option * srcif->n_options);
 
-		if (new_option == NULL) {
-			perror(argv0);
-			return NULL;
-		}
+		if (new_option == NULL)
+			err(1, "realloc");
 
 		destif->option = new_option;
 		destif->max_options = srcif->n_options;
@@ -372,16 +355,12 @@ static interface_defn *copy_variables(interface_defn *destif, interface_defn *sr
 
 	for (int i = 0; i < srcif->n_options; i++) {
 		destif->option[i].name = strdup(srcif->option[i].name);
-		if (!destif->option[i].name) {
-			perror(argv0);
-			return NULL;
-		}
+		if (!destif->option[i].name)
+			err(1, "strdup");
 
 		destif->option[i].value = strdup(srcif->option[i].value);
-		if (!destif->option[i].value) {
-			perror(argv0);
-			return NULL;
-		}
+		if (!destif->option[i].value)
+			err(1, "strdup");
 	}
 	destif->n_options = srcif->n_options;
 
@@ -391,15 +370,12 @@ static interface_defn *copy_variables(interface_defn *destif, interface_defn *sr
 static void add_to_list(char ***list, int *count, const char *item) {
 	(*count)++;
 	*list = realloc(*list, sizeof **list * *count);
-	if (!*list) {
-		perror("realloc");
-		exit(1);
-	}
+	if (!*list)
+		err(1, "realloc");
+
 	(*list)[*count - 1] = strdup(item);
-	if (!(*list)[*count - 1]) {
-		perror("strdup");
-		exit(1);
-	}
+	if (!(*list)[*count - 1])
+		err(1, "strdup");
 }
 
 static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *filename) {
@@ -418,7 +394,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 	f = fopen(filename, "r");
 	if (f == NULL) {
-		fprintf(stderr, "warning: couldn't open interfaces file \"%s\"\n", filename);
+		warn("couldn't open interfaces file \"%s\"", filename);
 		return defn;
 	}
 
@@ -431,10 +407,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 		if (strcmp(firstword, "mapping") == 0) {
 			currmap = calloc(1, sizeof *currmap);
-			if (currmap == NULL) {
-				perror(filename);
-				return NULL;
-			}
+			if (currmap == NULL)
+				err(1, "calloc");
 
 			while ((rest = next_word(rest, firstword, 80))) {
 				if (currmap->max_matches == currmap->n_matches) {
@@ -442,11 +416,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 					currmap->max_matches = currmap->max_matches * 2 + 1;
 					tmp = realloc(currmap->match, sizeof(*tmp) * currmap->max_matches);
-					if (tmp == NULL) {
-						currmap->max_matches = (currmap->max_matches - 1) / 2;
-						perror(filename);
-						return NULL;
-					}
+					if (tmp == NULL)
+						err(1, "realloc");
 					currmap->match = tmp;
 				}
 
@@ -464,16 +435,12 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			currently_processing = MAPPING;
 		} else if (strcmp(firstword, "source") == 0) {
 			char *filename_dup = strdup(filename);
-			if (filename_dup == NULL) {
-				perror(filename);
-				return NULL;
-			}
+			if (filename_dup == NULL)
+				err(1, "strdup");
 
 			char *dir = strdup(dirname(filename_dup));
-			if (dir == NULL) {
-				perror(filename);
-				return NULL;
-			}
+			if (dir == NULL)
+				err(1, "strdup");
 
 			free(filename_dup);
 
@@ -484,22 +451,16 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 				size_t s = strlen(rest) + 1;	/* + NUL */
 
 				pattern = malloc(s);
-				if (pattern == NULL) {
-					free(dir);
-					perror(filename);
-					return NULL;
-				}
+				if (pattern == NULL)
+					err(1, "malloc");
 
 				pattern[0] = '\0';
 			} else {
 				size_t s = l + strlen(rest) + 2;	/* + slash + NUL */
 
 				pattern = malloc(s);
-				if (pattern == NULL) {
-					free(dir);
-					perror(filename);
-					return NULL;
-				}
+				if (pattern == NULL)
+					err(1, "malloc");
 
 				pattern[0] = '\0';
 				strcat(pattern, dir);
@@ -523,7 +484,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 							continue;
 
 					if (verbose)
-						fprintf(stderr, "Parsing file %s\n", w[i]);
+						warnx("parsing file %s", w[i]);
 
 					read_interfaces_defn(defn, w[i]);
 				}
@@ -536,16 +497,12 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			currently_processing = NONE;
 		} else if (strlmatch(firstword, "source-dir") == 0) {
 			char *filename_dup = strdup(filename);
-			if (filename_dup == NULL) {
-				perror(filename);
-				return NULL;
-			}
+			if (filename_dup == NULL)
+				err(1, "strdup");
 
 			char *dir = strdup(dirname(filename_dup));
-			if (dir == NULL) {
-				perror(filename);
-				return NULL;
-			}
+			if (dir == NULL)
+				err(1, "strdup");
 
 			free(filename_dup);
 
@@ -556,22 +513,16 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 				size_t s = strlen(rest) + 1;	/* + NUL */
 
 				pattern = malloc(s);
-				if (pattern == NULL) {
-					free(dir);
-					perror(filename);
-					return NULL;
-				}
+				if (pattern == NULL)
+					err(1, "malloc");
 
 				pattern[0] = '\0';
 			} else {
 				size_t s = l + strlen(rest) + 2;	/* + slash + NUL */
 
 				pattern = malloc(s);
-				if (pattern == NULL) {
-					free(dir);
-					perror(filename);
-					return NULL;
-				}
+				if (pattern == NULL)
+					err(1, "malloc");
 
 				pattern[0] = '\0';
 				strcat(pattern, dir);
@@ -591,7 +542,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 					if (n >= 0) {
 						if (verbose)
-							fprintf(stderr, "Reading directory %s\n", w[i]);
+							warnx("reading directory %s", w[i]);
 
 						size_t ll = strlen(w[i]);
 
@@ -599,10 +550,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 							size_t s = ll + strlen(namelist[j]->d_name) + 2;	/* + slash + NUL */
 
 							char *name = malloc(s);
-							if (name == NULL) {
-								perror(filename);
-								return NULL;
-							}
+							if (name == NULL)
+								err(1, "malloc");
 
 							name[0] = '\0';
 							strcat(name, w[i]);
@@ -610,8 +559,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 							strcat(name, namelist[j]->d_name);
 
 							if (verbose)
-								fprintf(stderr, "Parsing file %s\n", name);
-
+								warnx("parsing file %s", name);
 							read_interfaces_defn(defn, name);
 							free(name);
 						}
@@ -633,10 +581,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			keyword kw = NIL;
 
 			currif = malloc(sizeof *currif);
-			if (!currif) {
-				perror(filename);
-				return NULL;
-			}
+			if (!currif)
+				err(1, "malloc");
 
 			*currif = (interface_defn) {
 				.max_options = 0,
@@ -646,7 +592,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 			rest = next_word(rest, iface_name, 80);
 			if (rest == NULL) {
-				fprintf(stderr, "%s:%d: too few parameters for iface line\n", filename, line);
+				warnx("%s:%d: too few parameters for iface line", filename, line);
 				free(currif);
 				return NULL;
 			}
@@ -669,13 +615,13 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			}
 
 			if ((currif->address_family == NULL) && (kw == NIL)) {
-				fprintf(stderr, "%s:%d: unknown or no address type and no inherits keyword specified\n", filename, line);
+				warnx("%s:%d: unknown or no address type and no inherits keyword specified", filename, line);
 				free(currif);
 				return NULL;
 			}
 
 			if ((currif->method == NULL) && (kw == NIL)) {
-				fprintf(stderr, "%s:%d: unknown or no method and no inherits keyword specified\n", filename, line);
+				warnx("%s:%d: unknown or no method and no inherits keyword specified", filename, line);
 				free(currif);
 				return NULL;	/* FIXME */
 			}
@@ -685,7 +631,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 				if (rest != NULL) {
 					kw = get_keyword(inherits);
 					if (kw == NIL) {
-						fprintf(stderr, "%s:%d: extra parameter for the iface line not understood and ignored: %s\n", filename, line, inherits);
+						warnx("%s:%d: extra parameter for the iface line not understood and ignored: %s", filename, line, inherits);
 					}
 				}
 			}
@@ -693,14 +639,14 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			if (kw != NIL) {
 				rest = next_word(rest, inherits, 80);
 				if (rest == NULL) {
-					fprintf(stderr, "%s:%d: '%s' keyword is missing a parameter\n", filename, line, keywords[kw]);
+					warnx("%s:%d: '%s' keyword is missing a parameter", filename, line, keywords[kw]);
 					free(currif);
 					return NULL;
 				}
 				if (kw == INHERITS) {
 					interface_defn *otherif = get_interface(defn, inherits, currif->address_family ? address_family_name : NULL);
 					if (otherif == NULL) {
-						fprintf(stderr, "%s:%d: unknown iface to inherit from: %s (%s)\n", filename, line, inherits, currif->address_family ? address_family_name : "*");
+						warnx("%s:%d: unknown iface to inherit from: %s (%s)", filename, line, inherits, currif->address_family ? address_family_name : "*");
 						free(currif);
 						return NULL;
 					}
@@ -721,11 +667,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			}
 
 			currif->logical_iface = strdup(iface_name);
-			if (!currif->logical_iface) {
-				perror(filename);
-				free(currif);
-				return NULL;
-			}
+			if (!currif->logical_iface)
+				err(1, "strdup");
 
 			if (((!strcmp(address_family_name, "inet")) || (!strcmp(address_family_name, "inet6"))) && (!strcmp(method_name, "loopback")))
 				no_loopback = true;
@@ -742,27 +685,15 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 		} else if (strcmp(firstword, "auto") == 0) {
 			allowup_defn *auto_ups = get_allowup(&defn->allowups, "auto");
 
-			if (!auto_ups) {
-				perror(filename);
-				return NULL;
-			}
-
 			while ((rest = next_word(rest, firstword, 80)))
-				if (!add_allow_up(filename, line, auto_ups, firstword))
-					return NULL;
+				add_allow_up(filename, line, auto_ups, firstword);
 
 			currently_processing = NONE;
 		} else if (strncmp(firstword, "allow-", 6) == 0 && strlen(firstword) > 6) {
 			allowup_defn *allow_ups = get_allowup(&defn->allowups, firstword + 6);
 
-			if (!allow_ups) {
-				perror(filename);
-				return NULL;
-			}
-
 			while ((rest = next_word(rest, firstword, 80)))
-				if (!add_allow_up(filename, line, allow_ups, firstword))
-					return NULL;
+				add_allow_up(filename, line, allow_ups, firstword);
 
 			currently_processing = NONE;
 		} else if (strcmp(firstword, "no-auto-down") == 0) {
@@ -785,7 +716,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 					strcpy(firstword, "down");
 
 				if (strlen(rest) == 0) {
-					fprintf(stderr, "%s:%d: option with empty value\n", filename, line);
+					warnx("%s:%d: option with empty value", filename, line);
 					return NULL;
 				}
 
@@ -795,10 +726,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 							size_t l = strlen(currif->option[i].value);
 
 							currif->option[i].value = realloc(currif->option[i].value, l + strlen(rest) + 2);	/* 2 for NL and NULL */
-							if (!currif->option[i].value) {
-								perror(filename);
-								return NULL;
-							}
+							if (!currif->option[i].value)
+								err(1, "realloc");
 
 							currif->option[i].value[l] = '\n';
 							strcpy(&(currif->option[i].value[l + 1]), rest);
@@ -813,7 +742,7 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 			case MAPPING:
 				if (strcmp(firstword, "script") == 0) {
 					if (currmap->script != NULL) {
-						fprintf(stderr, "%s:%d: duplicate script in mapping\n", filename, line);
+						warnx("%s:%d: duplicate script in mapping", filename, line);
 						return NULL;
 					} else {
 						currmap->script = strdup(rest);
@@ -824,10 +753,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 						currmap->max_mappings = currmap->max_mappings * 2 + 1;
 						opt = realloc(currmap->mapping, sizeof(*opt) * currmap->max_mappings);
-						if (opt == NULL) {
-							perror(filename);
-							return NULL;
-						}
+						if (opt == NULL)
+							err(1, "realloc");
 
 						currmap->mapping = opt;
 					}
@@ -835,21 +762,21 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 					currmap->mapping[currmap->n_mappings] = strdup(rest);
 					currmap->n_mappings++;
 				} else {
-					fprintf(stderr, "%s:%d: misplaced option\n", filename, line);
+					warnx("%s:%d: misplaced option", filename, line);
 					return NULL;
 				}
 				break;
 
 			case NONE:
 			default:
-				fprintf(stderr, "%s:%d: misplaced option\n", filename, line);
+				warnx("%s:%d: misplaced option", filename, line);
 				return NULL;
 			}
 		}
 	}
 
 	if (ferror(f) != 0) {
-		perror(filename);
+		warn("%s", filename);
 		return NULL;
 	}
 
@@ -878,10 +805,8 @@ interfaces_file *read_interfaces(const char *filename) {
 	if (!no_loopback) {
 		interface_defn *lo_if = malloc(sizeof *lo_if);
 
-		if (!lo_if) {
-			perror(filename);
-			return NULL;
-		}
+		if (!lo_if)
+			err(1, "malloc");
 
 		*lo_if = (interface_defn) {
 			.logical_iface = strdup(LO_IFACE),

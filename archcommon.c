@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <arpa/inet.h>
+#include <err.h>
 
 #include "archcommon.h"
 
@@ -38,21 +39,19 @@ void cleanup_hwaddress(interface_defn *ifd, char **pparam, int argc, char **argv
 		uint8_t mac[6];
 		int fd = open("/dev/urandom", O_RDONLY);
 		if(!fd) {
-			perror("/dev/urandom");
+			warn("/dev/urandom");
 			return;
 		}
 		if(read(fd, mac, sizeof mac) != sizeof mac) {
-			perror("/dev/urandom");
+			warn("/dev/urandom");
 			return;
 		}
 		close(fd);
 		mac[0] |= 0x2; // locally administered
 		mac[0] &= ~0x1; // unicast
 		*pparam = realloc(*pparam, 18);
-		if (!*pparam) {
-			perror("realloc");
-			exit(1);
-		}
+		if (!*pparam)
+			err(1, "realloc");
 		snprintf(*pparam, 18, "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 		return;
 	}
@@ -239,13 +238,10 @@ void get_token(interface_defn *ifd, char **pparam, int argc, char **argv) {
 		strcpy(*pparam, token);
 	} else {
 		if (argc == 3) {
-			*pparam = realloc(*pparam, strlen(argv[2]) + 1);
-			if (*pparam == NULL) {
-				free(s);
-				return;
-			}
-
-			strcpy(*pparam, argv[2]);
+			free(*pparam);
+			*pparam = strdup(argv[2]);
+			if (!*pparam)
+				err(1, "strdup");
 		}
 	}
 

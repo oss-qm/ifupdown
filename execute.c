@@ -128,7 +128,7 @@ int doit(const char *str) {
 
 		case 0:	/* child */
 			execle("/bin/sh", "/bin/sh", "-c", str, NULL, localenv);
-			exit(127);
+			err(127, "executing '%s' failed", str);
 
 		default:	/* parent */
 			break;
@@ -225,7 +225,7 @@ int iface_predown(interface_defn *iface) {
 
 			if (fscanf(pidfile, "%d", &pid) == 1) {
 				if (verbose)
-					fprintf(stderr, "Terminating ifup (pid %d)\n", pid);
+					warnx("terminating ifup (pid %d)", pid);
 
 				kill((pid_t) - pid, SIGTERM);
 			}
@@ -296,10 +296,8 @@ static void addstr(char **buf, size_t *len, size_t *pos, const char *str, size_t
 		char *newbuf;
 
 		newbuf = realloc(*buf, *len * 2 + strlen + 1);
-		if (!newbuf) {
-			perror("realloc");
-			exit(1);	/* a little ugly */
-		}
+		if (!newbuf)
+			err(1, "realloc");
 
 		*buf = newbuf;
 		*len = *len * 2 + strlen + 1;
@@ -399,7 +397,7 @@ static char *parse(const char *command, interface_defn *ifd) {
 					free(varvalue);
 				} else {
 					if (opt_depth == 1)
-						fprintf(stderr, "Missing required variable: %.*s\n", (int)namelen, command);
+						warnx("missing required variable: %.*s", (int)namelen, command);
 
 					okay[opt_depth - 1] = 0;
 				}
@@ -558,7 +556,7 @@ static int popen2(FILE **in, FILE **out, char *command, ...) {
 		close(outfd[0]);
 		close(outfd[1]);
 		execvp(command, argv);
-		exit(127);
+		err(127, "executing \"%s\" failed", command);
 
 	default:		/* parent */
 		*in = fdopen(infd[1], "w");
@@ -579,7 +577,7 @@ bool run_mapping(const char *physical, char *logical, int len, mapping_defn *map
 
 	pid = popen2(&in, &out, map->script, physical, NULL);
 	if (pid == 0) {
-		fprintf(stderr, "Could not execute mapping script %s on %s: %s\n", map->script, physical, strerror(errno));
+		warn("could not execute mapping script %s on %s", map->script, physical);
 		return false;
 	}
 
@@ -603,10 +601,10 @@ bool run_mapping(const char *physical, char *logical, int len, mapping_defn *map
 
 			result = true;
 		} else {
-			fprintf(stderr, "No output from mapping script %s on %s\n", map->script, physical);
+			warnx("no output from mapping script %s on %s", map->script, physical);
 		}
 	} else {
-		fprintf(stderr, "Error trying to executing mapping script %s on %s\n", map->script, physical);
+		warnx("error trying to executing mapping script %s on %s", map->script, physical);
 	}
 
 	fclose(out);

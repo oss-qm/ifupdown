@@ -131,7 +131,6 @@ bool var_set_anywhere(const char *id, interface_defn *ifd);
 bool run_mapping(const char *physical, char *logical, int len, mapping_defn *map);
 char *make_pidfile_name(const char *command, interface_defn *fd);
 
-extern const char *argv0;
 extern bool no_act;
 extern bool do_all;
 extern bool verbose;
