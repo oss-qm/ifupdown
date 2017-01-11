@@ -129,7 +129,7 @@ bool var_true(const char *id, interface_defn *ifd);
 bool var_set(const char *id, interface_defn *ifd);
 bool var_set_anywhere(const char *id, interface_defn *ifd);
 bool run_mapping(const char *physical, char *logical, int len, mapping_defn *map);
-bool make_pidfile_name(char *name, size_t size, const char *command, interface_defn *fd);
+char *make_pidfile_name(const char *command, interface_defn *fd);
 
 extern const char *argv0;
 extern bool no_act;

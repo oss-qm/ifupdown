@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +13,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <limits.h>
+#include <err.h>
 
 #include "header.h"
 
@@ -23,10 +26,10 @@ bool ignore_failures = false;
 
 interfaces_file *defn;
 
-static char statedir[PATH_MAX] = RUN_DIR;
-static char lockfile[PATH_MAX] = RUN_DIR ".ifstate.lock";
-static char statefile[PATH_MAX] = RUN_DIR "ifstate";
-static char tmpstatefile[PATH_MAX] = RUN_DIR ".ifstate.tmp";
+static char *statedir;
+static char *lockfile;
+static char *statefile;
+static char *tmpstatefile;
 
 static void usage(void) {
 	fprintf(stderr, "%s: Use --help for help\n", argv0);
@@ -149,12 +152,28 @@ static void sanitize_file_name(char *name) {
       *name = '.';
 }
 
+static void sanitize_env_name(char *name) {
+  for (; *name; name++)
+    if (*name == '=')
+      *name = '_';
+}
+
+static char *ifacestatefile(const char *iface) {
+	char *filename;
+	if(asprintf(&filename, "%s.%s", statefile, iface) == -1)
+		err(1, "asprintf");
+
+	sanitize_file_name(filename + strlen(statefile) + 1);
+
+	return filename;
+}
+
 static bool is_locked(const char *iface) {
-	char filename[sizeof statefile + strlen(iface) + 2];
-	snprintf(filename, sizeof filename, "%s.%s", statefile, iface);
-	sanitize_file_name(filename + sizeof statefile);
+	char *filename = ifacestatefile(iface);
 
 	FILE *lock_fp = fopen(filename, "r");
+
+	free(filename);
 
 	if (lock_fp == NULL)
 		return false;
@@ -170,11 +189,7 @@ static bool is_locked(const char *iface) {
 }
 
 static FILE *lock_interface(const char *iface, char **state) {
-	char filename[sizeof statefile + strlen(iface) + 2];
-	char *siface = strdup(iface);
-	sanitize_file_name(siface);
-	snprintf(filename, sizeof filename, "%s.%s", statefile, siface);
-	free(siface);
+	char *filename = ifacestatefile(iface);
 
 	FILE *lock_fp = fopen(filename, no_act ? "r" : "a+");
 
@@ -183,6 +198,7 @@ static FILE *lock_interface(const char *iface, char **state) {
 			fprintf(stderr, "%s: failed to open lockfile %s: %s\n", argv0, filename, strerror(errno));
 			exit(1);
 		} else {
+			free(filename);
 			return NULL;
 		}
 	}
@@ -222,6 +238,7 @@ static FILE *lock_interface(const char *iface, char **state) {
 		}
 	}
 
+	free(filename);
 	return lock_fp;
 }
 
@@ -357,22 +374,14 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 		fclose(lock_fp);
 }
 
-bool make_pidfile_name(char *name, size_t size, const char *command, interface_defn * ifd) {
-	char *iface = strdup(ifd->real_iface);
+char *make_pidfile_name(const char *command, interface_defn *ifd) {
+	char *filename;
+	if(asprintf(&filename, "%s/%s-%s.pid", statedir, command, ifd->real_iface) == -1)
+		err(1, "asprintf");
 
-	if (!iface)
-		return false;
+	sanitize_file_name(filename + strlen(statedir) + 1);
 
-	sanitize_file_name(iface);
-
-	int n = snprintf(name, size, RUN_DIR "%s-%s.pid", command, iface);
-
-	free(iface);
-
-	if (n < 0 || (size_t) n >= size)
-		return false;
-
-	return true;
+	return filename;
 }
 
 /* Ensure stdin, stdout and stderr are valid, open filedescriptors */
@@ -427,7 +436,7 @@ static bool force = false;
 static bool list = false;
 static bool state_query = false;
 char *allow_class = NULL;
-static char *interfaces = "/etc/network/interfaces";
+static char *interfaces = NULL;
 char **no_auto_down_int = NULL;
 int no_auto_down_ints = 0;
 char **no_scripts_int = NULL;
@@ -496,6 +505,7 @@ static void parse_options(int *argc, char **argv[]) {
 
 		switch (c) {
 		case 'i':
+			free(interfaces);
 			interfaces = strdup(optarg);
 			break;
 
@@ -600,10 +610,14 @@ static void parse_options(int *argc, char **argv[]) {
 			break;
 
 		case 9:
-			snprintf(statedir, sizeof statedir, "%s", optarg);
-			snprintf(statefile, sizeof statefile, "%s/ifstate", optarg);
-			snprintf(tmpstatefile, sizeof tmpstatefile, "%s/.ifstate.tmp", optarg);
-			snprintf(lockfile, sizeof lockfile, "%s/.ifstate.lock", optarg);
+			free(statedir);
+			free(statefile);
+			free(tmpstatefile);
+			free(lockfile);
+			asprintf(&statedir, "%s", optarg);
+			asprintf(&statefile, "%s/ifstate", optarg);
+			asprintf(&tmpstatefile, "%s/.ifstate.tmp", optarg);
+			asprintf(&lockfile, "%s/.ifstate.lock", optarg);
 			break;
 
 		default:
@@ -828,11 +842,10 @@ static bool do_interface(const char *target_iface) {
 	}
 
 	if (cmds != iface_up) {
-		char filename[sizeof statefile + strlen(iface) + 2];
-		snprintf(filename, sizeof filename, "%s.%s", statefile, iface);
-		sanitize_file_name(filename + sizeof statefile);
+		char *filename = ifacestatefile(iface);
 		if (access(filename, R_OK) == 0)
 			found = true;
+		free(filename);
 	}
 
 	if (!found) {
@@ -844,10 +857,8 @@ static bool do_interface(const char *target_iface) {
 	/* Bail out if we are being called recursively on the same interface */
 
 	char envname[160];
-	char *siface = strdup(iface);
-	sanitize_file_name(siface);
-	snprintf(envname, sizeof envname, "IFUPDOWN_%s", siface);
-	free(siface);
+	snprintf(envname, sizeof envname, "IFUPDOWN_%s", iface);
+	sanitize_env_name(envname + 9);
 	char *envval = getenv(envname);
 	if(envval && is_locked(iface)) {
 		fprintf(stderr, "%s: recursion detected for interface %s in %s phase\n", argv0, iface, envval);
@@ -862,6 +873,7 @@ static bool do_interface(const char *target_iface) {
 	if ((pch = strchr(piface, '.'))) {
 		*pch = '\0';
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", piface);
+		sanitize_env_name(envname + 9);
 		char *envval = getenv(envname);
 		if(envval && is_locked(piface)) {
 			fprintf(stderr, "%s: recursion detected for parent interface %s in %s phase\n", argv0, piface, envval);
@@ -1067,7 +1079,6 @@ static bool do_interface(const char *target_iface) {
 			if (verbose)
 				fprintf(stderr, "%s interface %s=%s (%s)\n", (cmds == iface_query) ? "Querying" : "Configuring", iface, liface, currif->address_family->name);
 
-			char pidfilename[100];
 			const char *command;
 
 			if ((command = strrchr(argv0, '/')))
@@ -1075,7 +1086,7 @@ static bool do_interface(const char *target_iface) {
 			else
 				command = argv0;	/* no /'s in argv0 */
 
-			make_pidfile_name(pidfilename, sizeof(pidfilename), command, currif);
+			char *pidfilename = make_pidfile_name(command, currif);
 
 			if (!no_act) {
 				FILE *pidfile = fopen(pidfilename, "w");
@@ -1112,6 +1123,8 @@ static bool do_interface(const char *target_iface) {
 
 			if (!no_act)
 				unlink(pidfilename);
+
+			free(pidfilename);
 
 			currif->real_iface = NULL;
 
@@ -1199,23 +1212,45 @@ int main(int argc, char *argv[]) {
 
 	parse_options(&argc, &argv);
 
+	if (!statedir) {
+		statedir = strdup(RUN_DIR);
+		statefile = strdup(RUN_DIR ".ifstate.lock");
+		tmpstatefile = strdup(RUN_DIR ".ifstate.tmp");
+		lockfile = strdup(RUN_DIR ".ifstate.lock");
+	}
+
+	if (!interfaces)
+		interfaces = strdup("/etc/network/interfaces");
+
+	if (!interfaces || !statedir || !statefile || !tmpstatefile || !lockfile)
+		err(1, "asprintf");
+
 	mkdir(statedir, 0755);
 
-	if (state_query)
-		return do_state(argc, argv);
+	bool success = true;
+
+	if (state_query) {
+		success = do_state(argc, argv);
+		goto finish;
+	}
 
 	select_interfaces(argc, argv);
 
 	if (do_all)
 		do_pre_all();
 
-	bool success = true;
-
 	for (int i = 0; i < n_target_ifaces; i++)
 		success &= do_interface(target_iface[i]);
 
 	if (do_all)
 		do_post_all();
+
+finish:
+	free(interfaces);
+	free(lockfile);
+	free(tmpstatefile);
+	free(statefile);
+	free(statedir);
 
 	return success ? 0 : 1;
 }

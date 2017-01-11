@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -8,6 +10,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <err.h>
 
 #include "header.h"
 
@@ -20,28 +23,13 @@ static int check(const char *str) {
 
 static char *setlocalenv_nomangle(char *format, char *name, char *value) {
 	char *result;
-
-	result = malloc(strlen(format) + strlen(name) + strlen(value) + 1);	/* -4 for the two %s's */
-	if (!result) {
-		perror("malloc");
-		exit(1);
-	}
-
-	sprintf(result, format, name, value);
-
+	if(asprintf(&result, format, name, value) == -1)
+		err(1, "asprintf");
 	return result;
 }
 
 static char *setlocalenv(char *format, char *name, char *value) {
-	char *result;
-
-	result = malloc(strlen(format) + strlen(name) + strlen(value) + 1);	/* -4 for the two %s's */
-	if (!result) {
-		perror("malloc");
-		exit(1);
-	}
-
-	sprintf(result, format, name, value);
+	char *result = setlocalenv_nomangle(format, name, value);
 
 	char *here, *there;
 
@@ -175,11 +163,14 @@ static int execute_scripts(interface_defn *ifd, execfn *exec, char *opt) {
 	if (no_scripts_ints && match_patterns(ifd->logical_iface, no_scripts_ints, no_scripts_int))
 		return 1;
 
-	char buf[100];
 
-	snprintf(buf, sizeof(buf), "/bin/run-parts %s%s/etc/network/if-%s.d", ignore_failures ? "" : "--exit-on-error ", verbose ? "--verbose " : "", opt);
+	char *command;
+	if(asprintf(&command, "/bin/run-parts %s%s/etc/network/if-%s.d", ignore_failures ? "" : "--exit-on-error ", verbose ? "--verbose " : "", opt) == -1)
+		err(1, "asprintf");
 
-	int result = (*exec) (buf);
+	int result = (*exec) (command);
+
+	free(command);
 
 	return ignore_failures ? 1 : result;
 }
@@ -225,9 +216,8 @@ int iface_up(interface_defn *iface) {
 
 int iface_predown(interface_defn *iface) {
 	if (!no_act) {
-		char pidfilename[100];
+		char *pidfilename = make_pidfile_name("ifup", iface);
 
-		make_pidfile_name(pidfilename, sizeof(pidfilename), "ifup", iface);
 		FILE *pidfile = fopen(pidfilename, "r");
 
 		if (pidfile) {
@@ -243,6 +233,8 @@ int iface_predown(interface_defn *iface) {
 			fclose(pidfile);
 			unlink(pidfilename);
 		}
+
+		free(pidfilename);
 	}
 
 	set_environ(iface, "stop", "pre-down");
@@ -555,11 +547,10 @@ static int popen2(FILE **in, FILE **out, char *command, ...) {
 
 	case 0:		/* child */
 		/* release the current directory */
-		if(chdir("/") == -1) {
+		if(chdir("/") == -1)
 			// VERY unlikely, but if this fails we probably don't want to continue anyway.
-			fprintf(stderr, "Could not chdir to /: %s\n", strerror(errno));
-			exit(127);
-		}
+			err(127, "could not chdir to /");
+
 		dup2(infd[0], 0);
 		dup2(outfd[1], 1);
 		close(infd[0]);
