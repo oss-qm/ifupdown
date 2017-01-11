@@ -34,6 +34,7 @@ clean :
 	rm -f $(patsubst %.defn,%.man,$(DEFNFILES))
 	rm -f ifup ifdown ifquery interfaces.5 ifdown.8 ifquery.8
 	-rm -f ./tests/*/*-res*
+	-rm -r ./tests/*/state.*
 
 distclean : clean
 
