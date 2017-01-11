@@ -1,4 +1,4 @@
-.TH ifup 8 "23 May 2014" IFUPDOWN ""
+.TH ifup 8 "11 Jan 2017" IFUPDOWN ""
 .SH NAME
 ifup \- bring a network interface up
 .PP
@@ -97,7 +97,7 @@ Read interface definitions from
 instead of from
 .IR /etc/network/interfaces "."
 .TP
-\fB\-\-interfaces=\fR\fIDIR\fR
+\fB\-\-state\-dir=\fR\fIDIR\fR
 Keep interface state in
 .I DIR
 instead of in
@@ -262,8 +262,12 @@ install other packages such as
 .BR udev (7)
 or
 .BR ifplugd (8).
-.SH AUTHOR
-The ifupdown suite was written by Anthony Towns <aj@azure.humbug.org.au>.
+.SH AUTHORS
+The ifupdown suite was created by Anthony Towns <aj@azure.humbug.org.au>,
+and is currently maintained by Guus Sliepen <guus@debian.org>.
+.P
+Many others have helped develop ifupdown over time, see
+/usr/share/doc/ifupdown/changelog.Debian.gz for a full history.
 .SH SEE ALSO
 .BR interfaces (5),
 .BR ip (8),
