@@ -1167,7 +1167,7 @@ int main(int argc, char *argv[]) {
 
 	if (!statedir) {
 		statedir = strdup(RUN_DIR);
-		statefile = strdup(RUN_DIR ".ifstate.lock");
+		statefile = strdup(RUN_DIR "ifstate");
 		tmpstatefile = strdup(RUN_DIR ".ifstate.tmp");
 		lockfile = strdup(RUN_DIR ".ifstate.lock");
 	}
