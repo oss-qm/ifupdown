@@ -1,10 +1,18 @@
-ifupdown (0.8.18) UNRELEASED; urgency=medium
+ifupdown (0.8.18) unstable; urgency=medium
 
   [ Svante Signell ]
   * Makefile: Add removal of tests/*/state.* directories in the clean target.
   * Update testcases for GNU/Hurd.
 
- -- Guus Sliepen <guus@debian.org>  Wed, 11 Jan 2017 11:55:54 +0100
+  [ Guus Sliepen ]
+  * Use dynamically allocated strings for filenames. This avoids using
+    PATH_MAX, which caused a FTBFS on Hurd. Based on Svante's patch.
+    Closes: #845140
+  * Fix some memory leaks.
+  * Improve error messages.
+  * Always immediately quit when running out of memory.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 11 Jan 2017 20:43:06 +0100
 
 ifupdown (0.8.17) unstable; urgency=medium
 
