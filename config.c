@@ -856,6 +856,8 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 	fclose(f);
 	line = -1;
 
+	free(buf);
+
 	return defn;
 }
 

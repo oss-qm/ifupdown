@@ -1028,6 +1028,11 @@ static bool do_interface(const char *target_iface) {
 				if (!link.method->up(&link, doit))
 					break;
 
+				for (int i = 0; i < link.n_options; i++) {
+					free(link.option[i].name);
+					free(link.option[i].value);
+				}
+
 				if (link.option)
 					free(link.option);
 			}
