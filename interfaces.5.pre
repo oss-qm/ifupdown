@@ -24,6 +24,7 @@ commands.
 This is where you configure how your system is connected to the network.
 .SH EXAMPLE
 The following example configures two network interfaces: eth0 is brought up at boot, and uses DHCP for IPv4 and SLAAC for IPv6, whereas eth1 is brought up whenever the network hardware is detected, and is configured with static IPv4 and IPv6 addresses.
+.P
 .EX
 auto eth0
 allow-hotplug eth1
@@ -81,6 +82,7 @@ specifying the interface name explicitly.
 Lines beginning with "no-scripts" are used to identify interfaces for which scripts in
 .IR /etc/network/if\-*.d/
 should not be run when those interfaces are brought up or down.
+he above will match eth0 and eth1, and will bring up both interfaces using the "iface eth" stanza.
 .SH INCLUDING OTHER FILES
 Lines beginning with "source" are used to include stanzas from other files,
 so configuration can be split into many files. The word "source" is
@@ -201,7 +203,38 @@ iface eth0 inet static inherits ethernet
 This may be useful to separate link-level settings shared by multiple
 interfaces from, for example, IP address settings specific to every
 interface.
+.SH PATTERN MATCHING INTERFACES
+It is possible to use patterns to match one or more real interfaces.
+These patterns can currently appear in lines beginning with "auto" and on the command line.
+A pattern begins with a forward slash character ("/"), the rest is interpreted as a wildcard pattern
+according to the
+.BR fnmatch (3)
+function.
+When
+.BR ifup
+or
+.BR ifdown
+is run, patterns are replaces by all real interfaces that are currently known to the operating system kernel and whose names match the pattern.
+For example, given the following line:
 .P
+.EX
+auto /eth*
+.EE
+.P
+If the kernel knows about the interfaces with names lo, eth0 and eth1,
+then the above line is then interpreted as:
+.P
+.EX
+auto eth0 eth1
+.EE
+.P
+Note that there must still be valid "iface" stanzas for each matching interface.
+However, it is possible to combine a pattern with a mapping to a logical interface, like so:
+.P
+.EX
+auto /eth*=eth
+iface eth inet dhcp
+.EE
 .SH VLAN INTERFACES
 To ease the configuration of VLAN interfaces, interfaces having
 .B .

@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <limits.h>
 #include <err.h>
+#include <ifaddrs.h>
 
 #include "header.h"
 
@@ -621,6 +622,73 @@ static int do_state(int n_target_ifaces, char *target_iface[]) {
 	return ret;
 }
 
+/* Add string to a list if it is not a duplicate */
+static void append_to_list_nodup(char ***list, int *n, char *entry) {
+	for (int i = 0; i < *n; i++)
+		if (!strcmp((*list)[i], entry))
+			return;
+
+	(*n)++;
+	*list = realloc(*list, *n * sizeof **list);
+	(*list)[*n - 1] = entry;
+}
+
+/* Expand matches in the list of interfaces to act upon */
+static void expand_matches(void) {
+	char **exp_iface = NULL;
+	int n_exp_ifaces = 0;
+
+	static struct ifaddrs *ifap = NULL;
+
+	for (int i = 0; i < n_target_ifaces; i++) {
+		if (*target_iface[i] != '/') {
+			append_to_list_nodup(&exp_iface, &n_exp_ifaces, target_iface[i]);
+			continue;
+		}
+
+		char *buf = strdupa(target_iface[i]);
+		char *real_iface = buf + 1;
+		char *logical_iface = strchr(real_iface, '=');
+		if (logical_iface)
+			*logical_iface++ = 0;
+
+		if (!*real_iface)
+			continue;
+
+		// find all matching real network interfaces
+		if (!ifap) {
+			getifaddrs(&ifap);
+			// Mark duplicates
+			for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next)
+				for (struct ifaddrs *ifb = ifa->ifa_next; ifb; ifb = ifb->ifa_next)
+					if(!strcmp(ifa->ifa_name, ifb->ifa_name))
+						ifa->ifa_flags = ~0U;
+		}
+
+		for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next) {
+			if(ifa->ifa_flags == ~0U || !ifa->ifa_name)
+				continue;
+
+			if(fnmatch(real_iface, ifa->ifa_name, FNM_EXTMATCH))
+				continue;
+
+			char *exp;
+			if (logical_iface) {
+				asprintf(&exp, "%s=%s", ifa->ifa_name, logical_iface);
+				if (!exp)
+					err(1, "asprintf");
+			} else {
+				exp = ifa->ifa_name;
+			}
+
+			append_to_list_nodup(&exp_iface, &n_exp_ifaces, exp);
+		}
+	}
+
+	target_iface = exp_iface;
+	n_target_ifaces = n_exp_ifaces;
+}
+
 /* Check non-option arguments and build a list of interfaces to act upon */
 static void select_interfaces(int argc, char *argv[]) {
 	if (argc > 0 && (do_all || list)) {
@@ -647,6 +715,7 @@ static void select_interfaces(int argc, char *argv[]) {
 
 			target_iface = autos ? autos->interfaces : NULL;
 			n_target_ifaces = autos ? autos->n_interfaces : 0;
+			expand_matches();
 		} else if (cmds == iface_down) {
 			read_all_state(&target_iface, &n_target_ifaces);
 		} else {
@@ -656,6 +725,7 @@ static void select_interfaces(int argc, char *argv[]) {
 	} else {
 		target_iface = argv;
 		n_target_ifaces = argc;
+		expand_matches();
 	}
 }
 
