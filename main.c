@@ -587,13 +587,13 @@ static void parse_options(int *argc, char **argv[]) {
 	*argv += optind;
 }
 
-/* Report the state of interfaces. Return 0 (success) if all reported interfaces are up, 1 (failure) otherwise */
-static int do_state(int n_target_ifaces, char *target_iface[]) {
+/* Report the state of interfaces. Return true if all reported interfaces are up, false otherwise */
+static bool do_state(int n_target_ifaces, char *target_iface[]) {
 	char **up_ifaces;
 	int n_up_ifaces;
 
 	read_all_state(&up_ifaces, &n_up_ifaces);
-	int ret = 0;
+	bool all_up = true;
 
 	if (n_target_ifaces == 0) {
 		for (int i = 0; i < n_up_ifaces; i++)
@@ -614,11 +614,11 @@ static int do_state(int n_target_ifaces, char *target_iface[]) {
 			}
 
 			if (!found)
-				ret = 1;
+				all_up = false;
 		}
 	}
 
-	return ret;
+	return all_up;
 }
 
 /* Check non-option arguments and build a list of interfaces to act upon */
