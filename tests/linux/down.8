@@ -13,7 +13,7 @@ ifdown: configuring interface eth2.2=eth2.2 (inet)
 
 /bin/ip addr del 2.3.4.5/255.255.255.0 broadcast 2.3.4.255 	  dev eth2.2 label eth2.2
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/eth2/device/infiniband; then         echo 0x2 > /sys/class/net/eth2/delete_child;     else         /bin/ip link del eth2.2;     fi
+if test `cat /sys/class/net/eth2/type` -eq 32; then         echo 0x2 > /sys/class/net/eth2/delete_child;     else         /bin/ip link del eth2.2;     fi
 
 ifdown: configuring interface eth1:1=eth1:1 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d

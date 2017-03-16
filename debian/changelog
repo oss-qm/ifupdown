@@ -1,8 +1,12 @@
 ifupdown (0.8.27) UNRELEASED; urgency=medium
 
+  [ Guus Sliepen ]
   * Automatically bring up VLAN parent interfaces, and bring down VLAN slave
     interfaces. Closes: #879518
   * Update testcases.
+
+  [ Alex Fox ]
+  * Use a more reliable check for Infiniband interfaces. Closes: #857976
 
  -- Guus Sliepen <guus@debian.org>  Mon, 23 Oct 2017 23:26:43 +0200
 

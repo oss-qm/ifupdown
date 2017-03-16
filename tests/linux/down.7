@@ -12,40 +12,40 @@ ifdown: configuring interface tunnel=tunnel (inet6)
 ifdown: configuring interface br0.0202=br0.0202 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/br0/device/infiniband; then         echo 0x0202 > /sys/class/net/br0/delete_child;     else         /bin/ip link del br0.0202;     fi
+if test `cat /sys/class/net/br0/type` -eq 32; then         echo 0x0202 > /sys/class/net/br0/delete_child;     else         /bin/ip link del br0.0202;     fi
 
 ifdown: configuring interface br0.0201=br0.0201 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/br0/device/infiniband; then         echo 0x0201 > /sys/class/net/br0/delete_child;     else         /bin/ip link del br0.0201;     fi
+if test `cat /sys/class/net/br0/type` -eq 32; then         echo 0x0201 > /sys/class/net/br0/delete_child;     else         /bin/ip link del br0.0201;     fi
 
 ifdown: configuring interface eth0.0201=eth0.0201 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d
 
 /bin/ip addr del 192.168.0.1/255.255.255.128 broadcast 192.168.0.127 	  dev eth0.0201 label eth0.0201
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/eth0/device/infiniband; then         echo 0x0201 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.0201;     fi
+if test `cat /sys/class/net/eth0/type` -eq 32; then         echo 0x0201 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.0201;     fi
 
 ifdown: configuring interface eth0.1=eth0.1 (inet6)
 /bin/run-parts --verbose /etc/network/if-down.d
 
 /bin/ip -6 addr del 3ffe:ffff:120:f101::1/64  dev eth0.1
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/eth0/device/infiniband; then         echo 0x1 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.1;     fi
+if test `cat /sys/class/net/eth0/type` -eq 32; then         echo 0x1 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.1;     fi
 
 ifdown: configuring interface eth0.1=eth0.1 (inet6)
 /bin/run-parts --verbose /etc/network/if-down.d
 
 /bin/ip -6 addr del 3ffe:ffff:120:f101::1/64  dev eth0.1
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/eth0/device/infiniband; then         echo 0x1 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.1;     fi
+if test `cat /sys/class/net/eth0/type` -eq 32; then         echo 0x1 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.1;     fi
 
 ifdown: configuring interface eth0.0201=eth0.0201 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d
 
 /bin/ip addr del 192.168.0.1/255.255.255.128 broadcast 192.168.0.127 	  dev eth0.0201 label eth0.0201
 /bin/run-parts --verbose /etc/network/if-post-down.d
-if test -d /sys/class/net/eth0/device/infiniband; then         echo 0x0201 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.0201;     fi
+if test `cat /sys/class/net/eth0/type` -eq 32; then         echo 0x0201 > /sys/class/net/eth0/delete_child;     else         /bin/ip link del eth0.0201;     fi
 
 ifdown: configuring interface eth0=eth0 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d

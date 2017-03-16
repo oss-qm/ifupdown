@@ -40,7 +40,7 @@ ifup: configuring interface eth0=eth0 (inet6)
 /bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0  nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.1 ;     then         if test -d /sys/class/net/eth0/device/infiniband; then             echo 0x1 > /sys/class/net/eth0/create_child;         else             /bin/ip link set up dev eth0;             /bin/ip link add link eth0 name eth0.1 type vlan id 1; 	fi;     fi
+if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.1 ;     then         if test `cat /sys/class/net/eth0/type` -eq 32; then             echo 0x1 > /sys/class/net/eth0/create_child;         else             /bin/ip link set up dev eth0;             /bin/ip link add link eth0 name eth0.1 type vlan id 1; 	fi;     fi
 
 ifup: configuring interface eth0.1=eth0.1 (inet6)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
@@ -72,7 +72,7 @@ ifup: configuring interface eth0=eth0 (inet6)
 /bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0  nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.0201 ;     then         if test -d /sys/class/net/eth0/device/infiniband; then             echo 0x0201 > /sys/class/net/eth0/create_child;         else             /bin/ip link set up dev eth0;             /bin/ip link add link eth0 name eth0.0201 type vlan id 201; 	fi;     fi
+if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.0201 ;     then         if test `cat /sys/class/net/eth0/type` -eq 32; then             echo 0x0201 > /sys/class/net/eth0/create_child;         else             /bin/ip link set up dev eth0;             /bin/ip link add link eth0 name eth0.0201 type vlan id 201; 	fi;     fi
 
 ifup: configuring interface eth0.0201=eth0.0201 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
@@ -80,7 +80,7 @@ ifup: configuring interface eth0.0201=eth0.0201 (inet)
 /bin/ip link set dev eth0.0201   up
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-if test -d /sys/class/net/br0 -a             ! -d /sys/class/net/br0.0201 ;     then         if test -d /sys/class/net/br0/device/infiniband; then             echo 0x0201 > /sys/class/net/br0/create_child;         else             /bin/ip link set up dev br0;             /bin/ip link add link br0 name br0.0201 type vlan id 201; 	fi;     fi
+if test -d /sys/class/net/br0 -a             ! -d /sys/class/net/br0.0201 ;     then         if test `cat /sys/class/net/br0/type` -eq 32; then             echo 0x0201 > /sys/class/net/br0/create_child;         else             /bin/ip link set up dev br0;             /bin/ip link add link br0 name br0.0201 type vlan id 201; 	fi;     fi
 
 ifup: configuring interface br0.0201=br0.0201 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
@@ -88,7 +88,7 @@ ifup: configuring interface br0.0201=br0.0201 (inet)
 
 /bin/ip link set dev br0.0201 up 2>/dev/null || true
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-if test -d /sys/class/net/br0 -a             ! -d /sys/class/net/br0.0202 ;     then         if test -d /sys/class/net/br0/device/infiniband; then             echo 0x0202 > /sys/class/net/br0/create_child;         else             /bin/ip link set up dev br0;             /bin/ip link add link br0 name br0.0202 type vlan id 202; 	fi;     fi
+if test -d /sys/class/net/br0 -a             ! -d /sys/class/net/br0.0202 ;     then         if test `cat /sys/class/net/br0/type` -eq 32; then             echo 0x0202 > /sys/class/net/br0/create_child;         else             /bin/ip link set up dev br0;             /bin/ip link add link br0 name br0.0202 type vlan id 202; 	fi;     fi
 
 ifup: configuring interface br0.0202=br0.0202 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
