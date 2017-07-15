@@ -11,22 +11,22 @@
 #include "archcommon.h"
 
 bool variable_match(const char *iface, const char *variable, const char *pattern) {
+	// Map platform-independent variables to sysfs names
+	if(!strcasecmp(variable, "mac"))
+		variable = "address";
+
 	// Open the corresponding sysfs file
 	char *filename = NULL;
 	if(asprintf(&filename, "/sys/class/net/%s/%s", iface, variable) == -1 || !filename)
 		errx(1, "asprintf");
 
 	// Shortcut: * tests for file presence
-	if(strcmp(pattern, "*"))
+	if(!strcmp(pattern, "*"))
 		return access(filename, F_OK);
 
 	FILE *f = fopen(filename, "r");
 	if(!f)
 		return false;
-
-	// Map platform-independent variables to sysfs names
-	if(!strcasecmp(variable, "mac"))
-		variable = "address";
 
 	// Match against any line
 	char buf[1024];
