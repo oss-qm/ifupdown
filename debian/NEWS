@@ -1,3 +1,13 @@
+ifupdown (0.8.20) unstable; urgency=medium
+
+  Ifupdown now supports pattern matching for interfaces. This will help
+  writing /etc/network/interfaces for systems with changing interface names,
+  or to simplify configuration for a large number of interfaces. The details
+  are in the interfaces(5) manual page, and examples are provided in
+  /usr/share/doc/ifupdown/examples/pattern-matching.
+
+ -- Guus Sliepen <guus@debian.org>  Tue, 10 Jan 2017 17:20:09 +0100
+
 ifupdown (0.8.17) unstable; urgency=medium
 
   Ifupdown now also configures VLANs for bridge interfaces. (Previously, the
