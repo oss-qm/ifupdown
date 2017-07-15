@@ -1,10 +1,10 @@
-ifupdown (0.8.20) UNRELEASED; urgency=medium
+ifupdown (0.8.20) unstable; urgency=medium
 
   * Change udevadm path to /bin/udevadm. Closes: #852559
   * Add initial pattern matching support.
   * Bump Standards-Version.
 
- -- Guus Sliepen <guus@debian.org>  Tue, 20 Jun 2017 17:59:38 +0200
+ -- Guus Sliepen <guus@debian.org>  Sat, 15 Jul 2017 22:01:17 +0200
 
 ifupdown (0.8.19) unstable; urgency=medium
 
