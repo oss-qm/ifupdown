@@ -16,6 +16,7 @@
 #include <err.h>
 #include <ifaddrs.h>
 
+#include "archcommon.h"
 #include "header.h"
 
 static const char *argv0;
@@ -641,23 +642,45 @@ static void expand_matches(void) {
 	static struct ifaddrs *ifap = NULL;
 
 	for (int i = 0; i < n_target_ifaces; i++) {
-		if (*target_iface[i] != '/') {
+		// Interface names not containing a slash are taken over literally.
+		if (!strchr(target_iface[i], '/')) {
 			append_to_list_nodup(&exp_iface, &n_exp_ifaces, target_iface[i]);
 			continue;
 		}
 
+		// Format is [variable]/pattern[/options]	
 		char *buf = strdupa(target_iface[i]);
-		char *real_iface = buf + 1;
-		char *logical_iface = strchr(real_iface, '=');
+		char *variable = NULL;
+		char *pattern = NULL;
+		char *options = NULL;
+		int match_n = 0;
+
+		char *slash = strchr(buf, '/');
+		if (slash != buf)
+			variable = buf;
+		*slash++ = 0;
+		pattern = slash;
+		if (*pattern) {
+			slash = strchr(slash, '/');
+			if (slash) {
+				options = slash + 1;
+				*slash = 0;
+			}
+		}
+
+		char *logical_iface = strchr(options ? options : pattern, '=');
 		if (logical_iface)
 			*logical_iface++ = 0;
 
-		if (!*real_iface)
-			continue;
+		if (options) {
+			match_n = atoi(options);
+		}
 
-		// find all matching real network interfaces
+		// Get the list of network interfaces
 		if (!ifap) {
-			getifaddrs(&ifap);
+			if(getifaddrs(&ifap) || !ifap)
+				continue;
+
 			// Mark duplicates
 			for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next)
 				for (struct ifaddrs *ifb = ifa->ifa_next; ifb; ifb = ifb->ifa_next)
@@ -665,11 +688,25 @@ static void expand_matches(void) {
 						ifa->ifa_flags = ~0U;
 		}
 
+		int n = 0;
+
+		// Find all matching network interfaces
 		for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next) {
 			if(ifa->ifa_flags == ~0U || !ifa->ifa_name)
 				continue;
 
-			if(fnmatch(real_iface, ifa->ifa_name, FNM_EXTMATCH))
+			if(variable) {
+				if(!variable_match(ifa->ifa_name, variable, pattern))
+					continue;
+			} else {
+				if(fnmatch(pattern, ifa->ifa_name, FNM_EXTMATCH))
+					continue;
+			}
+
+			n++;
+
+			// Match a single interface
+			if (match_n > 0 && match_n != n)
 				continue;
 
 			char *exp;

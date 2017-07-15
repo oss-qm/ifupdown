@@ -17,3 +17,4 @@ void get_token(interface_defn *ifd, char **pparam, int argc, char **argv);
 void to_decimal(interface_defn *ifd, char **pparam, int argc, char **argv);
 void map_value(interface_defn *ifd, char **pparam, int argc, char **argv);
 void if_set(interface_defn *ifd, char **pparam, int argc, char **argv);
+bool variable_match(const char *iface, const char *variable, const char *pattern);

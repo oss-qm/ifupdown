@@ -1,33 +1,47 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/utsname.h>
+#include <fnmatch.h>
 
-#include "archlinux.h"
+#include "archcommon.h"
 
-unsigned int mylinuxver(void) {
-	static int maj = -1, rev = 0, min = 0;
+bool variable_match(const char *iface, const char *variable, const char *pattern) {
+	// Open the corresponding sysfs file
+	char *filename = NULL;
+	asprintf(&filename, "/sys/class/net/%s/%s", iface, variable);
 
-	if (maj == -1) {
-		struct utsname u;
-		char *pch;
+	// Shortcut: * tests for file presence
+	if(strcmp(pattern, "*"))
+		return access(filename, F_OK);
 
-		uname(&u);
-		maj = atoi(u.release);
-		pch = strchr(u.release, '.');
-		if (pch) {
-			rev = atoi(pch + 1);
-			pch = strchr(pch + 1, '.');
-			if (pch) {
-				min = atoi(pch + 1);
-			}
+	FILE *f = fopen(filename, "r");
+	if(!f)
+		return false;
+
+	// Map platform-independent variables to sysfs names
+	if(!strcasecmp(variable, "mac"))
+		variable = "address";
+
+	// Match against any line
+	char buf[1024];
+	bool found = false;
+	while(fgets(buf, sizeof buf, f)) {
+		// strip newline
+		size_t len = strlen(buf);
+		if(len && buf[len - 1] == '\n')
+			buf[len - 1] = 0;
+
+		if(fnmatch(pattern, buf, FNM_EXTMATCH) == 0) {
+			found = true;
+			break;
 		}
 	}
 
-	return mylinux(maj, rev, min);
-}
+	fclose(f);
 
-unsigned int mylinux(int maj, int rev, int min) {
-	return min | rev << 10 | maj << 13;
+	return found;
 }

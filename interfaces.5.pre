@@ -206,8 +206,15 @@ interface.
 .SH PATTERN MATCHING INTERFACES
 It is possible to use patterns to match one or more real interfaces.
 These patterns can currently appear in lines beginning with "auto" and on the command line.
-A pattern begins with a forward slash character ("/"), the rest is interpreted as a wildcard pattern
-according to the
+A pattern has the following format:
+.P
+.EX
+[variabele]/value[/[options]]
+.EE
+.P
+If no variable name is given, this pattern will match interface names against the given value.
+Value can contain wildcard patterns such as ? and *,
+see the
 .BR fnmatch (3)
 function.
 When
@@ -235,6 +242,12 @@ However, it is possible to combine a pattern with a mapping to a logical interfa
 auto /eth*=eth
 iface eth inet dhcp
 .EE
+.P
+Valid variable names are "mac", in which case value is matched against the interface's MAC address.
+On Linux, the variable name can also be any filename in /sys/class/net/<iface>/,
+in which case the value is matched against the contents of the corresponding file.
+.P
+The options field currently only supports a number. If given, only the n-th interface that has a matching value will actually be used, where n is the number given, starting at 1. So /eth*/1 will match the first interface whose name starts with eth.
 .SH VLAN INTERFACES
 To ease the configuration of VLAN interfaces, interfaces having
 .B .
