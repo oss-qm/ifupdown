@@ -6,13 +6,15 @@
 #include <unistd.h>
 #include <sys/utsname.h>
 #include <fnmatch.h>
+#include <err.h>
 
 #include "archcommon.h"
 
 bool variable_match(const char *iface, const char *variable, const char *pattern) {
 	// Open the corresponding sysfs file
 	char *filename = NULL;
-	asprintf(&filename, "/sys/class/net/%s/%s", iface, variable);
+	if(asprintf(&filename, "/sys/class/net/%s/%s", iface, variable) == -1 || !filename)
+		errx(1, "asprintf");
 
 	// Shortcut: * tests for file presence
 	if(strcmp(pattern, "*"))

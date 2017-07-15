@@ -1,6 +1,7 @@
 ifupdown (0.8.20) UNRELEASED; urgency=medium
 
   * Change udevadm path to /bin/udevadm. Closes: #852559
+  * Add initial pattern matching support.
 
  -- Guus Sliepen <guus@debian.org>  Tue, 20 Jun 2017 17:59:38 +0200
 

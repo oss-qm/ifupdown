@@ -154,8 +154,8 @@ static void sanitize_env_name(char *name) {
 }
 
 static char *ifacestatefile(const char *iface) {
-	char *filename;
-	if(asprintf(&filename, "%s.%s", statefile, iface) == -1)
+	char *filename = NULL;
+	if(asprintf(&filename, "%s.%s", statefile, iface) == -1 || !filename)
 		err(1, "asprintf");
 
 	sanitize_file_name(filename + strlen(statefile) + 1);
@@ -348,8 +348,8 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 }
 
 char *make_pidfile_name(const char *command, interface_defn *ifd) {
-	char *filename;
-	if(asprintf(&filename, "%s/%s-%s.pid", statedir, command, ifd->real_iface) == -1)
+	char *filename = NULL;
+	if(asprintf(&filename, "%s/%s-%s.pid", statedir, command, ifd->real_iface) == -1 || !filename)
 		err(1, "asprintf");
 
 	sanitize_file_name(filename + strlen(statedir) + 1);
@@ -573,10 +573,18 @@ static void parse_options(int *argc, char **argv[]) {
 			free(statefile);
 			free(tmpstatefile);
 			free(lockfile);
-			asprintf(&statedir, "%s", optarg);
-			asprintf(&statefile, "%s/ifstate", optarg);
-			asprintf(&tmpstatefile, "%s/.ifstate.tmp", optarg);
-			asprintf(&lockfile, "%s/.ifstate.lock", optarg);
+			statedir = NULL;
+			statefile = NULL;
+			tmpstatefile = NULL;
+			lockfile = NULL;
+			if(asprintf(&statedir, "%s", optarg) == -1 || !statedir)
+				err(1, "asprintf");
+			if(asprintf(&statefile, "%s/ifstate", optarg) == -1 || !statefile)
+				err(1, "asprintf");
+			if(asprintf(&tmpstatefile, "%s/.ifstate.tmp", optarg) == -1 || !tmpstatefile)
+				err(1, "asprintf");
+			if(asprintf(&lockfile, "%s/.ifstate.lock", optarg) == -1 || !lockfile)
+				err(1, "asprintf");
 			break;
 
 		default:
@@ -709,10 +717,9 @@ static void expand_matches(void) {
 			if (match_n > 0 && match_n != n)
 				continue;
 
-			char *exp;
+			char *exp = NULL;
 			if (logical_iface) {
-				asprintf(&exp, "%s=%s", ifa->ifa_name, logical_iface);
-				if (!exp)
+				if(asprintf(&exp, "%s=%s", ifa->ifa_name, logical_iface) == -1 || !exp)
 					err(1, "asprintf");
 			} else {
 				exp = ifa->ifa_name;
@@ -1283,7 +1290,7 @@ int main(int argc, char *argv[]) {
 		interfaces = strdup("/etc/network/interfaces");
 
 	if (!interfaces || !statedir || !statefile || !tmpstatefile || !lockfile)
-		err(1, "asprintf");
+		err(1, "strdup");
 
 	mkdir(statedir, 0755);
 
