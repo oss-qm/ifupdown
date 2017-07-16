@@ -1,8 +1,8 @@
-ifupdown (0.8.21) UNRELEASED; urgency=medium
+ifupdown (0.8.21) unstable; urgency=medium
 
   * Ensure allow-* also allows pattern matching. Closes: #868493
 
- -- Guus Sliepen <guus@debian.org>  Sun, 16 Jul 2017 13:10:54 +0200
+ -- Guus Sliepen <guus@debian.org>  Sun, 16 Jul 2017 13:38:59 +0200
 
 ifupdown (0.8.20) unstable; urgency=medium
 
