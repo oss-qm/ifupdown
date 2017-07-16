@@ -1,3 +1,9 @@
+ifupdown (0.8.21) UNRELEASED; urgency=medium
+
+  * Ensure allow-* also allows pattern matching. Closes: #868493
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 16 Jul 2017 13:10:54 +0200
+
 ifupdown (0.8.20) unstable; urgency=medium
 
   * Change udevadm path to /bin/udevadm. Closes: #852559

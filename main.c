@@ -643,21 +643,21 @@ static void append_to_list_nodup(char ***list, int *n, char *entry) {
 }
 
 /* Expand matches in the list of interfaces to act upon */
-static void expand_matches(void) {
+static void expand_matches(int *argc, char ***argv) {
 	char **exp_iface = NULL;
 	int n_exp_ifaces = 0;
 
 	static struct ifaddrs *ifap = NULL;
 
-	for (int i = 0; i < n_target_ifaces; i++) {
+	for (int i = 0; i < *argc; i++) {
 		// Interface names not containing a slash are taken over literally.
-		if (!strchr(target_iface[i], '/')) {
-			append_to_list_nodup(&exp_iface, &n_exp_ifaces, target_iface[i]);
+		if (!strchr((*argv)[i], '/')) {
+			append_to_list_nodup(&exp_iface, &n_exp_ifaces, (*argv)[i]);
 			continue;
 		}
 
 		// Format is [variable]/pattern[/options]	
-		char *buf = strdupa(target_iface[i]);
+		char *buf = strdupa((*argv)[i]);
 		char *variable = NULL;
 		char *pattern = NULL;
 		char *options = NULL;
@@ -729,8 +729,8 @@ static void expand_matches(void) {
 		}
 	}
 
-	target_iface = exp_iface;
-	n_target_ifaces = n_exp_ifaces;
+	*argv = exp_iface;
+	*argc = n_exp_ifaces;
 }
 
 /* Check non-option arguments and build a list of interfaces to act upon */
@@ -759,7 +759,7 @@ static void select_interfaces(int argc, char *argv[]) {
 
 			target_iface = autos ? autos->interfaces : NULL;
 			n_target_ifaces = autos ? autos->n_interfaces : 0;
-			expand_matches();
+			expand_matches(&n_target_ifaces, &target_iface);
 		} else if (cmds == iface_down) {
 			read_all_state(&target_iface, &n_target_ifaces);
 		} else {
@@ -769,7 +769,7 @@ static void select_interfaces(int argc, char *argv[]) {
 	} else {
 		target_iface = argv;
 		n_target_ifaces = argc;
-		expand_matches();
+		expand_matches(&n_target_ifaces, &target_iface);
 	}
 }
 
@@ -835,12 +835,21 @@ static bool ignore_interface(const char *iface) {
 
 		bool found = false;
 
-		for (int i = 0; i < allowup->n_interfaces; i++) {
-			if (strcmp(allowup->interfaces[i], iface) == 0) {
+		char **interfaces = allowup->interfaces;
+		int n_interfaces = allowup->n_interfaces;
+		expand_matches(&n_interfaces, &interfaces);
+
+		for (int i = 0; i < n_interfaces; i++) {
+			char *logical = strchr(interfaces[i], '=');
+			if (logical)
+				*logical++ = 0;
+			if (strcmp(interfaces[i], iface) == 0) {
 				found = true;
 				break;
 			}
 		}
+
+		free(interfaces);
 
 		if (!found)
 			return true;
