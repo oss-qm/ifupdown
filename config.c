@@ -685,27 +685,43 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 		} else if (strcmp(firstword, "auto") == 0) {
 			allowup_defn *auto_ups = get_allowup(&defn->allowups, "auto");
 
-			while ((rest = next_word(rest, firstword, 80)))
-				add_allow_up(filename, line, auto_ups, firstword);
+			if ((!rest || !*rest) && currently_processing == IFACE) {
+				add_allow_up(filename, line, auto_ups, currif->logical_iface);
+			} else {
+				while ((rest = next_word(rest, firstword, 80)))
+					add_allow_up(filename, line, auto_ups, firstword);
 
-			currently_processing = NONE;
+				currently_processing = NONE;
+			}
 		} else if (strncmp(firstword, "allow-", 6) == 0 && strlen(firstword) > 6) {
 			allowup_defn *allow_ups = get_allowup(&defn->allowups, firstword + 6);
 
-			while ((rest = next_word(rest, firstword, 80)))
-				add_allow_up(filename, line, allow_ups, firstword);
+			if ((!rest || !*rest) && currently_processing == IFACE) {
+				add_allow_up(filename, line, allow_ups, currif->logical_iface);
+			} else {
+				while ((rest = next_word(rest, firstword, 80)))
+					add_allow_up(filename, line, allow_ups, firstword);
 
-			currently_processing = NONE;
+				currently_processing = NONE;
+			}
 		} else if (strcmp(firstword, "no-auto-down") == 0) {
-			while ((rest = next_word(rest, firstword, 80)))
-				add_to_list(&no_auto_down_int, &no_auto_down_ints, firstword);
+			if ((!rest || !*rest) && currently_processing == IFACE) {
+				add_to_list(&no_auto_down_int, &no_auto_down_ints, currif->logical_iface);
+			} else {
+				while ((rest = next_word(rest, firstword, 80)))
+					add_to_list(&no_auto_down_int, &no_auto_down_ints, firstword);
 
-			currently_processing = NONE;
+				currently_processing = NONE;
+			}
 		} else if (strcmp(firstword, "no-scripts") == 0) {
-			while ((rest = next_word(rest, firstword, 80)))
-				add_to_list(&no_scripts_int, &no_scripts_ints, firstword);
+			if ((!rest || !*rest) && currently_processing == IFACE) {
+				add_to_list(&no_scripts_int, &no_scripts_ints, currif->logical_iface);
+			} else {
+				while ((rest = next_word(rest, firstword, 80)))
+					add_to_list(&no_scripts_int, &no_scripts_ints, firstword);
 
-			currently_processing = NONE;
+				currently_processing = NONE;
+			}
 		} else {
 			switch (currently_processing) {
 			case IFACE:
