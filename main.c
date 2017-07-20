@@ -405,6 +405,8 @@ char **no_auto_down_int = NULL;
 int no_auto_down_ints = 0;
 char **no_scripts_int = NULL;
 int no_scripts_ints = 0;
+char **rename_int = NULL;
+int rename_ints = 0;
 static char **excludeint = NULL;
 static int excludeints = 0;
 static variable *option = NULL;
@@ -642,12 +644,12 @@ static void append_to_list_nodup(char ***list, int *n, char *entry) {
 	(*list)[*n - 1] = entry;
 }
 
+static struct ifaddrs *ifap = NULL;
+
 /* Expand matches in the list of interfaces to act upon */
 static void expand_matches(int *argc, char ***argv) {
 	char **exp_iface = NULL;
 	int n_exp_ifaces = 0;
-
-	static struct ifaddrs *ifap = NULL;
 
 	for (int i = 0; i < *argc; i++) {
 		// Interface names not containing a slash are taken over literally.
@@ -656,7 +658,7 @@ static void expand_matches(int *argc, char ***argv) {
 			continue;
 		}
 
-		// Format is [variable]/pattern[/options]	
+		// Format is [variable]/pattern[/options]
 		char *buf = strdupa((*argv)[i]);
 		char *variable = NULL;
 		char *pattern = NULL;
@@ -682,18 +684,6 @@ static void expand_matches(int *argc, char ***argv) {
 
 		if (options) {
 			match_n = atoi(options);
-		}
-
-		// Get the list of network interfaces
-		if (!ifap) {
-			if(getifaddrs(&ifap) || !ifap)
-				continue;
-
-			// Mark duplicates
-			for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next)
-				for (struct ifaddrs *ifb = ifa->ifa_next; ifb; ifb = ifb->ifa_next)
-					if(!strcmp(ifa->ifa_name, ifb->ifa_name))
-						ifa->ifa_flags = ~0U;
 		}
 
 		int n = 0;
@@ -733,6 +723,84 @@ static void expand_matches(int *argc, char ***argv) {
 	*argc = n_exp_ifaces;
 }
 
+static void get_interface_list(void) {
+	if (ifap) {
+		freeifaddrs(ifap);
+		ifap = NULL;
+	}
+
+	// Get the list of network interfaces
+	getifaddrs(&ifap);
+
+	// Mark duplicates
+	if (ifap) {
+		for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next)
+			for (struct ifaddrs *ifb = ifa->ifa_next; ifb; ifb = ifb->ifa_next)
+				if(!strcmp(ifa->ifa_name, ifb->ifa_name))
+					ifa->ifa_flags = ~0U;
+	}
+}
+
+/* Process interfaces that need to be renamed */
+static void do_rename(void) {
+	if (!rename_ints || !ifap)
+		return;
+
+	expand_matches(&rename_ints, &rename_int);
+
+	int renamed_ints = 0;
+
+	for (int i = 0; i < rename_ints; i++) {
+		char *logical = strchr(rename_int[i], '=');
+		if (!logical)
+			continue;
+		*logical++ = 0;
+		if (!strcmp(rename_int[i], logical)) {
+			rename_int[i] = NULL;
+			continue;
+		}
+
+		bool found = false;
+
+		for (struct ifaddrs *ifa = ifap; ifa; ifa = ifa->ifa_next) {
+			if (ifa->ifa_flags == ~0U || !ifa->ifa_name)
+				continue;
+			if (!strcmp(ifa->ifa_name, rename_int[i])) {
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			rename_int[i] = NULL;
+			continue;
+		}
+
+		struct variable option = {
+			.name = "newname",
+			.value = logical,
+		};
+
+		struct interface_defn ifd = {
+			.real_iface = rename_int[i],
+			.logical_iface = logical,
+			.n_options = 1,
+			.option = &option,
+		};
+
+		if (!addr_link.method[0].rename(&ifd, doit)) {
+			errx(1, "Unable to rename %s to %s", rename_int[i], logical);
+		}
+
+		logical[-1] = '=';
+		renamed_ints++;
+	}
+
+	if (renamed_ints)
+		get_interface_list();
+}
+
+
 /* Check non-option arguments and build a list of interfaces to act upon */
 static void select_interfaces(int argc, char *argv[]) {
 	if (argc > 0 && (do_all || list)) {
@@ -753,6 +821,11 @@ static void select_interfaces(int argc, char *argv[]) {
 	if (!defn)
 		errx(1, "couldn't read interfaces file \"%s\"", interfaces);
 
+	get_interface_list();
+
+	if (cmds == iface_up)
+		do_rename();
+
 	if (do_all || list) {
 		if ((cmds == iface_list) || (cmds == iface_up)) {
 			allowup_defn *autos = find_allowup(defn, allow_class ? allow_class : "auto");
@@ -770,6 +843,24 @@ static void select_interfaces(int argc, char *argv[]) {
 		target_iface = argv;
 		n_target_ifaces = argc;
 		expand_matches(&n_target_ifaces, &target_iface);
+	}
+
+	/* Remap interfaces that would have been renamed */
+	for (int j = 0; j < rename_ints; j++) {
+		if (!rename_int[j])
+			continue;
+		int rename_len = strcspn(rename_int[j], "=");
+		for (int i = 0; i < n_target_ifaces; i++) {
+			int iface_len = strcspn(target_iface[i], "=");
+			if (iface_len != rename_len || strncmp(target_iface[i], rename_int[j], rename_len))
+				continue;
+			char *newtarget = NULL;
+			if (target_iface[i][iface_len])
+				asprintf(&newtarget, "%s=%s", rename_int[j] + rename_len + 1, target_iface[i] + iface_len + 1);
+			else
+				newtarget = strdup(rename_int[j] + rename_len + 1);
+			target_iface[i] = newtarget;
+		}
 	}
 }
 

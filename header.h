@@ -24,7 +24,7 @@ struct address_family {
 
 struct method {
 	char *name;
-	command_set *up, *down;
+	command_set *up, *down, *rename;
 	conversion *conversions;
 	option_default *defaults;
 };
@@ -150,5 +150,7 @@ extern char **no_auto_down_int;
 extern int no_auto_down_ints;
 extern char **no_scripts_int;
 extern int no_scripts_ints;
+extern char **rename_int;
+extern int rename_ints;
 
 #endif				/* HEADER_H */

@@ -48,7 +48,7 @@ NOT supported, comments must be on a line of their own.
 A line may be extended across multiple lines by making the last character
 a backslash.
 .P
-The file consists of zero or more "iface", "mapping", "auto", "allow-",
+The file consists of zero or more "iface", "mapping", "auto", "allow-", "rename",
 "source" and "source-directory" stanzas. These will be described in more detail in the following sections.
 .SH INTERFACE SELECTION
 Lines beginning with the word "auto" are used to identify the physical
@@ -83,6 +83,30 @@ Lines beginning with "no-scripts" are used to identify interfaces for which scri
 .IR /etc/network/if\-*.d/
 should not be run when those interfaces are brought up or down.
 he above will match eth0 and eth1, and will bring up both interfaces using the "iface eth" stanza.
+.SH INTERFACE RENAMING
+Lines beginning with "rename" are used to rename interfaces.
+It takes one or more arguments in the form of "CUR=NEW", where CUR is the name of an existing interface, and NEW is the new name.
+This becomes very powerful when combined with pattern matching for the CUR interface.
+.P
+Interfaces are renamed whenever "ifup" is called.
+Renaming logically happens before anything else is done.
+So if an interface is started with the name "foo", and it has to be renamed to "bar" and brought up at boot time,
+then one should use the following /etc/network/interfaces file:
+.P
+.EX
+rename foo=bar
+auto bar
+iface bar ...
+.EE
+.P
+However, if the interface is not renamed yet, it is possible to use both "ifup foo" and "ifup bar".
+The former command will then automatically be converted to the latter.
+This is mainly useful when ifup is called automatically whenever an interface is hotplugged.
+.P
+Interface renaming only works if the operating system supports it,
+if an interface is not renamed to another existing interface,
+and may require that the interface that is to be renamed has not been brought up yet.
+If ifup tries to rename an interface and it fails, it will exit with an error.
 .SH INCLUDING OTHER FILES
 Lines beginning with "source" are used to include stanzas from other files,
 so configuration can be split into many files. The word "source" is
@@ -205,7 +229,7 @@ interfaces from, for example, IP address settings specific to every
 interface.
 .SH PATTERN MATCHING INTERFACES
 It is possible to use patterns to match one or more real interfaces.
-These patterns can currently appear in lines beginning with "auto", "allow-" and on the command line.
+These patterns can currently appear in lines beginning with "auto", "allow-", "rename" and on the command line.
 A pattern has the following format:
 .P
 .EX

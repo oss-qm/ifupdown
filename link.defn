@@ -35,6 +35,8 @@ method none
     -/bin/ip link set down dev %iface% 2>/dev/null \
 	if (iface_is_lo())
     [[-test -n "%description%" && /bin/echo > /sys/class/net/%iface0%/ifalias]]
+  rename
+    /bin/ip link set %iface% name %newname%
 
 architecture kfreebsd
 
@@ -54,6 +56,8 @@ method none
     -/sbin/ifconfig %iface% down \
 	if (iface_is_lo())
     [[-test -n "%description%" && /sbin/ifconfig %iface% -desc]]
+  rename
+    /sbin/ifconfig %iface% name %newname%
 
 architecture hurd
 

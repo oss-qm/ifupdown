@@ -722,6 +722,11 @@ static interfaces_file *read_interfaces_defn(interfaces_file *defn, const char *
 
 				currently_processing = NONE;
 			}
+		} else if (strcmp(firstword, "rename") == 0) {
+			while ((rest = next_word(rest, firstword, 80)))
+				add_to_list(&rename_int, &rename_ints, firstword);
+
+			currently_processing = NONE;
 		} else {
 			switch (currently_processing) {
 			case IFACE:

@@ -126,12 +126,17 @@ sub get_method {
         if (match($line, "up", $indent)) {
                 get_commands(${method}, "up");
         } else {
-                print "static int _${method}_up(interface_defn ifd) { return 0; }\n"
+                print "static int _${method}_up(interface_defn *ifd, execfn *exec) { return 0; }\n"
         }
         if (match($line, "down", $indent)) {
                 get_commands(${method}, "down");
         } else {
-                print "static int _${method}_down(interface_defn ifd) { return 0; }\n"
+                print "static int _${method}_down(interface_defn *ifd, execfn *exec) { return 0; }\n"
+        }
+        if (match($line, "rename", $indent)) {
+                get_commands(${method}, "rename");
+        } else {
+                print "static int _${method}_rename(interface_defn *ifd, execfn *exec) { return 0; }\n"
         }
 }
 sub skip_section {
@@ -216,8 +221,8 @@ foreach $method (sort keys %ourmethods) {
         print <<EOF;
         {
                 "$method",
-                _${method}_up, _${method}_down,
-                _${method}_conv, _${method}_default
+                _${method}_up, _${method}_down, _${method}_rename,
+                _${method}_conv, _${method}_default,
         },
 EOF
 }
