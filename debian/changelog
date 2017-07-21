@@ -1,9 +1,9 @@
-ifupdown (0.8.22) UNRELEASED; urgency=medium
+ifupdown (0.8.22) unstable; urgency=medium
 
   * Support interface renaming.
   * Add ifupdown-wait-online.service. Closes: #868650
 
- -- Guus Sliepen <guus@debian.org>  Sat, 22 Jul 2017 00:42:39 +0200
+ -- Guus Sliepen <guus@debian.org>  Sat, 22 Jul 2017 01:10:34 +0200
 
 ifupdown (0.8.21) unstable; urgency=medium
 
