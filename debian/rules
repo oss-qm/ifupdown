@@ -18,6 +18,7 @@ endif
 
 override_dh_installinit:
 	dh_installinit --name=networking --no-start
+	dh_installinit --name=ifupdown-wait-online --no-start --no-scripts
 	install -p -m 0644 debian/networking.defaults $(DESTDIR)/etc/default/networking
 	dh_installinit --name=network-interface-container --noscripts
 	dh_installinit --name=network-interface-security --noscripts
