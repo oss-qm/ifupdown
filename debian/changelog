@@ -1,3 +1,9 @@
+ifupdown (0.8.23) UNRELEASED; urgency=medium
+
+  * Handle interface renaming in the ifupdown-hotplug script. Closes: #869275
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 24 Jul 2017 12:53:59 +0200
+
 ifupdown (0.8.22) unstable; urgency=medium
 
   * Support interface renaming.

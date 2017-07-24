@@ -59,12 +59,13 @@ net_ifup() {
     check_program /sbin/ifup
 
     # exit if the interface is not configured as allow-hotplug
-    if ! ifquery --allow hotplug -l | grep -q "^${INTERFACE}\$"; then
+    TARGET_IFACE=$(/sbin/ifquery --allow hotplug -l "$INTERFACE" || true)
+    if [ -z "$TARGET_IFACE" ]; then
         exit 0
     fi
 
     if [ -d /run/systemd/system ]; then
-        exec systemctl --no-block start $(systemd-escape --template ifup@.service $INTERFACE)
+        exec systemctl --no-block start $(systemd-escape --template ifup@.service $TARGET_IFACE)
     fi
 
     local out=$(ps -C ifup ho args)
