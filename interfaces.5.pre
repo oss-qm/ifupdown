@@ -233,7 +233,7 @@ These patterns can currently appear in lines beginning with "auto", "allow-", "r
 A pattern has the following format:
 .P
 .EX
-[VARIABELE]/VALUE[/[OPTIONS]][=LOGICAL]
+[VARIABLE]/VALUE[/[OPTIONS]][=LOGICAL]
 .EE
 .P
 If no VARIABLE is given, this pattern will match interface names against the given VALUE.
