@@ -753,7 +753,7 @@ static void do_rename(void) {
 	for (int i = 0; i < rename_ints; i++) {
 		char *logical = strchr(rename_int[i], '=');
 		if (!logical)
-			continue;
+			errx(1, "missing target name for interface %s", rename_int[i]);
 		*logical++ = 0;
 		if (!strcmp(rename_int[i], logical)) {
 			rename_int[i] = NULL;
@@ -789,7 +789,7 @@ static void do_rename(void) {
 		};
 
 		if (!addr_link.method[0].rename(&ifd, doit)) {
-			errx(1, "Unable to rename %s to %s", rename_int[i], logical);
+			errx(1, "unable to rename %s to %s", rename_int[i], logical);
 		}
 
 		logical[-1] = '=';
