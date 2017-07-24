@@ -1,9 +1,9 @@
-ifupdown (0.8.23) UNRELEASED; urgency=medium
+ifupdown (0.8.23) unstable; urgency=medium
 
   * Handle interface renaming in the ifupdown-hotplug script. Closes: #869275
   * Fix typo in the manpage. Closes: #869276
 
- -- Guus Sliepen <guus@debian.org>  Mon, 24 Jul 2017 12:53:59 +0200
+ -- Guus Sliepen <guus@debian.org>  Mon, 24 Jul 2017 13:03:31 +0200
 
 ifupdown (0.8.22) unstable; urgency=medium
 
