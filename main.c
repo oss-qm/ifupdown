@@ -746,8 +746,6 @@ static void do_rename(void) {
 	if (!rename_ints || !ifap)
 		return;
 
-	expand_matches(&rename_ints, &rename_int);
-
 	int renamed_ints = 0;
 
 	for (int i = 0; i < rename_ints; i++) {
@@ -803,8 +801,8 @@ static void do_rename(void) {
 
 /* Check non-option arguments and build a list of interfaces to act upon */
 static void select_interfaces(int argc, char *argv[]) {
-	if (argc > 0 && (do_all || list)) {
-		warnx("either use the --all/--list options, or specify interface(s), but not both");
+	if (argc > 0 && (do_all)) {
+		warnx("either use the --all option, or specify interface(s), but not both");
 		usage();
 	}
 
@@ -823,10 +821,13 @@ static void select_interfaces(int argc, char *argv[]) {
 
 	get_interface_list();
 
+	if (rename_ints)
+		expand_matches(&rename_ints, &rename_int);
+
 	if (cmds == iface_up)
 		do_rename();
 
-	if (do_all || list) {
+	if (do_all || (list && !argc)) {
 		if ((cmds == iface_list) || (cmds == iface_up)) {
 			allowup_defn *autos = find_allowup(defn, allow_class ? allow_class : "auto");
 
