@@ -3,6 +3,10 @@ ifupdown (0.8.24) UNRELEASED; urgency=medium
   [ Svante Signell ]
   * Fix FTBFS on hurd-i386 and kfreebsd-any. Closes: #869954
 
+  [ Guus Sliepen ]
+  * Don't interpret interface names starting with /dev/ as a pattern on
+    GNU/Hurd.
+
  -- Guus Sliepen <guus@debian.org>  Fri, 28 Jul 2017 12:15:27 +0200
 
 ifupdown (0.8.23) unstable; urgency=medium

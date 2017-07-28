@@ -646,28 +646,40 @@ static void append_to_list_nodup(char ***list, int *n, char *entry) {
 
 static struct ifaddrs *ifap = NULL;
 
+/* Check if an interface name is actually pattern */
+static bool is_pattern(const char *name) {
+	if(!strchr(name, '/'))
+		return false;
+
+#ifdef __gnu_hurd__
+	/* On GNU/Hurd, literal interface names start with /dev/. */
+	if(!strncmp(name, "/dev/", 5))
+		return false;
+#endif
+
+	return true;
+}
+
 /* Expand matches in the list of interfaces to act upon */
 static void expand_matches(int *argc, char ***argv) {
 	char **exp_iface = NULL;
 	int n_exp_ifaces = 0;
-	char *buf = NULL;
 
 	for (int i = 0; i < *argc; i++) {
 		// Interface names not containing a slash are taken over literally.
-		buf = strdupa((*argv)[i]);
-		sanitize_file_name(buf);
-		if (!strchr(buf, '/')) {
+		if (!is_pattern((*argv)[i])) {
 			append_to_list_nodup(&exp_iface, &n_exp_ifaces, (*argv)[i]);
 			continue;
 		}
 
 		// Format is [variable]/pattern[/options]
+		char *buf = strdupa((*argv)[i]);
 		char *variable = NULL;
 		char *pattern = NULL;
 		char *options = NULL;
 		int match_n = 0;
 
-		char *slash = strchrnul(buf, '/');
+		char *slash = strchr(buf, '/');
 		if (slash != buf)
 			variable = buf;
 		*slash++ = 0;

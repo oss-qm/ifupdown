@@ -230,7 +230,7 @@ interface.
 .SH PATTERN MATCHING INTERFACES
 It is possible to use patterns to match one or more real interfaces.
 These patterns can currently appear in lines beginning with "auto", "allow-", "rename" and on the command line.
-A pattern has the following format:
+A pattern has the following format (see below for exceptions for GNU/Hurd):
 .P
 .EX
 [VARIABLE]/VALUE[/[OPTIONS]][=LOGICAL]
@@ -272,6 +272,16 @@ On Linux, the variable name can also be any filename in /sys/class/net/<iface>/,
 in which case the value is matched against the contents of the corresponding file.
 .P
 The OPTIONS field currently only supports a number. If given, only the n-th interface that has a matching value will actually be used, where n is the number given, starting at 1. So /eth*/1 will match the first interface whose name starts with eth.
+.P
+On GNU/Hurd, interface names start with /dev/, and this obviously clashes with the format for patterns.
+To ensure an interface name like /dev/eth0 does not get interpreted as a pattern,
+any pattern that starts with /dev/ is ignored, and instead interpreted as a literal interface name.
+To make a pattern that matches interface names on GNU/Hurd, use something like:
+.P
+.EX
+auto /?dev?eth*=eth
+iface eth inet dhcp
+.EE
 .SH VLAN INTERFACES
 To ease the configuration of VLAN interfaces, interfaces having
 .B .
