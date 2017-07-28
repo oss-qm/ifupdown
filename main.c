@@ -650,22 +650,24 @@ static struct ifaddrs *ifap = NULL;
 static void expand_matches(int *argc, char ***argv) {
 	char **exp_iface = NULL;
 	int n_exp_ifaces = 0;
+	char *buf = NULL;
 
 	for (int i = 0; i < *argc; i++) {
 		// Interface names not containing a slash are taken over literally.
-		if (!strchr((*argv)[i], '/')) {
+		buf = strdupa((*argv)[i]);
+		sanitize_file_name(buf);
+		if (!strchr(buf, '/')) {
 			append_to_list_nodup(&exp_iface, &n_exp_ifaces, (*argv)[i]);
 			continue;
 		}
 
 		// Format is [variable]/pattern[/options]
-		char *buf = strdupa((*argv)[i]);
 		char *variable = NULL;
 		char *pattern = NULL;
 		char *options = NULL;
 		int match_n = 0;
 
-		char *slash = strchr(buf, '/');
+		char *slash = strchrnul(buf, '/');
 		if (slash != buf)
 			variable = buf;
 		*slash++ = 0;

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "archcommon.h"
 
 bool variable_match(const char *iface, const char *variable, const char *pattern) {

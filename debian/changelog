@@ -1,3 +1,10 @@
+ifupdown (0.8.24) UNRELEASED; urgency=medium
+
+  [ Svante Signell ]
+  * Fix FTBFS on hurd-i386 and kfreebsd-any. Closes: #869954
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 28 Jul 2017 12:15:27 +0200
+
 ifupdown (0.8.23) unstable; urgency=medium
 
   * Handle interface renaming in the ifupdown-hotplug script. Closes: #869275
