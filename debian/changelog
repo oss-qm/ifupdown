@@ -1,4 +1,4 @@
-ifupdown (0.8.24) UNRELEASED; urgency=medium
+ifupdown (0.8.24) unstable; urgency=medium
 
   [ Svante Signell ]
   * Fix FTBFS on hurd-i386 and kfreebsd-any. Closes: #869954
@@ -8,7 +8,7 @@ ifupdown (0.8.24) UNRELEASED; urgency=medium
     GNU/Hurd.
   * Support MAC address matching on kFreeBSD.
 
- -- Guus Sliepen <guus@debian.org>  Fri, 28 Jul 2017 12:15:27 +0200
+ -- Guus Sliepen <guus@debian.org>  Fri, 28 Jul 2017 18:05:33 +0200
 
 ifupdown (0.8.23) unstable; urgency=medium
 
