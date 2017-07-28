@@ -11,7 +11,7 @@
 .  fi
 .  PP
 ..
-.TH INTERFACES 5 "4 June 2016" "ifupdown" "File formats"
+.TH INTERFACES 5 "24 July 2017" "ifupdown" "File formats"
 .SH NAME
 /etc/network/interfaces \- network interface configuration for ifup and ifdown
 .SH DESCRIPTION
