@@ -1,6 +1,6 @@
-VERSION ?= 0.7
+VERSION ?= 0.8
 CFLAGS ?= -Wall -W -Wno-unused-parameter -g -O2
-ARCH ?= linux
+ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 
 BASEDIR ?= $(DESTDIR)
 
@@ -18,7 +18,7 @@ DEFNFILES += meta.defn link.defn
 
 all : ifup ifdown ifquery ifup.8 ifdown.8 ifquery.8 interfaces.5
 
-.PHONY : all clean distclean
+.PHONY : all install clean distclean check
 .SECONDARY: link.c ipx.c can.c meta.c inet6.c inet.c
 
 install :
@@ -48,7 +48,6 @@ ifdown: ifup
 ifquery: ifup
 	ln -sf ifup ifquery
 
-ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 check: ifup ifdown
 	@echo running ./tests/testbuild-$(ARCH)
 	@if ! exec ./tests/testbuild-$(ARCH); then \
