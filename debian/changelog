@@ -6,6 +6,7 @@ ifupdown (0.8.24) UNRELEASED; urgency=medium
   [ Guus Sliepen ]
   * Don't interpret interface names starting with /dev/ as a pattern on
     GNU/Hurd.
+  * Support MAC address matching on kFreeBSD.
 
  -- Guus Sliepen <guus@debian.org>  Fri, 28 Jul 2017 12:15:27 +0200
 

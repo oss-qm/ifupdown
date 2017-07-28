@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <ifaddrs.h>
 
 typedef struct address_family address_family;
 typedef struct method method;
@@ -104,6 +105,7 @@ struct mapping_defn {
 #endif
 
 extern address_family *addr_fams[];
+extern struct ifaddrs *ifap;
 
 variable *set_variable(const char *name, const char *value, variable **var, int *n_vars, int *max_vars);
 void convert_variables(conversion *conversions, interface_defn *ifd);

@@ -644,7 +644,7 @@ static void append_to_list_nodup(char ***list, int *n, char *entry) {
 	(*list)[*n - 1] = entry;
 }
 
-static struct ifaddrs *ifap = NULL;
+struct ifaddrs *ifap = NULL;
 
 /* Check if an interface name is actually pattern */
 static bool is_pattern(const char *name) {
