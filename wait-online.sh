@@ -28,7 +28,7 @@ ping6)
 
 ifup|iface|interface)
 	up=false
-	if [ -z "WAIT_ONLINE_IFACE" ]; then
+	if [ -z "$WAIT_ONLINE_IFACE" ]; then
 		auto_list="$(/sbin/ifquery -X lo --list)"
 		hotplug_list="$(/sbin/ifquery -X lo --allow=hotplug --list)"
 		if [ -n "$auto_list" ]; then
