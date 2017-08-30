@@ -870,10 +870,12 @@ static void select_interfaces(int argc, char *argv[]) {
 			if (iface_len != rename_len || strncmp(target_iface[i], rename_int[j], rename_len))
 				continue;
 			char *newtarget = NULL;
-			if (target_iface[i][iface_len])
-				asprintf(&newtarget, "%s=%s", rename_int[j] + rename_len + 1, target_iface[i] + iface_len + 1);
-			else
+			if (target_iface[i][iface_len]) {
+				if(asprintf(&newtarget, "%s=%s", rename_int[j] + rename_len + 1, target_iface[i] + iface_len + 1))
+					err(1, "asprintf");
+			} else {
 				newtarget = strdup(rename_int[j] + rename_len + 1);
+			}
 			target_iface[i] = newtarget;
 		}
 	}
