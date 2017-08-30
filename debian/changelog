@@ -1,3 +1,15 @@
+ifupdown (0.8.25) UNRELEASED; urgency=medium
+
+  [ SATOH Fumiyasu]
+  * wait-online.sh: Evaluate "$WAIT_ONLINE_IFACE". Closes: #873475
+
+  [ Guus Sliepen ]
+  * Don't check for another instance of ifup running during hotplug.
+    Closes: #873110
+  * Drop upstart system jobs.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 30 Aug 2017 22:45:21 +0200
+
 ifupdown (0.8.24) unstable; urgency=medium
 
   [ Svante Signell ]

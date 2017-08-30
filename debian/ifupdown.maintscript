@@ -1,3 +1,7 @@
 rm_conffile /etc/default/ifupdown 0.7~+ ifupdown
 rm_conffile /etc/init.d/ifupdown 0.7~+ ifupdown
 rm_conffile /etc/init.d/ifupdown-clean 0.7~beta1 ifupdown
+rm_conffile /etc/init/networking.conf 0.8.25~ ifupdown
+rm_conffile /etc/init/network-interface-container.conf 0.8.25~ ifupdown
+rm_conffile /etc/init/network-interface-security.conf 0.8.25~ ifupdown
+rm_conffile /etc/init/network-interface.conf 0.8.25~ ifupdown
