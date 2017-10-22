@@ -977,7 +977,7 @@ static bool ignore_interface(const char *iface) {
 }
 
 
-static bool do_interface(const char *target_iface) {
+static bool do_interface(const char *target_iface, char *is_parent) {
 	/* Split into physical and logical interface */
 
 	char iface[80], liface[80];
@@ -1035,16 +1035,17 @@ static bool do_interface(const char *target_iface) {
 		return false;
 	}
 
-
 	/* Bail out if we are being called recursively on the same interface */
 
-	char envname[160];
-	snprintf(envname, sizeof envname, "IFUPDOWN_%s", iface);
-	sanitize_env_name(envname + 9);
-	char *envval = getenv(envname);
-	if(envval && is_locked(iface)) {
-		warnx("recursion detected for interface %s in %s phase", iface, envval);
-		return false;
+	if (!is_parent) {
+		char envname[160];
+		snprintf(envname, sizeof envname, "IFUPDOWN_%s", iface);
+		sanitize_env_name(envname + 9);
+		char *envval = getenv(envname);
+		if(envval && is_locked(iface)) {
+			warnx("recursion detected for interface %s in %s phase", iface, envval);
+			return false;
+		}
 	}
 
 	/* Are we configuring a VLAN interface? If so, lock the parent interface as well. */
@@ -1053,7 +1054,9 @@ static bool do_interface(const char *target_iface) {
 	FILE *plock = NULL;
 	strncpy(piface, iface, sizeof piface);
 	if ((pch = strchr(piface, '.'))) {
+		assert(!is_parent);
 		*pch = '\0';
+		char envname[160];
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", piface);
 		sanitize_env_name(envname + 9);
 		char *envval = getenv(envname);
@@ -1062,7 +1065,18 @@ static bool do_interface(const char *target_iface) {
 			return false;
 		}
 
-		plock = lock_interface(piface, NULL);
+		char *parent_state = NULL;
+		plock = lock_interface(piface, &parent_state);
+
+		if (cmds == iface_up) {
+			/* And ensure it's up. */
+			if (!do_interface(piface, parent_state)) {
+				warnx("could not bring up parent interface %s", piface);
+				return false;
+			}
+		}
+
+		free(parent_state);
 	}
 
 	/* Start by locking this interface */
@@ -1071,14 +1085,17 @@ static bool do_interface(const char *target_iface) {
 	FILE *lock = NULL;
 	char *current_state = NULL;
 
-	lock = lock_interface(iface, &current_state);
+	if (!is_parent)
+		lock = lock_interface(iface, &current_state);
+	else
+		current_state = is_parent;
 
 	/* If we are not forcing the command, then exit with success if it is a no-op */
 
 	if (!force) {
 		if (cmds == iface_up) {
 			if (current_state != NULL) {
-				if (!do_all)
+				if (!is_parent && !do_all)
 					warnx("interface %s already configured", iface);
 
 				success = true;
@@ -1424,7 +1441,7 @@ int main(int argc, char *argv[]) {
 		do_pre_all();
 
 	for (int i = 0; i < n_target_ifaces; i++)
-		success &= do_interface(target_iface[i]);
+		success &= do_interface(target_iface[i], NULL);
 
 	if (do_all)
 		do_post_all();

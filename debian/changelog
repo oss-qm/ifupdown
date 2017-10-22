@@ -1,4 +1,10 @@
-ifupdown (0.8.25) UNRELEASED; urgency=medium
+ifupdown (0.8.26) UNRELEASED; urgency=medium
+
+  * Automatically bring up VLAN parent interfaces. Closes: #879518
+
+ -- Guus Sliepen <guus@debian.org>  Sun, 22 Oct 2017 21:52:55 +0200
+
+ifupdown (0.8.25) unstable; urgency=medium
 
   [ SATOH Fumiyasu]
   * wait-online.sh: Evaluate "$WAIT_ONLINE_IFACE". Closes: #873475
@@ -8,7 +14,7 @@ ifupdown (0.8.25) UNRELEASED; urgency=medium
     Closes: #873110
   * Drop upstart system jobs.
 
- -- Guus Sliepen <guus@debian.org>  Wed, 30 Aug 2017 22:45:21 +0200
+ -- Guus Sliepen <guus@debian.org>  Wed, 30 Aug 2017 22:50:08 +0200
 
 ifupdown (0.8.24) unstable; urgency=medium
 
