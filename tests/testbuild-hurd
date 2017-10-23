@@ -8,7 +8,7 @@ for test in 1 2 3 4 5 6 11; do
         args="$(cat $dir/testcase.$test | sed -n 's/^# RUN: //p')"
 
 	exitcode=0
-        ./ifup -nv --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
+        ./ifup -v --no-act-commands --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
                 >$dir/up-res-out.$test 2>$dir/up-res-err.$test || exitcode=$?
 
         (echo "exit code: $exitcode";
@@ -16,7 +16,7 @@ for test in 1 2 3 4 5 6 11; do
          echo "====stderr===="; cat $dir/up-res-err.$test) > $dir/up-res.$test
 
 	exitcode=0
-        ./ifdown -nv --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
+        ./ifdown -v --no-act-commands --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
                >$dir/down-res-out.$test 2>$dir/down-res-err.$test || exitcode=$?
 
         (echo "exit code: $exitcode";

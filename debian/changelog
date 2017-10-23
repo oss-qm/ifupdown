@@ -1,9 +1,10 @@
-ifupdown (0.8.26) UNRELEASED; urgency=medium
+ifupdown (0.8.27) UNRELEASED; urgency=medium
 
   * Automatically bring up VLAN parent interfaces, and bring down VLAN slave
     interfaces. Closes: #879518
+  * Update testcases.
 
- -- Guus Sliepen <guus@debian.org>  Sun, 22 Oct 2017 21:52:55 +0200
+ -- Guus Sliepen <guus@debian.org>  Mon, 23 Oct 2017 23:26:43 +0200
 
 ifupdown (0.8.25) unstable; urgency=medium
 

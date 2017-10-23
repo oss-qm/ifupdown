@@ -4,16 +4,30 @@ dir=tests/kfreebsd
 
 result=true
 for test in 1 2 3 4 5 6; do
-        args="$(cat $dir/testcase.$test | sed -n 's/^# RUN: //p')"
-        ./ifup --no-loopback -nv --force -i $dir/testcase.$test $args \
-                >$dir/up-res-out.$test 2>$dir/up-res-err.$test ||
-                true
-        (echo "====stdout===="; cat $dir/up-res-out.$test
-         echo "====stderr===="; cat $dir/up-res-err.$test) > $dir/up-res.$test
-
+	if [ -e $dir/testcase.$test ]; then
+		args="$(cat $dir/testcase.$test | sed -n 's/^# RUN: //p')"
+	else
+		args="-a"
+	fi
         echo "Testcase $test: $args"
 
-        if diff -ub $dir/up.$test $dir/up-res.$test; then
+	exitcode=0
+        ./ifup -v --no-act-commands --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
+                >$dir/up-res-out.$test 2>$dir/up-res-err.$test || exitcode=$?
+
+        (echo "exit code: $exitcode";
+         echo "====stdout===="; cat $dir/up-res-out.$test
+         echo "====stderr===="; cat $dir/up-res-err.$test) > $dir/up-res.$test
+
+	exitcode=0
+        ./ifdown -v --no-act-commands --force -i $dir/testcase.$test --state-dir=$dir/state.$test $args \
+               >$dir/down-res-out.$test 2>$dir/down-res-err.$test || exitcode=$?
+
+        (echo "exit code: $exitcode";
+         echo "====stdout===="; cat $dir/down-res-out.$test
+         echo "====stderr===="; cat $dir/down-res-err.$test) > $dir/down-res.$test
+
+        if diff -ub $dir/up.$test $dir/up-res.$test && diff -ub $dir/down.$test $dir/down-res.$test; then
                 echo "(okay)"
         else
                 echo "(failed)"

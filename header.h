@@ -134,6 +134,7 @@ bool run_mapping(const char *physical, char *logical, int len, mapping_defn *map
 char *make_pidfile_name(const char *command, interface_defn *fd);
 
 extern bool no_act;
+extern bool no_act_commands;
 extern bool do_all;
 extern bool verbose;
 extern bool run_scripts;

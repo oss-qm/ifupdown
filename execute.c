@@ -115,7 +115,7 @@ int doit(const char *str) {
 	if (verbose || no_act)
 		fprintf(stderr, "%s\n", str);
 
-	if (!no_act) {
+	if (!no_act_commands) {
 		pid_t child;
 		int status;
 

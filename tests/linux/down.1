@@ -2,4 +2,50 @@ exit code: 0
 ====stdout====
 ====stderr====
 /bin/run-parts --verbose /etc/network/if-down.d
+ifdown: configuring interface eth3=eth3 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.0 broadcast 1.2.3.0 	  dev eth3 label eth3
+/bin/ip link set dev eth3 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+ifdown: configuring interface eth3=eth3 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.252 broadcast 1.2.3.4 	  dev eth3 label eth3
+/bin/ip link set dev eth3 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+ifdown: configuring interface eth3=eth3 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.254 broadcast 255.255.255.255 	  dev eth3 label eth3
+/bin/ip link set dev eth3 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+ifdown: configuring interface eth3=eth3 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.254 broadcast 0.0.0.0 	  dev eth3 label eth3
+/bin/ip link set dev eth3 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
+ifdown: configuring interface eth2=eth2 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.128 broadcast 1.2.3.127 	  dev eth2 label eth2
+/bin/ip link set dev eth2 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
+ifdown: configuring interface eth1=eth1 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.252.0.0 broadcast 1.3.255.255 	  dev eth1 label eth1
+/bin/ip link set dev eth1 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
+ifdown: configuring interface eth0=eth0 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
+/bin/ip link set dev eth0 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
 /bin/run-parts --verbose /etc/network/if-post-down.d

@@ -4,6 +4,7 @@
 # Other cruft
 *.swp
 *~
+/tags
 
 # Generated C sources
 /can.c
@@ -20,6 +21,8 @@
 # Generated testcase output
 /tests/testcase.*
 /tests/*.*
+/tests/*/*-res*
+/tests/*/state.*
 
 # Binaries
 /ifup

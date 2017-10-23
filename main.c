@@ -21,6 +21,7 @@
 
 static const char *argv0;
 bool no_act = false;
+bool no_act_commands = false;
 bool run_scripts = true;
 bool verbose = false;
 bool no_loopback = false;
@@ -448,6 +449,7 @@ static void parse_options(int *argc, char **argv[]) {
 		{"interfaces", required_argument, NULL, 'i'},
 		{"exclude", required_argument, NULL, 'X'},
 		{"no-act", no_argument, NULL, 'n'},
+		{"no-act-commands", no_argument, NULL, 10},
 		{"no-mappings", no_argument, NULL, 1},
 		{"no-scripts", no_argument, NULL, 4},
 		{"no-loopback", no_argument, NULL, 5},
@@ -489,6 +491,7 @@ static void parse_options(int *argc, char **argv[]) {
 			if ((cmds == iface_list) || (cmds == iface_query))
 				usage();
 			no_act = true;
+			no_act_commands = true;
 			break;
 
 		case 1:
@@ -570,7 +573,7 @@ static void parse_options(int *argc, char **argv[]) {
 			parse_environment_variables();
 			break;
 
-		case 9:
+		case 9: /* --state-dir */
 			free(statedir);
 			free(statefile);
 			free(tmpstatefile);
@@ -587,6 +590,10 @@ static void parse_options(int *argc, char **argv[]) {
 				err(1, "asprintf");
 			if(asprintf(&lockfile, "%s/.ifstate.lock", optarg) == -1 || !lockfile)
 				err(1, "asprintf");
+			break;
+
+		case 10: /* --no-act-commands */
+			no_act_commands = true;
 			break;
 
 		default:

@@ -21,6 +21,25 @@ ifup: configuring interface eth0=eth0 (inet6)
 /bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0  nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+
+ifup: configuring interface eth0=eth0 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
+/bin/ip link set dev eth0   up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+ifup: configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.use_tempaddr=2
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.accept_ra=0
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip addr flush dev eth0 mngtmpaddr
+/bin/ip link set dev eth0  up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0  nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.1 ;     then         if test -d /sys/class/net/eth0/device/infiniband; then             echo 0x1 > /sys/class/net/eth0/create_child;         else             /bin/ip link set up dev eth0;             /bin/ip link add link eth0 name eth0.1 type vlan id 1; 	fi;     fi
 
 ifup: configuring interface eth0.1=eth0.1 (inet6)
@@ -32,6 +51,25 @@ ifup: configuring interface eth0.1=eth0.1 (inet6)
 
 /bin/ip link set dev eth0.1  up
 /bin/ip -6 addr add 3ffe:ffff:120:f101::1/64  dev eth0.1  nodad
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+
+ifup: configuring interface eth0=eth0 (inet)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/bin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
+/bin/ip link set dev eth0   up
+
+/bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
+ifup: configuring interface eth0=eth0 (inet6)
+/bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
+/sbin/modprobe -q net-pf-10 > /dev/null 2>&1 || true # ignore failure.
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.use_tempaddr=2
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.accept_ra=0
+/sbin/sysctl -q -e -w net.ipv6.conf.eth0.autoconf=0
+
+/bin/ip addr flush dev eth0 mngtmpaddr
+/bin/ip link set dev eth0  up
+/bin/ip -6 addr add 3ffe:ffff:100:f101::1/64  dev eth0  nodad
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 if test -d /sys/class/net/eth0 -a             ! -d /sys/class/net/eth0.0201 ;     then         if test -d /sys/class/net/eth0/device/infiniband; then             echo 0x0201 > /sys/class/net/eth0/create_child;         else             /bin/ip link set up dev eth0;             /bin/ip link add link eth0 name eth0.0201 type vlan id 201; 	fi;     fi

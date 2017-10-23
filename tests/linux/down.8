@@ -2,4 +2,30 @@ exit code: 0
 ====stdout====
 ====stderr====
 /bin/run-parts --verbose /etc/network/if-down.d
+ifdown: configuring interface eth2.2:3=eth2.2:3 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 3.4.5.6/255.255.254.0 broadcast 3.4.5.255 	  dev eth2.2:3 label eth2.2:3
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
+ifdown: configuring interface eth2.2=eth2.2 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 2.3.4.5/255.255.255.0 broadcast 2.3.4.255 	  dev eth2.2 label eth2.2
+/bin/run-parts --verbose /etc/network/if-post-down.d
+if test -d /sys/class/net/eth2/device/infiniband; then         echo 0x2 > /sys/class/net/eth2/delete_child;     else         /bin/ip link del eth2.2;     fi
+
+ifdown: configuring interface eth1:1=eth1:1 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.5.3.4/255.255.255.0 broadcast 1.5.3.255 	  dev eth1:1 label eth1:1
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
+ifdown: configuring interface eth1=eth1 (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/bin/ip addr del 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth1 label eth1
+/bin/ip link set dev eth1 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
 /bin/run-parts --verbose /etc/network/if-post-down.d

@@ -1,0 +1,9 @@
+exit code: 0
+====stdout====
+====stderr====
+ifdown: configuring interface eth0=work (inet)
+/bin/run-parts --verbose /etc/network/if-down.d
+
+/sbin/ifconfig eth0 down
+/bin/run-parts --verbose /etc/network/if-post-down.d
+
