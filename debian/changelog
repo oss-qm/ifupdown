@@ -1,6 +1,7 @@
 ifupdown (0.8.26) UNRELEASED; urgency=medium
 
-  * Automatically bring up VLAN parent interfaces. Closes: #879518
+  * Automatically bring up VLAN parent interfaces, and bring down VLAN slave
+    interfaces. Closes: #879518
 
  -- Guus Sliepen <guus@debian.org>  Sun, 22 Oct 2017 21:52:55 +0200
 

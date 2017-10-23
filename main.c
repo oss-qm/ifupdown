@@ -977,7 +977,7 @@ static bool ignore_interface(const char *iface) {
 }
 
 
-static bool do_interface(const char *target_iface, char *is_parent) {
+static bool do_interface(const char *target_iface, char *parent_state) {
 	/* Split into physical and logical interface */
 
 	char iface[80], liface[80];
@@ -1031,13 +1031,17 @@ static bool do_interface(const char *target_iface, char *is_parent) {
 	}
 
 	if (!found) {
-		warnx("unknown interface %s", liface);
-		return false;
+		if (!parent_state) {
+			warnx("unknown interface %s", liface);
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/* Bail out if we are being called recursively on the same interface */
 
-	if (!is_parent) {
+	if (!parent_state) {
 		char envname[160];
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", iface);
 		sanitize_env_name(envname + 9);
@@ -1048,13 +1052,14 @@ static bool do_interface(const char *target_iface, char *is_parent) {
 		}
 	}
 
-	/* Are we configuring a VLAN interface? If so, lock the parent interface as well. */
+	/* Are we configuring a VLAN interface? If so, lock the parent interface first. */
 
 	char piface[80];
 	FILE *plock = NULL;
 	strncpy(piface, iface, sizeof piface);
-	if ((pch = strchr(piface, '.'))) {
-		assert(!is_parent);
+	pch = strchr(piface, '.');
+
+	if (pch && !parent_state) {
 		*pch = '\0';
 		char envname[160];
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", piface);
@@ -1070,7 +1075,7 @@ static bool do_interface(const char *target_iface, char *is_parent) {
 
 		if (cmds == iface_up) {
 			/* And ensure it's up. */
-			if (!do_interface(piface, parent_state)) {
+			if (!do_interface(piface, parent_state ? parent_state : "")) {
 				warnx("could not bring up parent interface %s", piface);
 				return false;
 			}
@@ -1085,17 +1090,30 @@ static bool do_interface(const char *target_iface, char *is_parent) {
 	FILE *lock = NULL;
 	char *current_state = NULL;
 
-	if (!is_parent)
+	if (!parent_state || !*parent_state)
 		lock = lock_interface(iface, &current_state);
 	else
-		current_state = is_parent;
+		current_state = parent_state;
+
+	/* Are we the parent of one or more VLAN interfaces? */
+
+	if (!pch && !parent_state && cmds == iface_down) {
+		size_t namelen = strlen(iface);
+
+		for (struct interface_defn *ifd = defn->ifaces; ifd; ifd = ifd->next) {
+			if (strncmp(iface, ifd->logical_iface, namelen) || ifd->logical_iface[namelen] != '.')
+				continue;
+
+			do_interface(ifd->logical_iface, "");
+		}
+	}
 
 	/* If we are not forcing the command, then exit with success if it is a no-op */
 
 	if (!force) {
 		if (cmds == iface_up) {
 			if (current_state != NULL) {
-				if (!is_parent && !do_all)
+				if (!parent_state && !do_all)
 					warnx("interface %s already configured", iface);
 
 				success = true;
@@ -1103,7 +1121,7 @@ static bool do_interface(const char *target_iface, char *is_parent) {
 			}
 		} else if (cmds == iface_down) {
 			if (current_state == NULL) {
-				if (!do_all)
+				if (!parent_state && !do_all)
 					warnx("interface %s not configured", iface);
 
 				success = true;
