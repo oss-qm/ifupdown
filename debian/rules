@@ -26,9 +26,6 @@ override_dh_installinit:
 	dh_installinit --name=networking --noscripts
 	dh_installinit --name=ifup@ --noscripts
 
-override_dh_installifupdown:
-	dh_installifupdown --name=upstart
-
 override_dh_auto_clean:
 	$(MAKE) clean
 

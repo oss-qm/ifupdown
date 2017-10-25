@@ -9,6 +9,7 @@ ifupdown (0.8.27) UNRELEASED; urgency=medium
   * Let ifquery print all matching interface stanzas. Closes: #878836
   * Guessnet and network-manager do support the source directive nowadays.
     Closes: #863135
+  * Remove all references to upstart from scripts. Closes: #861164
 
   [ Alex Fox ]
   * Use a more reliable check for Infiniband interfaces. Closes: #857976

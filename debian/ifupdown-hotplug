@@ -122,7 +122,7 @@ esac
 if [ -d /run/systemd/system ]; then
     do_everything
 else
-    # under sysvinit/upstart we need to fork as we start the long-running
+    # under sysvinit we need to fork as we start the long-running
     # "ifup". but there, forked processes won't get killed.
     # When udev_log="debug" stdout and stderr are pipes connected to udevd.
     # They need to be closed or udevd will wait for this process which will
