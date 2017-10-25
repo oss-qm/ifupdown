@@ -131,10 +131,6 @@ keyword is placed. In the example above, if the file is located at
 paths to the included files are understood to be under
 .IR /etc/network\fR.
 .P
-Currently, "source-directory" isn't supported by
-.BR network-manager " and"
-.BR guessnet .
-.P
 By default, on a freshly installed Debian system, the interfaces file includes a
 line to source files in the
 .IR /etc/network/interfaces.d
