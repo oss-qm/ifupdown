@@ -285,7 +285,7 @@ int iface_query(interface_defn *iface) {
 	for (int i = 0; i < iface->n_options; i++)
 		printf("%s: %s\n", iface->option[i].name, iface->option[i].value);
 
-	return 0;
+	return 1;
 }
 
 static void addstr(char **buf, size_t *len, size_t *pos, const char *str, size_t strlen) {

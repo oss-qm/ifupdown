@@ -6,6 +6,7 @@ ifupdown (0.8.27) UNRELEASED; urgency=medium
   * Update testcases.
   * Flush IP addresses when bringing down physical links. Closes: #845121
   * Add -v option to IPv6 dhclient.
+  * Let ifquery print all matching interface stanzas. Closes: #878836
 
   [ Alex Fox ]
   * Use a more reliable check for Infiniband interfaces. Closes: #857976
