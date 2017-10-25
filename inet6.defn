@@ -95,7 +95,7 @@ method static
     /bin/ip -6 addr add %address%[[/%netmask%]] [[scope %scope%]] dev %iface% [[preferred_lft %preferred-lifetime%]] nodad \
                 if (var_set("dad-attempts", ifd) && !var_true("dad-attempts", ifd))
     [[ /bin/ip -6 route add default via %gateway% [[metric %metric%]] dev %iface% onlink ]]
-    /lib/ifupdown/settle-dad.sh if (!no_act && execable("/lib/ifupdown/settle-dad.sh") && (var_true("dad-attempts", ifd)))
+    /lib/ifupdown/settle-dad.sh if (!no_act_commands && execable("/lib/ifupdown/settle-dad.sh") && (var_true("dad-attempts", ifd)))
 
   down
     [[ /bin/ip -6 route del default via %gateway% [[metric %metric%]] dev %iface% ]]

@@ -31,7 +31,6 @@ ifup: configuring interface eth1=eth1 (inet6)
 /bin/ip link set dev eth1 address 12:34:ff:fe:0a:bc up
 /bin/ip -6 addr add 3ffe:ffff:120::fffe:1/64  dev eth1 
 
-/lib/ifupdown/settle-dad.sh
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 
 ifup: configuring interface eth2=eth2 (inet)
@@ -50,7 +49,6 @@ ifup: configuring interface eth2=eth2 (inet6)
 /bin/ip link set dev eth2 address 12:34:ff:fe:0a:bc up
 /bin/ip -6 addr add 3ffe:ffff:120::fffe:1/64  dev eth2 
 
-/lib/ifupdown/settle-dad.sh
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 
 ifup: configuring interface eth3=eth3 (inet)
