@@ -10,6 +10,8 @@ ifupdown (0.8.27) UNRELEASED; urgency=medium
   * Guessnet and network-manager do support the source directive nowadays.
     Closes: #863135
   * Remove all references to upstart from scripts. Closes: #861164
+  * Bump Standards-Version.
+  * Bump debian/compat and the minimum required debhelper version.
 
   [ Alex Fox ]
   * Use a more reliable check for Infiniband interfaces. Closes: #857976

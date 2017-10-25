@@ -2,8 +2,8 @@ Source: ifupdown
 Section: admin
 Priority: important
 Maintainer: Guus Sliepen <guus@debian.org>
-Standards-Version: 4.0.0
-Build-Depends: debhelper (>= 9.20120410~), dh-systemd
+Standards-Version: 4.1.1
+Build-Depends: debhelper (>= 10)
 Vcs-Git: https://anonscm.debian.org/git/collab-maint/ifupdown.git
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/ifupdown.git
 
