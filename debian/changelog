@@ -1,8 +1,8 @@
-ifupdown (0.8.28) UNRELEASED; urgency=medium
+ifupdown (0.8.28) unstable; urgency=medium
 
   * Fix testsuite failure if ifupdown isn't already installed. 
 
- -- Guus Sliepen <guus@debian.org>  Wed, 25 Oct 2017 21:37:51 +0200
+ -- Guus Sliepen <guus@debian.org>  Wed, 25 Oct 2017 21:38:16 +0200
 
 ifupdown (0.8.27) unstable; urgency=medium
 
