@@ -46,6 +46,8 @@ method static
     [[ /bin/ip route del default via %gateway% [[metric %metric%]] dev %iface% 2>&1 1>/dev/null || true ]]
     /bin/ip addr del %address%[[/%netmask%]] [[broadcast %broadcast%]] \
 	[[peer %pointopoint%]] [[scope %scope%]] dev %iface% label %iface%
+    /bin/ip -4 addr flush dev %iface% \
+    		if (iface_is_link())
     /bin/ip link set dev %iface% down \
 		if (iface_is_link())
 
@@ -68,6 +70,8 @@ method manual
     /bin/ip link set dev %iface% up 2>/dev/null || true
 
   down
+    /bin/ip -4 addr flush dev %iface% 2>/dev/null || true \
+    	if (iface_is_link())
     /bin/ip link set dev %iface% down 2>/dev/null || true \
         if (iface_is_link() && !do_all)
 

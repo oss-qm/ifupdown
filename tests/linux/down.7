@@ -51,12 +51,14 @@ ifdown: configuring interface eth0=eth0 (inet)
 /bin/run-parts --verbose /etc/network/if-down.d
 
 /bin/ip addr del 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
+/bin/ip -4 addr flush dev eth0
 /bin/ip link set dev eth0 down
 /bin/run-parts --verbose /etc/network/if-post-down.d
 ifdown: configuring interface eth0=eth0 (inet6)
 /bin/run-parts --verbose /etc/network/if-down.d
 
 /bin/ip -6 addr del 3ffe:ffff:100:f101::1/64  dev eth0
+/bin/ip -6 addr flush dev eth0
 /bin/ip link set dev eth0 down
 /bin/run-parts --verbose /etc/network/if-post-down.d
 

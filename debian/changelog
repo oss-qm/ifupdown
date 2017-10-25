@@ -4,6 +4,7 @@ ifupdown (0.8.27) UNRELEASED; urgency=medium
   * Automatically bring up VLAN parent interfaces, and bring down VLAN slave
     interfaces. Closes: #879518
   * Update testcases.
+  * Flush IP addresses when bringing down physical links. Closes: #845121
 
   [ Alex Fox ]
   * Use a more reliable check for Infiniband interfaces. Closes: #857976
