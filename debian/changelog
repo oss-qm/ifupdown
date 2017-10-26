@@ -1,3 +1,10 @@
+ifupdown (0.8.29) unstable; urgency=medium
+
+  [ Sven Joachim ]
+  * Remove obsolete conffiles from the system. Closes: #879802
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 26 Oct 2017 20:25:15 +0200
+
 ifupdown (0.8.28) unstable; urgency=medium
 
   * Fix testsuite failure if ifupdown isn't already installed. 
