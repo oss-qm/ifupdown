@@ -14,7 +14,7 @@ method none
     vlan_id1 (to_decimal 10) =vlan_id
   up
     if test -d /sys/class/net/%link% -a \
-            ! -d /sys/class/net/%iface0% ; \
+            $(ip link show %iface0% >/dev/null 2>&1; echo $?) -ne 0 ; \
     then \
         if test `cat /sys/class/net/%link%/type` -eq 32; then \
             echo 0x%vlan_id1% > /sys/class/net/%link%/create_child; \
