@@ -13,8 +13,8 @@ method none
     vlan_id0 (get_token : 0 "") =vlan_id1
     vlan_id1 (to_decimal 10) =vlan_id
   up
-    if test -d /sys/class/net/%link% -a \
-            ! -d /sys/class/net/%iface0% ; \
+    if test -d /sys/class/net/%link% && \
+        ! ip link show %iface0% >/dev/null 2>&1; \
     then \
         if test `cat /sys/class/net/%link%/type` -eq 32; then \
             echo 0x%vlan_id1% > /sys/class/net/%link%/create_child; \
@@ -34,7 +34,7 @@ method none
     fi if (iface_has(".") && !iface_has(":"))
     -/bin/ip link set down dev %iface% 2>/dev/null \
 	if (iface_is_lo())
-    [[-test -n "%description%" && /bin/echo > /sys/class/net/%iface0%/ifalias]]
+    [[-test -n "%description%" && /bin/ip link set %iface0% alias ""]]
   rename
     /bin/ip link set %iface% name %newname%
 
