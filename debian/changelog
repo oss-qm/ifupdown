@@ -1,9 +1,13 @@
-ifupdown (0.8.30) UNRELEASED; urgency=medium
+ifupdown (0.8.30) unstable; urgency=medium
 
+  [ Guus Sliepen ]
   * Use >&2 instead of >/dev/stderr. Closes: #890988
   * Bump Standards-Version and debian/compat.
 
- -- Guus Sliepen <guus@debian.org>  Wed, 21 Feb 2018 20:38:54 +0100
+  [ Arthur Gautier ]
+  * Use ip instead of writing to /sys to better supported network namespaces.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 21 Feb 2018 22:02:31 +0100
 
 ifupdown (0.8.29) unstable; urgency=medium
 
