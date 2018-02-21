@@ -108,7 +108,7 @@ method dhcp
     /sbin/dhcpcd [[-h %hostname%]] [[-i %vendor%]] [[-I %client%]] \
            [[-l %leasetime%]] [[-m %metric%]] %iface% \
         elsif (execable("/sbin/dhcpcd"))
-    echo 'No DHCP client software found!' >/dev/stderr; false \
+    echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
   down
@@ -120,7 +120,7 @@ method dhcp
         elsif (execable("/sbin/udhcpc"))
     /sbin/dhcpcd -k %iface% \
         elsif (execable("/sbin/dhcpcd"))
-    echo 'No DHCP client software found!' >/dev/stderr; false \
+    echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
     /bin/ip link set dev %iface% down \
@@ -293,7 +293,7 @@ method dhcp
     /sbin/dhcpcd [[-h %hostname%]] [[-i %vendor%]] [[-I %client%]] \
            [[-l %leasetime%]] %iface% \
         elsif (execable("/sbin/dhcpcd"))
-    echo 'No DHCP client software found!' >/dev/stderr; false \
+    echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
   down
@@ -303,7 +303,7 @@ method dhcp
         elsif (execable("/sbin/udhcpc"))
     /sbin/dhcpcd -k %iface% \
         elsif (execable("/sbin/dhcpcd"))
-    echo 'No DHCP client software found!' >/dev/stderr; false \
+    echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
     /sbin/ifconfig %iface% down
@@ -444,7 +444,7 @@ method dhcp
     /sbin/dhcpcd [[-h %hostname%]] [[-i %vendor%]] [[-I %client%]] \
            [[-l %leasetime%]] %iface% \
         elsif (execable("/sbin/dhcpcd"))
-    echo 'No DHCP client software found!' >/dev/stderr; false \
+    echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
   down
@@ -454,7 +454,7 @@ method dhcp
         elsif (execable("/sbin/udhcpc"))
     /sbin/dhcpcd -k %iface% \
         elsif (execable("/sbin/dhcpcd"))
-    echo 'No DHCP client software found!' >/dev/stderr; false \
+    echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
     inetutils-ifconfig --interface %iface% --down
