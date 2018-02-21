@@ -1,6 +1,7 @@
 ifupdown (0.8.30) UNRELEASED; urgency=medium
 
   * Use >&2 instead of >/dev/stderr. Closes: #890988
+  * Bump Standards-Version and debian/compat.
 
  -- Guus Sliepen <guus@debian.org>  Wed, 21 Feb 2018 20:38:54 +0100
 
