@@ -1,8 +1,9 @@
-ifupdown (0.8.31) UNRELEASED; urgency=medium
+ifupdown (0.8.32) UNRELEASED; urgency=medium
 
   * Do not enable ifupdown-wait-online.service by default. Closes: #891139
+  * Drop Before=network.target from ifupdown-wait-online.service. 
 
- -- Guus Sliepen <guus@debian.org>  Sat, 03 Mar 2018 17:36:11 +0100
+ -- Guus Sliepen <guus@debian.org>  Sat, 03 Mar 2018 17:37:45 +0100
 
 ifupdown (0.8.30) unstable; urgency=medium
 
