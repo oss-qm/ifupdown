@@ -1,4 +1,4 @@
-ifupdown (0.8.32) unstable; urgency=medium
+ifupdown (0.8.31) unstable; urgency=medium
 
   * Do not enable ifupdown-wait-online.service by default. Closes: #891139
   * Drop Before=network.target from ifupdown-wait-online.service. 
