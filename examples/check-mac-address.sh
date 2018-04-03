@@ -8,12 +8,12 @@ set -e
 
 export LANG=C
 
-if [ ! "$2" ] ; then
+if [ ! "$1" -o ! "$2" ]; then
 	echo "Usage: $0 IFACE targetMAC"
 	exit 1
 fi
-iface="$1"
-targetmac=`echo "$2" | sed -e 'y/ABCDEF/abcdef/'`
-mac=$(/sbin/ifconfig "$iface" | sed -n -e '/^.*HWaddr \([:[:xdigit:]\-]*\).*/{s//\1/;y/ABCDEF/abcdef/;p;q;}')
 
-if [ "$targetmac" = "$mac" ]; then exit 0; else exit 1; fi
+/bin/ip -brief link show dev "$1" | read iface state mac rest
+targetmac=`echo "$2" | tr A-F a-f`
+
+test "$targetmac" = "$mac"

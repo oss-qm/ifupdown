@@ -1,3 +1,9 @@
+ifupdown (0.8.32) UNRELEASED; urgency=medium
+
+  * Fix check-mac-address.sh and get-mac-address.sh example scripts.
+
+ -- Guus Sliepen <guus@debian.org>  Tue, 03 Apr 2018 21:58:55 +0200
+
 ifupdown (0.8.31) unstable; urgency=medium
 
   * Do not enable ifupdown-wait-online.service by default. Closes: #891139
