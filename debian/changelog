@@ -1,6 +1,11 @@
 ifupdown (0.8.32) UNRELEASED; urgency=medium
 
+  [ Guus Sliepen ]
   * Fix check-mac-address.sh and get-mac-address.sh example scripts.
+
+  [ Filipe Brandenburger ]
+  * Prevent ExecStartPre from exiting with non-zero status when not supposed
+    to do anything. Closes: #894759
 
  -- Guus Sliepen <guus@debian.org>  Tue, 03 Apr 2018 21:58:55 +0200
 
