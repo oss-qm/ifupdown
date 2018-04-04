@@ -1,3 +1,15 @@
+ifupdown (0.8.32) UNRELEASED; urgency=medium
+
+  Since version 0.8, ifupdown allows concurrent calls of ifup and ifdown.
+  While calls for the same interface will be serialized, calls for different
+  interfaces can run in parallel. This is especially important during boot
+  time, when the chance is high that multiple interfaces are being brought up
+  concurrently. Ensure that any if-pre/post-up/down.d scripts you use are safe
+  to run concurrently, as well as any pre/post-up/down commands in
+  /etc/network/interfaces.
+
+ -- Guus Sliepen <guus@debian.org>  Wed, 04 Apr 2018 23:20:51 +0200
+
 ifupdown (0.8.20) unstable; urgency=medium
 
   Ifupdown now supports pattern matching for interfaces. This will help

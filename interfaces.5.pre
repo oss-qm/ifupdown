@@ -349,12 +349,33 @@ This behavior may change in the future.
 .BI description " name"
 Alias interface by
 .I name
+.SH HOOK SCRIPTS
+There are four directories in which scripts can be placed which will always be run
+for any interface during certain phases of ifup and ifdown commands. These are:
+.TP
+.IR /etc/network/if-pre-up.d/
+Scripts in this directory are run before bringing the interface up.
+.TP
+.IR /etc/network/if-up.d/
+Scripts in this directory are run after bringing the interface up.
+.TP
+.IR /etc/network/if-down.d/
+Scripts in this directory are run before bringing the interface down.
+.TP
+.IR /etc/network/if-post-down.d/
+Scripts in this directory are run after bringing the interface down.
 .P
-There exists for each of the above mentioned options a directory
-.IR /etc/network/if\-\fB<option>\fI.d/
-the scripts in which are run (with no arguments) using
+The scripts in which are run (with no arguments) using
 .BR run\-parts (8)
-after the option itself has been processed. Please note that as
+after the corresponding
+.BI pre-up\fR,
+.BI up\fR,
+.BI down
+and
+.BI post-down
+options in the
+.IR /etc/network/interfaces
+file itself have been processed. Please note that as
 .BI post\-up
 and
 .BI pre\-down
@@ -364,8 +385,16 @@ Please use
 and
 .IR if-down.d
 directories instead.
-.P
-All of these commands have access to the following environment variables.
+.SH ENVIRONMENT VARIABLES
+All hook scripts, and the commands executed by
+.BI pre-up\fR,
+.BI up\fR,
+.BI post-up\fR,
+.BI pre-down\fR,
+.BI down
+and
+.BI post-down
+have access to the following environment variables:
 .TP
 .B IFACE
 The physical name of the interface being processed, or "--all" (see below).
@@ -405,11 +434,24 @@ exported to the environment in upper case with "IF_" prepended and with
 hyphens converted to underscores and non\-alphanumeric characters discarded.
 .P
 When ifupdown is being called with the \fB\-\-all\fR option, before doing anything
-to interfaces, if calls all the hook scripts (\fIpre-up\fR or \fIdown\fR) with
+to interfaces, it calls all the hook scripts (\fIpre-up\fR or \fIdown\fR) with
 \fBIFACE\fR set to "\-\-all", \fBLOGICAL\fR set to the current value of \-\-allow
 parameter (or "auto" if it's not set), \fBADDRFAM\fR="meta" and \fBMETHOD\fR="none".
 After all the interfaces have been brought up or taken down, the appropriate scripts
 (\fIup\fR or \fIpost-down\fR) are executed.
+.SH CONCURRENCY AND PARALLEL EXECUTION
+Ifupdown uses per-interface locking to ensure that concurrent ifup and ifdown calls to the same interface are run in serial.
+However, calls to different interfaces will be able to run in parallel.
+It is therefore important that any hook scripts and \fIpre-up\fR, \fIup\fR, \fIdown\fR and \fIpost-down\fR commands are written with the possibility of parallel execution in mind.
+.P
+It is allowed to recursively call
+.BI ifup
+and
+.BI ifdown
+from hook scripts and interface commands,
+as long as these calls refer to a different interface than the one that is already being (de)configured.
+Loops are detected and will result in the call failing instead of a deadlock,
+although it is best if one does not rely on that.
 .SH OPTIONS PROVIDED BY OTHER PACKAGES
 This manual page documents the configuration options provided by the ifupdown package.
 However, other packages can make other options available for use in /etc/network/interfaces.

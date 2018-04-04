@@ -214,6 +214,25 @@ for more information.
 .TP
 .I /run/network/ifstate
 current state of network interfaces
+.SH CONCURRENCY
+Ifupdown uses per-interface locking to ensure that concurrent ifup and ifdown calls to the same interface are run in serial.
+However, calls to different interfaces will be able to run in parallel.
+.SH EXIT STATUS
+For
+.B ifup
+and
+.B ifdown\fR,
+the exit status will be 0 if the given interface(s) have all been (de)configured succesfully, 1 if there was any error.
+The result of these commands is idempotent; running
+.B ifup
+on an interface that is already up will result in an exit status of 0, and similarly running
+.B ifdown
+on an interface that is not up will also result in an exit status of 0.
+.P
+.B ifquery
+will normally return with exit status 0 if an interface with a matching iface stanza, 1 if there is no matching stanza.
+.B ifquery --status
+will also return with exit status 1 if the given interface was known but was not up.
 .SH KNOWN BUGS/LIMITATIONS
 The program keeps records of whether network interfaces are up or down.
 Under exceptional circumstances these records can become

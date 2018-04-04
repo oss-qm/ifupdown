@@ -2,6 +2,8 @@ ifupdown (0.8.32) UNRELEASED; urgency=medium
 
   [ Guus Sliepen ]
   * Fix check-mac-address.sh and get-mac-address.sh example scripts.
+  * Update the manpages and add an entry to NEWS about the possibility that
+    ifupdown runs in parallel. Closes: #894511
 
   [ Filipe Brandenburger ]
   * Prevent ExecStartPre from exiting with non-zero status when not supposed
