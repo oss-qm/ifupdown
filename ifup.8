@@ -32,26 +32,26 @@ ifquery \- parse interface configuration
 .PP
 .B ifquery
 [\fB\-nv\fR]
-[\fB\-\-no\-act\fR]
 [\fB\-\-verbose\fR]
 [\fB\-i\fR \fIFILE\fR|\fB\-\-interfaces=\fR\fIFILE\fR]
 [\fB\-\-state-dir=\fR\fIDIR\fR]
 [\fB\-\-allow\fR \fICLASS\fR]
-\fB\-a\fR|\fIIFACE\fR...
+\fIIFACE\fR...
 .PP
 .B ifquery
 \fB\-l\fR|\fB\-\-list\fR
 [\fB\-nv\fR]
-[\fB\-\-no\-act\fR]
 [\fB\-\-verbose\fR]
 [\fB\-i\fR \fIFILE\fR|\fB\-\-interfaces=\fR\fIFILE\fR]
 [\fB\-\-state-dir=\fR\fIDIR\fR]
 [\fB\-\-allow\fR \fICLASS\fR]
-\fB\-a\fR|\fIIFACE\fR...
+[\fB\-a\fR|\fIIFACE\fR...]
 .PP
 .B ifquery
 \fB\-\-state\fR
-[\fIIFACE\fR...]
+[\fB\-\-state-dir=\fR\fIDIR\fR]
+[\fB\-\-allow\fR \fICLASS\fR]
+[\fB\-a\fR|\fIIFACE\fR...]
 .SH DESCRIPTION
 The
 .BR ifup " and " ifdown
@@ -231,7 +231,7 @@ on an interface that is not up will also result in an exit status of 0.
 .P
 .B ifquery
 will normally return with exit status 0 if an interface with a matching iface stanza, 1 if there is no matching stanza.
-.B ifquery --status
+.B ifquery --state
 will also return with exit status 1 if the given interface was known but was not up.
 .SH KNOWN BUGS/LIMITATIONS
 The program keeps records of whether network interfaces are up or down.
