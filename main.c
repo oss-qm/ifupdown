@@ -107,7 +107,7 @@ static int lock_fd(int fd) {
 }
 
 static FILE *lock_state(void) {
-	FILE *lock_fp = fopen(lockfile, no_act ? "r" : "a+");
+	FILE *lock_fp = fopen(lockfile, no_act ? "re" : "a+e");
 
 	if (lock_fp == NULL) {
 		if (!no_act)
@@ -115,11 +115,6 @@ static FILE *lock_state(void) {
 		else
 			return NULL;
 	}
-
-	int flags = fcntl(fileno(lock_fp), F_GETFD);
-
-	if (flags == -1 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
-		err(1, "failed to set FD_CLOEXEC on lockfile %s", lockfile);
 
 	if (lock_fd(fileno(lock_fp)) != 0) {
 		if (!no_act)
@@ -185,7 +180,7 @@ static bool is_locked(const char *iface) {
 static FILE *lock_interface(const char *iface, char **state) {
 	char *filename = ifacestatefile(iface);
 
-	FILE *lock_fp = fopen(filename, no_act ? "r" : "a+");
+	FILE *lock_fp = fopen(filename, no_act ? "re" : "a+e");
 
 	if (lock_fp == NULL) {
 		if (!no_act) {
@@ -195,11 +190,6 @@ static FILE *lock_interface(const char *iface, char **state) {
 			return NULL;
 		}
 	}
-
-	int flags = fcntl(fileno(lock_fp), F_GETFD);
-
-	if (flags == -1 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
-		err(1, "failed to set FD_CLOEXEC on lockfile %s", filename);
 
 	struct flock lock = {.l_type = no_act ? F_RDLCK : F_WRLCK, .l_whence = SEEK_SET};
 
@@ -232,7 +222,7 @@ static FILE *lock_interface(const char *iface, char **state) {
 
 static void read_all_state(char ***ifaces, int *n_ifaces) {
 	FILE *lock_fp = lock_state();
-	FILE *state_fp = fopen(statefile, no_act ? "r" : "a+");
+	FILE *state_fp = fopen(statefile, no_act ? "re" : "a+e");
 
 	*n_ifaces = 0;
 	*ifaces = NULL;
@@ -242,13 +232,6 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 			err(1, "failed to open statefile %s", statefile);
 		else
 			goto end;
-	}
-
-	if (!no_act) {
-		int flags = fcntl(fileno(state_fp), F_GETFD);
-
-		if (flags == -1 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
-			err(1, "failed to set FD_CLOEXEC on statefile %s", statefile);
 	}
 
 	char buf[80];
@@ -285,7 +268,7 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 	}
 
 	lock_fp = lock_state();
-	FILE *state_fp = fopen(statefile, no_act ? "r" : "a+");
+	FILE *state_fp = fopen(statefile, no_act ? "re" : "a+e");
 
 	if (state_fp == NULL) {
 		if (!no_act)
@@ -296,11 +279,6 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 
 	if (no_act)
 		goto end;
-
-	int flags = fcntl(fileno(state_fp), F_GETFD);
-
-	if (flags == -1 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
-		err(1, "failed to set FD_CLOEXEC on statefile %s", statefile);
 
 	if (lock_fd(fileno(state_fp)) != 0)
 		err(1, "failed to lock statefile %s", statefile);
