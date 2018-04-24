@@ -20,6 +20,7 @@
 #include "header.h"
 
 static const char *argv0;
+bool do_interface_lock = true;
 bool no_act = false;
 bool no_act_commands = false;
 bool run_scripts = true;
@@ -385,6 +386,7 @@ static cmds_t determine_command(void) {
 		return iface_down;
 	} else if (strcmp(command, "ifquery") == 0) {
 		no_act = true;
+		do_interface_lock = false;
 		return iface_query;
 	} else {
 		errx(1, "this command should be called as ifup, ifdown, or ifquery");
@@ -1045,7 +1047,7 @@ static bool do_interface(const char *target_iface, char *parent_state) {
 
 	/* Bail out if we are being called recursively on the same interface */
 
-	if (!parent_state) {
+	if (!parent_state && do_interface_lock) {
 		char envname[160];
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", iface);
 		sanitize_env_name(envname + 9);
@@ -1063,7 +1065,7 @@ static bool do_interface(const char *target_iface, char *parent_state) {
 	strncpy(piface, iface, sizeof piface);
 	pch = strchr(piface, '.');
 
-	if (pch && !parent_state) {
+	if (pch && !parent_state && do_interface_lock) {
 		*pch = '\0';
 		char envname[160];
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", piface);
@@ -1094,7 +1096,7 @@ static bool do_interface(const char *target_iface, char *parent_state) {
 	FILE *lock = NULL;
 	char *current_state = NULL;
 
-	if (!parent_state || !*parent_state)
+	if ((!parent_state || !*parent_state) && do_interface_lock)
 		lock = lock_interface(iface, &current_state);
 	else
 		current_state = parent_state;
