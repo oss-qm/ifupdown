@@ -102,10 +102,7 @@ static int lock_fd(int fd) {
 		.l_len = 0,
 	};
 
-	if (fcntl(fd, F_SETLKW, &lock) < 0)
-		return -1;
-
-	return 0;
+	return fcntl(fd, F_SETLKW, &lock);
 }
 
 static FILE *lock_state(void) {
@@ -120,10 +117,10 @@ static FILE *lock_state(void) {
 
 	int flags = fcntl(fileno(lock_fp), F_GETFD);
 
-	if (flags < 0 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+	if (flags == -1 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
 		err(1, "failed to set FD_CLOEXEC on lockfile %s", lockfile);
 
-	if (lock_fd(fileno(lock_fp)) < 0) {
+	if (lock_fd(fileno(lock_fp)) != 0) {
 		if (!no_act)
 			err(1, "failed to lock lockfile %s", lockfile);
 	}
@@ -176,7 +173,7 @@ static bool is_locked(const char *iface) {
 
 	struct flock lock = {.l_type = F_WRLCK, .l_whence = SEEK_SET};
 
-	if (fcntl(fileno(lock_fp), F_GETLK, &lock) < 0)
+	if (fcntl(fileno(lock_fp), F_GETLK, &lock) != 0)
 		lock.l_type = F_UNLCK;
 
 	fclose(lock_fp);
@@ -200,15 +197,15 @@ static FILE *lock_interface(const char *iface, char **state) {
 
 	int flags = fcntl(fileno(lock_fp), F_GETFD);
 
-	if (flags < 0 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+	if (flags == -1 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
 		err(1, "failed to set FD_CLOEXEC on lockfile %s", filename);
 
 	struct flock lock = {.l_type = F_WRLCK, .l_whence = SEEK_SET};
 
-	if (fcntl(fileno(lock_fp), F_SETLK, &lock) < 0) {
+	if (fcntl(fileno(lock_fp), F_SETLK, &lock) != 0) {
 		if (errno == EACCES || errno == EAGAIN) {
 			warnx("waiting for lock on %s", filename);
-			if (fcntl(fileno(lock_fp), F_SETLKW, &lock) < 0) {
+			if (fcntl(fileno(lock_fp), F_SETLKW, &lock) != 0) {
 				if (!no_act)
 					err(1, "failed to lock lockfile %s", filename);
 			}
@@ -249,7 +246,7 @@ static void read_all_state(char ***ifaces, int *n_ifaces) {
 	if (!no_act) {
 		int flags = fcntl(fileno(state_fp), F_GETFD);
 
-		if (flags < 0 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+		if (flags == -1 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
 			err(1, "failed to set FD_CLOEXEC on statefile %s", statefile);
 	}
 
@@ -301,10 +298,10 @@ static void update_state(const char *iface, const char *state, FILE *lock_fp) {
 
 	int flags = fcntl(fileno(state_fp), F_GETFD);
 
-	if (flags < 0 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) < 0)
+	if (flags == -1 || fcntl(fileno(state_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
 		err(1, "failed to set FD_CLOEXEC on statefile %s", statefile);
 
-	if (lock_fd(fileno(state_fp)) < 0)
+	if (lock_fd(fileno(state_fp)) != 0)
 		err(1, "failed to lock statefile %s", statefile);
 
 	FILE *tmp_fp = fopen(tmpstatefile, "w");
