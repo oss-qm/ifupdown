@@ -96,7 +96,7 @@ static void help(int (*cmds) (interface_defn *)) {
 
 static int lock_fd(int fd) {
 	struct flock lock = {
-		.l_type = F_WRLCK,
+		.l_type = no_act ? F_RDLCK : F_WRLCK,
 		.l_whence = SEEK_SET,
 		.l_start = 0,
 		.l_len = 0,
@@ -200,7 +200,7 @@ static FILE *lock_interface(const char *iface, char **state) {
 	if (flags == -1 || fcntl(fileno(lock_fp), F_SETFD, flags | FD_CLOEXEC) != 0)
 		err(1, "failed to set FD_CLOEXEC on lockfile %s", filename);
 
-	struct flock lock = {.l_type = F_WRLCK, .l_whence = SEEK_SET};
+	struct flock lock = {.l_type = no_act ? F_RDLCK : F_WRLCK, .l_whence = SEEK_SET};
 
 	if (fcntl(fileno(lock_fp), F_SETLK, &lock) != 0) {
 		if (errno == EACCES || errno == EAGAIN) {
