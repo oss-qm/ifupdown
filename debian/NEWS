@@ -1,4 +1,4 @@
-ifupdown (0.8.32) UNRELEASED; urgency=medium
+ifupdown (0.8.32) unstable; urgency=medium
 
   Since version 0.8, ifupdown allows concurrent calls of ifup and ifdown.
   While calls for the same interface will be serialized, calls for different

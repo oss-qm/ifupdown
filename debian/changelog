@@ -1,4 +1,4 @@
-ifupdown (0.8.32) UNRELEASED; urgency=medium
+ifupdown (0.8.32) unstable; urgency=medium
 
   [ Guus Sliepen ]
   * Fix check-mac-address.sh and get-mac-address.sh example scripts.
@@ -11,7 +11,7 @@ ifupdown (0.8.32) UNRELEASED; urgency=medium
   * Prevent ExecStartPre from exiting with non-zero status when not supposed
     to do anything. Closes: #894759
 
- -- Guus Sliepen <guus@debian.org>  Tue, 03 Apr 2018 21:58:55 +0200
+ -- Guus Sliepen <guus@debian.org>  Tue, 24 Apr 2018 18:15:34 +0200
 
 ifupdown (0.8.31) unstable; urgency=medium
 
