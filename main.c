@@ -15,6 +15,7 @@
 #include <limits.h>
 #include <err.h>
 #include <ifaddrs.h>
+#include <signal.h>
 
 #include "archcommon.h"
 #include "header.h"
@@ -34,6 +35,14 @@ static char *statedir;
 static char *lockfile;
 static char *statefile;
 static char *tmpstatefile;
+
+volatile bool interrupted = false;
+
+static void signal_handler(int sig) {
+	interrupted = true;
+	fprintf(stderr, "Got signal %s, terminating...\n", strsignal(sig));
+	signal(sig, SIG_DFL);
+}
 
 static void usage(void) {
 	errx(1, "Use --help for help");
@@ -962,6 +971,10 @@ static bool ignore_interface(const char *iface) {
 
 
 static bool do_interface(const char *target_iface, char *parent_state) {
+	/* Exit early if we were interrupted */
+	if (interrupted)
+		return false;
+
 	/* Split into physical and logical interface */
 
 	char iface[80], liface[80];
@@ -1449,6 +1462,9 @@ int main(int argc, char *argv[]) {
 		success = do_state(argc, argv);
 		goto finish;
 	}
+
+	signal(SIGINT, signal_handler);
+	signal(SIGTERM, signal_handler);
 
 	select_interfaces(argc, argv);
 

@@ -141,6 +141,7 @@ extern bool verbose;
 extern bool run_scripts;
 extern bool no_loopback;
 extern bool ignore_failures;
+extern volatile bool interrupted;
 extern interfaces_file *defn;
 extern address_family addr_link;
 extern address_family addr_inet;

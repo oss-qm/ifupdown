@@ -111,6 +111,9 @@ static void set_environ(interface_defn *iface, char *mode, char *phase) {
 }
 
 int doit(const char *str) {
+	if (interrupted)
+		return 0;
+
 	assert(str);
 	bool ignore_status = false;
 
@@ -131,7 +134,7 @@ int doit(const char *str) {
 
 		switch (child = fork()) {
 		case -1:	/* failure */
-			return 0;
+			err(1, "fork");
 
 		case 0:	/* child */
 			execle("/bin/sh", "/bin/sh", "-c", str, NULL, localenv);
@@ -156,7 +159,7 @@ int doit(const char *str) {
 static int execute_options(interface_defn *ifd, execfn *exec, char *opt) {
 	for (int i = 0; i < ifd->n_options; i++)
 		if (strcmp(ifd->option[i].name, opt) == 0)
-			if (!(*exec) (ifd->option[i].value))
+			if (interrupted || !(*exec) (ifd->option[i].value))
 				if (!ignore_failures)
 					return 0;
 
@@ -164,6 +167,9 @@ static int execute_options(interface_defn *ifd, execfn *exec, char *opt) {
 }
 
 static int execute_scripts(interface_defn *ifd, execfn *exec, char *opt) {
+	if (interrupted)
+		return 1;
+
 	if (!run_scripts)
 		return 1;
 
