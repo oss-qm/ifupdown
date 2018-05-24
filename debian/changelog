@@ -1154,7 +1154,7 @@ ifupdown (0.6.7-0.1) unstable; urgency=low
   * Support for manual IPv6 method (Closes: #266021)
       - patch from Rémi Denis-Courmont.
 
- -- Mohammed Adnène Trojette <and+deb@diwi.org>  Wed, 23 Aug 2006 17:01:03 +0200
+ -- Mohammed Adnène Trojette <adn+deb@diwi.org>  Wed, 23 Aug 2006 17:01:03 +0200
 
 ifupdown (0.6.7) unstable; urgency=low
 
