@@ -1,5 +1,5 @@
 #!/bin/sh
-# This script is useful to check wether an interface is up and,
+# This script is useful to check whether an interface is up and,
 # if not, it attempts to bring it back. This can be necessary
 # if your ISP provider causes occasional outages.
 # Some ISPs are known to termine connections when they reach

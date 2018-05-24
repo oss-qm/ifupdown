@@ -71,7 +71,7 @@ sub check_status {
 	my ($int) = @_;
 	print "$int: ";
 	my $status = "UP";
-# Check if it's really up, this is done basicly because ifupdown
+# Check if it's really up, this is done basically because ifupdown
 # might not have configured it properly even if it thinks he has
 # (sample: ifconfig croaks when wrong parameters are used and 
 # ifupdown does not detect that the system call went awry)

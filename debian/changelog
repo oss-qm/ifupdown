@@ -998,7 +998,7 @@ ifupdown (0.7~alpha3) experimental; urgency=low
   * Update Build-Depends: to reflect name change from nowebm to noweb.
   * Move DH_COMPAT setting from debian/rules to debian/compat file.
   * Don't ignore errors from make clean in debian/rules clean target.
-  * Escape hypens in interfaces.5 manpage.
+  * Escape hyphens in interfaces.5 manpage.
   * Don't create /usr/bin or /usr/sbin directories.
   * Bump Standards-Version.
 
@@ -1026,15 +1026,15 @@ ifupdown (0.6.10) unstable; urgency=low
 
 ifupdown (0.6.9) unstable; urgency=low
 
-  * Fix typo subsytems -> subsystems in interfaces(5) manual page
+  * Fix typo subsystems -> subsystems in interfaces(5) manual page
     (Closes: #390086).  Thanks to A. Costa for the patch.
-  * Fix typo iterface -> interface in init.d/ifupdown-clean (Closes:
+  * Fix typo interface -> interface in init.d/ifupdown-clean (Closes:
     #458347).  Patch from Trent W. Buck.
   * Fix bashism in example script get-mac-address.sh (Closes:
     #518924).  Patch from Simon Descarpentries.
   * Remove obsolete debconf template translations (Closes: #520007,
     #534553).
-  * Fix gramatically incorrect message from ifupdown (Closes:
+  * Fix grammatically incorrect message from ifupdown (Closes:
     #501554).  Patch from Łukasz Stelmach.
   * Updated standards-version from 3.7.2 to 3.8.3.  No change needed.
   * Make sure postrm script fail on errors.  Thanks lintian.
@@ -1147,7 +1147,7 @@ ifupdown (0.6.7-0.1) unstable; urgency=low
   * Support for manual IPv6 method (Closes: #266021)
       - patch from Rémi Denis-Courmont.
 
- -- Mohammed Adnène Trojette <adn+deb@diwi.org>  Wed, 23 Aug 2006 17:01:03 +0200
+ -- Mohammed Adnène Trojette <and+deb@diwi.org>  Wed, 23 Aug 2006 17:01:03 +0200
 
 ifupdown (0.6.7) unstable; urgency=low
 
@@ -1284,7 +1284,7 @@ ifupdown (0.6.4-4.9) unstable; urgency=low
         by Gintautas Miliauskas (Closes: #249233)
     - /etc/init.d/ifupdown: Exit with error if called with unknown arguments
     - ifupdown.nw: fix FTBFS with gcc-3.4 (Closes: #258965)
-    - ifup.8: ammended manpage describing how ifdown really works 
+    - ifup.8: amended manpage describing how ifdown really works 
       (Closes: #259609)
     - Remove XSI:isms in several scripts (Closes: #255574)
     - debian/po/POTFILES.in:  point to templates.master instead of templates
