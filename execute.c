@@ -80,13 +80,20 @@ static void set_environ(interface_defn *iface, char *mode, char *phase) {
 		if(strncmp(*envp, "IFUPDOWN_", 9) == 0)
 			*ppch++ = strdup(*envp);
 
+	/* Do we have a parent interface? */
 	char piface[80];
 	strncpy(piface, iface->real_iface, sizeof piface);
 	piface[sizeof piface - 1] = '\0';
 	char *pch = strchr(piface, '.');
 	if (pch) {
+		/* If so, declare that we have locked it, but don't overwrite an existing environment variable. */
 		*pch = '\0';
-		*ppch++ = setlocalenv_nomangle("IFUPDOWN_%s=%s", piface, "parent-lock");
+		char envname[160];
+		snprintf(envname, sizeof envname, "IFUPDOWN_%s", piface);
+		sanitize_env_name(envname + 9);
+
+		if (!getenv(envname))
+			*ppch++ = setlocalenv_nomangle("IFUPDOWN_%s=%s", piface, "parent-lock");
 	}
 
 	*ppch++ = setlocalenv_nomangle("IFUPDOWN_%s=%s", iface->real_iface, phase);

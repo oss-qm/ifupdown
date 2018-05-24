@@ -287,6 +287,26 @@ virtual LAN interface. For example, interface
 is a virtual interface having
 .B eth0
 as physical link, with VLAN ID 1.
+.P
+VLAN interfaces are mostly treated as separate interfaces.
+As such, if you want a VLAN interface to be brought up automatically at boot,
+you must explicitly mark it as an auto interface,
+because they will not be brought up automatically if the physical interface is brought up.
+However, since VLAN interfaces are not physical interfaces,
+you cannot use pattern matching or allow-hotplug to bring up VLAN interfaces.
+To ensure a VLAN interface is brought up automatically when the physical interface is brought up,
+use a recursive call to ifup, like so:
+.P
+.EX
+iface eth0 inet manual
+     up ifup eth0.1
+
+iface eth0.1 inet static
+     address ...
+.EE
+.P
+Note that there is no need to add an explicit call to ifdown,
+since VLAN interfaces are automatically brought down whenever the corresponding physical interface is brought down.
 .SH IFACE OPTIONS
 The following "command" options are available for every family and method.
 Each of these options can be given multiple times in a single stanza,

@@ -1,3 +1,13 @@
+ifupdown (0.8.33) UNRELEASED; urgency=medium
+
+  [ Guus Sliepen ]
+  * Allow an interface to recursively bring up VLAN interfaces.
+
+  [ Benjamin Drung ]
+  * Split 'udevadm settle' from networking.service. Closes: #899002
+
+ -- Guus Sliepen <guus@debian.org>  Thu, 24 May 2018 15:43:54 +0200
+
 ifupdown (0.8.32) unstable; urgency=medium
 
   [ Guus Sliepen ]

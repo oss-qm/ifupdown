@@ -141,7 +141,7 @@ static void sanitize_file_name(char *name) {
       *name = '.';
 }
 
-static void sanitize_env_name(char *name) {
+void sanitize_env_name(char *name) {
   for (; *name; name++)
     if (*name == '=')
       *name = '_';
@@ -1049,23 +1049,36 @@ static bool do_interface(const char *target_iface, char *parent_state) {
 		snprintf(envname, sizeof envname, "IFUPDOWN_%s", piface);
 		sanitize_env_name(envname + 9);
 		char *envval = getenv(envname);
-		if(envval && is_locked(piface)) {
-			warnx("recursion detected for parent interface %s in %s phase", piface, envval);
-			return false;
+
+		bool needs_parent_lock = true;
+
+		/* Allow the parent interface to recursively bring up/down VLANs */
+		if (envval) {
+			if (cmds == iface_up && !strcmp(envval, "post-up"))
+				needs_parent_lock = false;
+			else if (cmds == iface_down && !strcmp(envval, "pre-down"))
+				needs_parent_lock = false;
 		}
 
-		char *parent_state = NULL;
-		plock = lock_interface(piface, &parent_state);
-
-		if (cmds == iface_up) {
-			/* And ensure it's up. */
-			if (!do_interface(piface, parent_state ? parent_state : "")) {
-				warnx("could not bring up parent interface %s", piface);
+		if (needs_parent_lock) {
+			if(envval && is_locked(piface)) {
+				warnx("recursion detected for parent interface %s in %s phase", piface, envval);
 				return false;
 			}
-		}
 
-		free(parent_state);
+			char *parent_state = NULL;
+			plock = lock_interface(piface, &parent_state);
+
+			if (cmds == iface_up) {
+				/* And ensure it's up. */
+				if (!do_interface(piface, parent_state ? parent_state : "")) {
+					warnx("could not bring up parent interface %s", piface);
+					return false;
+				}
+			}
+
+			free(parent_state);
+		}
 	}
 
 	/* Start by locking this interface */
