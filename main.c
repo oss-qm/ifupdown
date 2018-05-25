@@ -872,6 +872,23 @@ static void select_interfaces(int argc, char *argv[]) {
 			target_iface[i] = newtarget;
 		}
 	}
+
+	/* Bring up VLAN interfaces in the same allow class */
+	if (n_target_ifaces && cmds == iface_up && allow_class) {
+		allowup_defn *allowups = find_allowup(defn, allow_class);
+		if (allowups) {
+			int n = n_target_ifaces;
+			for (int i = 0; i < n; i++) {
+				if (strchr(target_iface[i], '.'))
+					continue;
+				int len = strlen(target_iface[i]);
+				for (int j = 0; j < allowups->n_interfaces; j++) {
+					if (!strncmp(target_iface[i], allowups->interfaces[j], len) && allowups->interfaces[j][len] == '.')
+						append_to_list_nodup(&target_iface, &n_target_ifaces, allowups->interfaces[j]);
+				}
+			}
+		}
+	}
 }
 
 static interface_defn meta_iface = {

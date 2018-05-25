@@ -1,6 +1,12 @@
 ifupdown (0.8.34) UNRELEASED; urgency=medium
 
+  [ Guus Sliepen ]
   * Handle SIGINT and SIGTERM more gracefully.
+  * VLAN interfaces in the same allow class are now brought up automatically
+    if the physical interface is brought up.
+
+  [ Antonio Terceiro ]
+  * Don't call udevadm settle if udev is not installed. Closes: #900046
 
  -- Guus Sliepen <guus@debian.org>  Thu, 24 May 2018 17:17:41 +0200
 

@@ -284,29 +284,49 @@ To ease the configuration of VLAN interfaces, interfaces having
 (full stop character) in the name are configured as 802.1q tagged
 virtual LAN interface. For example, interface
 .B eth0.1
-is a virtual interface having
+is a virtual interface with VLAN ID 1 having
 .B eth0
-as physical link, with VLAN ID 1.
+as its parent interface.
 .P
-VLAN interfaces are mostly treated as separate interfaces.
-As such, if you want a VLAN interface to be brought up automatically at boot,
-you must explicitly mark it as an auto interface,
-because they will not be brought up automatically if the physical interface is brought up.
-However, since VLAN interfaces are not physical interfaces,
-you cannot use pattern matching or allow-hotplug to bring up VLAN interfaces.
-To ensure a VLAN interface is brought up automatically when the physical interface is brought up,
-use a recursive call to ifup, like so:
+VLAN interfaces are mostly treated as independent interfaces.
+As such, a VLAN interface is normally not automatically brought up when its parent interface is brought up.
+The exception is when ifup is called with the --allow option,
+in which case all VLAN interfaces that are in the same allow class as the parent interface
+are brought up together with the parent interface.
+For example:
+.P
+.EX
+allow-hotplug eth0 eth0.1
+
+iface eth0 inet static
+     address ...
+
+iface eth0.1 inet static
+     address ...
+
+iface eth0.2 inet static
+     address ...
+.EE
+.P
+In the above example,
+when "ifup --allow hotplug eth0" is called (either manually or because udev triggers this when a network device is hotplugged),
+the interface eth0 and the VLAN interface eth0.1 are brought up, but eth0.2 is not.
+.P
+Keep in mind that pattern matching will only match interfaces the kernel knows about,
+so it is not possible to specify "auto /eth0.*" and have all VLAN interfaces for eth0 be brought up at boot time.
+Another way to ensure that a VLAN interface is brought up automatically when the parent interface is brought up,
+is to use a recursive call to ifup, like so:
 .P
 .EX
 iface eth0 inet manual
-     up ifup eth0.1
+     up ifup eth0.3
 
-iface eth0.1 inet static
+iface eth0.3 inet static
      address ...
 .EE
 .P
 Note that there is no need to add an explicit call to ifdown,
-since VLAN interfaces are automatically brought down whenever the corresponding physical interface is brought down.
+since VLAN interfaces are automatically brought down whenever their parent interfaces are brought down.
 .SH IFACE OPTIONS
 The following "command" options are available for every family and method.
 Each of these options can be given multiple times in a single stanza,
