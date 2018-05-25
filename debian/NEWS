@@ -1,3 +1,10 @@
+ifupdown (0.8.34) unstable; urgency=medium
+
+  VLAN interfaces that are marked allow-hotplug are now brought up
+  automatically when the parent interface is hotplugged.
+
+ -- Guus Sliepen <guus@debian.org>  Fri, 25 May 2018 22:33:22 +0200
+
 ifupdown (0.8.32) unstable; urgency=medium
 
   Since version 0.8, ifupdown allows concurrent calls of ifup and ifdown.

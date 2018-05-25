@@ -1,4 +1,4 @@
-ifupdown (0.8.34) UNRELEASED; urgency=medium
+ifupdown (0.8.34) unstable; urgency=medium
 
   [ Guus Sliepen ]
   * Handle SIGINT and SIGTERM more gracefully.
@@ -8,7 +8,7 @@ ifupdown (0.8.34) UNRELEASED; urgency=medium
   [ Antonio Terceiro ]
   * Don't call udevadm settle if udev is not installed. Closes: #900046
 
- -- Guus Sliepen <guus@debian.org>  Thu, 24 May 2018 17:17:41 +0200
+ -- Guus Sliepen <guus@debian.org>  Fri, 25 May 2018 22:34:33 +0200
 
 ifupdown (0.8.33) unstable; urgency=medium
 
