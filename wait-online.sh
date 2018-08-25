@@ -11,7 +11,7 @@ WAIT_ONLINE_TIMEOUT=300
 case "$WAIT_ONLINE_METHOD" in
 route)
 	[ -n "$WAIT_ONLINE_ADDRESS" ] || WAIT_ONLINE_ADDRESS=default
-	(/usr/bin/timeout "$WAIT_ONLINE_TIMEOUT" /bin/ip mon r & /bin/ip -4 r s; /bin/ip -6 r s) | /bin/grep -q "^$WAIT_ONLINE_ADDRESS\>"
+	(/usr/bin/timeout "$WAIT_ONLINE_TIMEOUT" /sbin/ip mon r & /sbin/ip -4 r s; /sbin/ip -6 r s) | /bin/grep -q "^$WAIT_ONLINE_ADDRESS\>"
 	;;
 
 ping)

@@ -4,7 +4,7 @@ set -e
 
 export LANG=C
 
-/bin/ip -brief link show dev "$1" | read iface state mac rest
+/sbin/ip -brief link show dev "$1" | read iface state mac rest
 which=""
 
 while read testmac scheme; do

@@ -2,7 +2,7 @@ exit code: 0
 ====stdout====
 ====stderr====
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
-/bin/ip link set up dev lo 2>/dev/null
+/sbin/ip link set up dev lo 2>/dev/null
 
 ifup: configuring interface lo=lo (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
@@ -11,22 +11,22 @@ ifup: configuring interface lo=lo (inet)
 ifup: configuring interface eth0=eth0 (inet)
 
 
-/bin/ip link set dev eth0 up 2>/dev/null || true
+/sbin/ip link set dev eth0 up 2>/dev/null || true
 
 ifup: configuring interface eth1=eth1 (inet)
 
 
-/bin/ip link set dev eth1 up 2>/dev/null || true
+/sbin/ip link set dev eth1 up 2>/dev/null || true
 
 ifup: configuring interface eth2=eth2 (inet)
 
 
-/bin/ip link set dev eth2 up 2>/dev/null || true
+/sbin/ip link set dev eth2 up 2>/dev/null || true
 
 ifup: configuring interface eth3=eth3 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 
 
-/bin/ip link set dev eth3 up 2>/dev/null || true
+/sbin/ip link set dev eth3 up 2>/dev/null || true
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

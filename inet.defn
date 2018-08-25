@@ -6,10 +6,10 @@ method loopback
     This method may be used to define the IPv4 loopback interface.
 
   up
-    /bin/ip link set dev %iface% up if (!iface_is_lo())
+    /sbin/ip link set dev %iface% up if (!iface_is_lo())
 
   down
-    /bin/ip link set dev %iface% down if (!iface_is_lo())
+    /sbin/ip link set dev %iface% down if (!iface_is_lo())
 
 method static
   description
@@ -36,19 +36,19 @@ method static
     broadcast compute_v4_broadcast
 
   up
-    /bin/ip addr add %address%[[/%netmask%]] [[broadcast %broadcast%]] \
+    /sbin/ip addr add %address%[[/%netmask%]] [[broadcast %broadcast%]] \
 	[[peer %pointopoint%]] [[scope %scope%]] dev %iface% label %iface%
-    /bin/ip link set dev %iface% [[mtu %mtu%]] [[address %hwaddress%]] up
+    /sbin/ip link set dev %iface% [[mtu %mtu%]] [[address %hwaddress%]] up
 
-    [[ /bin/ip route add default via %gateway% [[metric %metric%]] dev %iface% onlink ]]
+    [[ /sbin/ip route add default via %gateway% [[metric %metric%]] dev %iface% onlink ]]
 
   down
-    [[ /bin/ip route del default via %gateway% [[metric %metric%]] dev %iface% 2>&1 1>/dev/null || true ]]
-    /bin/ip addr del %address%[[/%netmask%]] [[broadcast %broadcast%]] \
+    [[ /sbin/ip route del default via %gateway% [[metric %metric%]] dev %iface% 2>&1 1>/dev/null || true ]]
+    /sbin/ip addr del %address%[[/%netmask%]] [[broadcast %broadcast%]] \
 	[[peer %pointopoint%]] [[scope %scope%]] dev %iface% label %iface%
-    /bin/ip -4 addr flush dev %iface% \
+    /sbin/ip -4 addr flush dev %iface% \
     		if (iface_is_link())
-    /bin/ip link set dev %iface% down \
+    /sbin/ip link set dev %iface% down \
 		if (iface_is_link())
 
 method manual
@@ -65,14 +65,14 @@ method manual
     hwaddress cleanup_hwaddress
 
   up
-    [[/bin/ip link set dev %iface% mtu %mtu%]]
-    [[/bin/ip link set dev %iface% address %hwaddress%]]
-    /bin/ip link set dev %iface% up 2>/dev/null || true
+    [[/sbin/ip link set dev %iface% mtu %mtu%]]
+    [[/sbin/ip link set dev %iface% address %hwaddress%]]
+    /sbin/ip link set dev %iface% up 2>/dev/null || true
 
   down
-    /bin/ip -4 addr flush dev %iface% 2>/dev/null || true \
+    /sbin/ip -4 addr flush dev %iface% 2>/dev/null || true \
     	if (iface_is_link())
-    /bin/ip link set dev %iface% down 2>/dev/null || true \
+    /sbin/ip link set dev %iface% down 2>/dev/null || true \
         if (iface_is_link() && !do_all)
 
 method dhcp
@@ -97,7 +97,7 @@ method dhcp
     hwaddress cleanup_hwaddress
 
   up
-    [[/bin/ip link set dev %iface% address %hwaddress%]]
+    [[/sbin/ip link set dev %iface% address %hwaddress%]]
     /sbin/dhclient -4 -v -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
 	[[-e IF_METRIC=%metric%]] \
         if (execable("/sbin/dhclient"))
@@ -123,7 +123,7 @@ method dhcp
     echo 'No DHCP client software found!' >&2; false \
         elsif (1)
 
-    /bin/ip link set dev %iface% down \
+    /sbin/ip link set dev %iface% down \
 		if (iface_is_link())
 
 method bootp
@@ -142,7 +142,7 @@ method bootp
            [[--hwaddr %hwaddr%]] --returniffail --serverbcast
 
   down
-    /bin/ip link set dev %iface% down \
+    /sbin/ip link set dev %iface% down \
         if (iface_is_link())
 
 method tunnel
@@ -162,13 +162,13 @@ method tunnel
     ttl time              -- TTL setting
     mtu size              -- MTU size
   up
-    /bin/ip tunnel add %iface% mode %mode% remote %endpoint% [[local %local%]] \
+    /sbin/ip tunnel add %iface% mode %mode% remote %endpoint% [[local %local%]] \
        [[ttl %ttl%]]
-    /bin/ip link set %iface% up [[mtu %mtu%]]
-    /bin/ip addr add %address%/%netmask% dev %iface% [[peer %dstaddr%]]
-    [[ /bin/ip route add default via %gateway% [[metric %metric%]] dev %iface% onlink ]]
+    /sbin/ip link set %iface% up [[mtu %mtu%]]
+    /sbin/ip addr add %address%/%netmask% dev %iface% [[peer %dstaddr%]]
+    [[ /sbin/ip route add default via %gateway% [[metric %metric%]] dev %iface% onlink ]]
   down
-    /bin/ip tunnel del %iface%
+    /sbin/ip tunnel del %iface%
 
 method ppp
   description

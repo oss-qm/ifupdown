@@ -13,7 +13,7 @@ if [ ! "$1" -o ! "$2" ]; then
 	exit 1
 fi
 
-/bin/ip -brief link show dev "$1" | read iface state mac rest
+/sbin/ip -brief link show dev "$1" | read iface state mac rest
 targetmac=`echo "$2" | tr A-F a-f`
 
 test "$targetmac" = "$mac"

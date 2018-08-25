@@ -6,13 +6,13 @@ exit code: 0
 ifup: configuring interface lo=lo (inet)
 configure lo
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
-/bin/ip link set dev lo up
+/sbin/ip link set dev lo up
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 
 ifup: configuring interface eth0=eth0 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
-/bin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
-/bin/ip link set dev eth0   up
+/sbin/ip addr add 1.2.3.4/255.255.255.0 broadcast 1.2.3.255 	  dev eth0 label eth0
+/sbin/ip link set dev eth0   up
 
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

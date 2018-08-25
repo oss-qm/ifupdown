@@ -2,30 +2,30 @@ exit code: 0
 ====stdout====
 ====stderr====
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
-/bin/ip link set up dev lo 2>/dev/null
+/sbin/ip link set up dev lo 2>/dev/null
 
 ifup: configuring interface lo=lo (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-/bin/ip link set eth0 alias "foo"
+/sbin/ip link set eth0 alias "foo"
 ifup: configuring interface eth0=eth0 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 
 
-/bin/ip link set dev eth0 up 2>/dev/null || true
+/sbin/ip link set dev eth0 up 2>/dev/null || true
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-/bin/ip link set eth1 alias "foo bar with spaces"
+/sbin/ip link set eth1 alias "foo bar with spaces"
 ifup: configuring interface eth1=eth1 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 
 
-/bin/ip link set dev eth1 up 2>/dev/null || true
+/sbin/ip link set dev eth1 up 2>/dev/null || true
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
-/bin/ip link set eth2 alias "works with ipv6 too"
+/sbin/ip link set eth2 alias "works with ipv6 too"
 ifup: configuring interface eth2=eth2 (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
 
 
-/bin/ip link set dev eth2 up 2>/dev/null || true
+/sbin/ip link set dev eth2 up 2>/dev/null || true
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d
 /bin/run-parts --exit-on-error --verbose /etc/network/if-up.d

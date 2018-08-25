@@ -3,7 +3,7 @@ exit code: 0
 ====stderr====
 ifup: couldn't open interfaces file "tests/linux/testcase.13": No such file or directory
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
-/bin/ip link set up dev lo 2>/dev/null
+/sbin/ip link set up dev lo 2>/dev/null
 
 ifup: configuring interface lo=lo (inet)
 /bin/run-parts --exit-on-error --verbose /etc/network/if-pre-up.d
