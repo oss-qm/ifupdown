@@ -86,7 +86,7 @@ method static
     -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.use_tempaddr=%privext%]]
     -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.accept_ra=%accept_ra%]]
     -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.autoconf=%autoconf%]]
-    -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.mtu=%mtu%]]
+    -[[if [ "$(/bin/cat /sys/class/net/%iface%/mtu)" -lt %mtu% ]; then /bin/ip link set dev %iface% mtu %mtu%; else /sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.mtu=%mtu%; fi]]
     /bin/ip addr flush dev %iface% mngtmpaddr \
         if (var_set("accept_ra", ifd) && !var_true("accept_ra", ifd))
     /bin/ip link set dev %iface% [[address %hwaddress%]] up
@@ -119,7 +119,7 @@ method manual
     hwaddress cleanup_hwaddress
 
   up
-    -[[/sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.mtu=%mtu%]]
+    -[[if [ "$(/bin/cat /sys/class/net/%iface%/mtu)" -lt %mtu% ]; then /bin/ip link set dev %iface% mtu %mtu%; else /sbin/sysctl -q -e -w net.ipv6.conf.%iface/.//%.mtu=%mtu%; fi]]
     [[/bin/ip link set dev %iface% address %hwaddress%]]
     /bin/ip link set dev %iface% up 2>/dev/null || true
 

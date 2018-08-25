@@ -27,7 +27,7 @@ ifup: configuring interface eth1=eth1 (inet6)
 
 
 /sbin/sysctl -q -e -w net.ipv6.conf.eth1.autoconf=0
-/sbin/sysctl -q -e -w net.ipv6.conf.eth1.mtu=1492
+if [ "$(/bin/cat /sys/class/net/eth1/mtu)" -lt 1492 ]; then /bin/ip link set dev eth1 mtu 1492; else /sbin/sysctl -q -e -w net.ipv6.conf.eth1.mtu=1492; fi
 /bin/ip link set dev eth1 address 12:34:ff:fe:0a:bc up
 /bin/ip -6 addr add 3ffe:ffff:120::fffe:1/64  dev eth1 
 
@@ -45,7 +45,7 @@ ifup: configuring interface eth2=eth2 (inet6)
 
 
 /sbin/sysctl -q -e -w net.ipv6.conf.eth2.autoconf=0
-/sbin/sysctl -q -e -w net.ipv6.conf.eth2.mtu=1492
+if [ "$(/bin/cat /sys/class/net/eth2/mtu)" -lt 1492 ]; then /bin/ip link set dev eth2 mtu 1492; else /sbin/sysctl -q -e -w net.ipv6.conf.eth2.mtu=1492; fi
 /bin/ip link set dev eth2 address 12:34:ff:fe:0a:bc up
 /bin/ip -6 addr add 3ffe:ffff:120::fffe:1/64  dev eth2 
 
