@@ -21,9 +21,9 @@ override_dh_installinit:
 	dh_installinit --name=ifupdown-wait-online --no-start --no-scripts
 	install -p -m 0644 debian/networking.defaults $(DESTDIR)/etc/default/networking
 	dh_installinit --name=networking --noscripts
-	dh_installsystemd --name=networking
-	dh_installsystemd --name=ifup@
-	dh_installsystemd --name=ifupdown-pre
+	dh_installsystemd --no-start --name=networking
+	dh_installsystemd --no-start --name=ifup@
+	dh_installsystemd --no-start --name=ifupdown-pre
 	dh_installsystemd --no-enable --no-start --name=ifupdown-wait-online
 
 override_dh_auto_clean:
