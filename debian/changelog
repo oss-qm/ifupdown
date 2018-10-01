@@ -1,6 +1,7 @@
 ifupdown (0.8.35) UNRELEASED; urgency=medium
 
   * d/copyright: Use https protocol in Format field
+  * d/changelog: Remove trailing whitespaces
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 01 Oct 2018 10:05:29 +0200
 
@@ -45,7 +46,7 @@ ifupdown (0.8.32) unstable; urgency=medium
 ifupdown (0.8.31) unstable; urgency=medium
 
   * Do not enable ifupdown-wait-online.service by default. Closes: #891139
-  * Drop Before=network.target from ifupdown-wait-online.service. 
+  * Drop Before=network.target from ifupdown-wait-online.service.
 
  -- Guus Sliepen <guus@debian.org>  Sat, 03 Mar 2018 17:49:51 +0100
 
@@ -69,7 +70,7 @@ ifupdown (0.8.29) unstable; urgency=medium
 
 ifupdown (0.8.28) unstable; urgency=medium
 
-  * Fix testsuite failure if ifupdown isn't already installed. 
+  * Fix testsuite failure if ifupdown isn't already installed.
 
  -- Guus Sliepen <guus@debian.org>  Wed, 25 Oct 2017 21:38:16 +0200
 
@@ -199,7 +200,7 @@ ifupdown (0.8.16) unstable; urgency=medium
 ifupdown (0.8.15) unstable; urgency=medium
 
   * Fix ifdown complaining about vlan_id1. Closes: #838312
-  * Add testcases for ifdown. 
+  * Add testcases for ifdown.
 
  -- Guus Sliepen <guus@debian.org>  Thu, 22 Sep 2016 11:53:52 +0200
 
@@ -262,7 +263,7 @@ ifupdown (0.8.10) unstable; urgency=medium
 
   * Allow "hwaddress random" to generate a random MAC address.
   * Allow ifdown/ifquery when physical interface is not same as logical
-    interface. 
+    interface.
 
  -- Guus Sliepen <guus@debian.org>  Fri, 22 Jan 2016 16:35:23 +0100
 
@@ -1100,7 +1101,7 @@ ifupdown (0.6.8) unstable; urgency=low
   * Add myself as co-maintainer with approval from Anthony Towns.
   * Change path of dhclient.leases to make sure the dhcp state survive
     reboots. (Closes: #311777)
-  * Change leasehours option value to match the option name. 
+  * Change leasehours option value to match the option name.
   * Async ifup/ifdown modication based on patch from Scott James
     Remnant and Ubuntu.  (Closes: #347580)
     - Rewrite the way that ifup and ifdown read and write the state
@@ -1293,17 +1294,17 @@ ifupdown (0.6.4-4.9) unstable; urgency=low
       This way other scripts (such as /e/i/networking in netbase)
       can avoid bringing down 'lo' on shutdown doing: 'ifdown -e lo -a'
       This will help close #254705, #256680 and #208700.
-    - Make it conflict with the dch-client version from experimental 
+    - Make it conflict with the dch-client version from experimental
       (Closes: #242537, #242527)
     - Added usage examples provided by Thomas Hood (Closes: #247772)
     - L10n:
-    	+ Updated catalan debconf templates provided by Aleix Badia i Bosch 
+    	+ Updated catalan debconf templates provided by Aleix Badia i Bosch
         (Closes: #248717)
         + Included Lithuanian translation of debconf templates provided
         by Gintautas Miliauskas (Closes: #249233)
     - /etc/init.d/ifupdown: Exit with error if called with unknown arguments
     - ifupdown.nw: fix FTBFS with gcc-3.4 (Closes: #258965)
-    - ifup.8: amended manpage describing how ifdown really works 
+    - ifup.8: amended manpage describing how ifdown really works
       (Closes: #259609)
     - Remove XSI:isms in several scripts (Closes: #255574)
     - debian/po/POTFILES.in:  point to templates.master instead of templates
@@ -1339,7 +1340,7 @@ ifupdown (0.6.4-4.9) unstable; urgency=low
         + Mention wireless(7)  (Closes: #255218)
         + Reorder content and do some other minor changes.
      - debian/postinst:
-        + Create /etc/network/run symlink to /dev/shm/network/ if 
+        + Create /etc/network/run symlink to /dev/shm/network/ if
           it does not exist
         + Warn if "auto lo" or "iface lo" stanza absent from /e/n/i
         (Closes: #121755)
@@ -1350,7 +1351,7 @@ ifupdown (0.6.4-4.9) unstable; urgency=low
 ifupdown (0.6.4-4.8) unstable; urgency=low
 
   * Fix configuration of interfaces with multiple address families.
-    (Closes: Bug#242867) 
+    (Closes: Bug#242867)
   * Add testcase 3 to check for such errors.
 
  -- Anthony Towns <aj@azure.humbug.org.au>  Sat, 10 Apr 2004 16:47:57 +1000
@@ -1371,8 +1372,8 @@ ifupdown (0.6.4-4.7) unstable; urgency=low
     - inet.defn
       + Included different handling of dhclient3 versus dhclient.
       + Avoids inconsistency in interface state if the command run
-       by ifup fails, also added -e option to dhclient in order to 
-       have it return an error if it cannot get an address. 
+       by ifup fails, also added -e option to dhclient in order to
+       have it return an error if it cannot get an address.
        Notice that this is not yet done with dhclient3 (-1) since that would
        mean not running dhclient3 as a daemon and renews not being done.
        (Closes: #97782, #82339, #113338, #148666, #169194)
@@ -1387,11 +1388,11 @@ ifupdown (0.6.4-4.7) unstable; urgency=low
       + Added a metric option for routes, notice, however, the dhclient's
        -e (undocumented) option is not included from the provided patch.
        (Closes: #235993)
-      + Use -r instead of -k when DHCP interfaces using pump are downed in 
+      + Use -r instead of -k when DHCP interfaces using pump are downed in
        order to avoid killing all interfaces (only release the one asked for)
        (Closes: #198841)
-      + Properly implement the 'hw' option in interfaces by defining the 
-       hardware address before upping the interface. 
+      + Properly implement the 'hw' option in interfaces by defining the
+       hardware address before upping the interface.
        (Closes: #224468, #84602)
       + Allow setting of the hw address in the dhcp method as suggested.
        (Closes: #135502)
@@ -1407,7 +1408,7 @@ ifupdown (0.6.4-4.7) unstable; urgency=low
        interfaces are always up (might be useful for crappy ISP providers)
        as provided by Yann Dirson (Closes: #86902)
       + Provide a 'generate-interfaces.pl' script under the examples dir
-       in order to facilitate migration of network configuration in 
+       in order to facilitate migration of network configuration in
        pre-woody systems. This script might also be useful to migrate other
        Linux systems to Debian.
        (Closes: #57830)
@@ -1416,16 +1417,16 @@ ifupdown (0.6.4-4.7) unstable; urgency=low
       + Fixed a syntax error in the 'check-mac-address.sh' script and added
         both a little bit of comment code and proper usage.
       + Provided an example on how to setup an interface without IP address
-        using the 'manual' method. This is suitable for some cases where we 
+        using the 'manual' method. This is suitable for some cases where we
         only want to have the interface to be up. This example can be used
-        to setup PPPOE interfaces or network IDS listening on a network. 
+        to setup PPPOE interfaces or network IDS listening on a network.
         This might not be as good as providing a specific method but the
         maintainer considers that this is the way it should be handled.
         (Closes: #76142, #92993, #129003, #164823, #171981)
       + Also, provided an example bridge configuration script that can
         be setup in /e/n/if-{pre-up,down}.d/ in order to setup bridges.
     - Interfaces(5).pre:
-      + Slight improvement in to better describe mapping and point to 
+      + Slight improvement in to better describe mapping and point to
        the examples available. (Closes: #232594)
       + Minor changes in the manpage to avoid people being misled .
         (Closes: #232347)
@@ -1517,9 +1518,9 @@ ifupdown (0.6.4-4.5) unstable; urgency=low
                                                              (Closes: #186316)
     + Mention extended options                               (Closes: #203636)
   * ifup(8)
-    + Indicate in synopsis that -i option takes an argument       
-    + minor phrasing changes aiming at greater clarity  
-    + formatting corrections                   
+    + Indicate in synopsis that -i option takes an argument
+    + minor phrasing changes aiming at greater clarity
+    + formatting corrections
   * examples/*: fix typos                                    (Closes: #173101)
   * debian/control:
     + Suggest dhcp-client and ppp                            (Closes: #178630)
@@ -1588,7 +1589,7 @@ ifupdown (0.6.4-4.1) unstable; urgency=low
   * reject options with empty values
     (Closes: #86410)
   * added more documentation to the IPX stanza
-  * improved usenet2man conversion (handles punctuation 
+  * improved usenet2man conversion (handles punctuation
     before/after //,**
   * added support for udhcpc (slightly modified patch from kraai@debian.org)
     (Closes: Bug#113620)
@@ -1632,7 +1633,7 @@ ifupdown (0.6.4-2) unstable; urgency=low
 
   * Check for old /etc/network/interfaces conffile (all comments, same
     md5, same size), and replace it with new conffile so as not to mislead
-    people into forgetting the "auto" lines. (Closes: Bug#79822) 
+    people into forgetting the "auto" lines. (Closes: Bug#79822)
 
   * Added wvdial support, theoretically. If it doesn't work, someone'll have
     to file a new bug and tell me. (Closes: Bug#76985)
@@ -1685,7 +1686,7 @@ ifupdown0.6 (0.6.2pr-5) unstable; urgency=low
 
   * Add .sh suffixes to the example mapping scripts.
   * Fix a typo in postinst (interface *file* not files)
-  * Add a "press enter to continue" if the /e/n/i update fails. 
+  * Add a "press enter to continue" if the /e/n/i update fails.
 
   * Moved /var/run/ifupdown.state to /etc/network/ifstate. Gross.
     (Closes: Bug#74312)
@@ -1694,7 +1695,7 @@ ifupdown0.6 (0.6.2pr-5) unstable; urgency=low
 
 ifupdown0.6 (0.6.2pr-4) unstable; urgency=low
 
-  * Automatically update /etc/network/interfaces, hopefully. 
+  * Automatically update /etc/network/interfaces, hopefully.
 
  -- Anthony Towns <ajt@debian.org>  Sat,  7 Oct 2000 21:53:21 -0700
 
@@ -1703,7 +1704,7 @@ ifupdown0.6 (0.6.2pr-3) unstable; urgency=low
   * Started work on automatically converting from 0.5.x config format to
     0.6.x.
   * Move the example from /usr/share/doc/ifupdown to ifupdown0.6.
-  * Add some example mapping scripts. 
+  * Add some example mapping scripts.
 
  -- Anthony Towns <ajt@debian.org>  Sat,  7 Oct 2000 18:15:10 -0700
 
