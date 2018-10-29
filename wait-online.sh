@@ -45,9 +45,9 @@ ifup|iface|interface)
 				fi
 				sleep 1
 			done
-		elif [ -n "$(/sbin/ifquery --allow=hotplug --list)" ]; then
+		elif [ -n "$hotplug_list" ]; then
 			for i in $(seq 1 $WAIT_ONLINE_TIMEOUT); do
-				if [ -n "$(/sbin/ifquery -X lo --allow=hotplug --state)" ]; then
+				if [ -n "$(/sbin/ifquery --state $hotplug_list)" ]; then
 					up=true
 					break
 				fi
