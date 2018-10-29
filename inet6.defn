@@ -59,7 +59,7 @@ method static
 
   options
     address address        -- Address (colon delimited/netmask) *required*
-    netmask mask           -- Netmask (number of bits, eg 64)
+    netmask mask           -- Netmask (number of bits, eg 64) *deprecated*
     metric metric          -- Routing metric for default gateway (integer)
     gateway address        -- Default gateway (colon delimited)
     media type             -- Medium type, driver dependent
@@ -176,8 +176,8 @@ method v4tunnel
     the *ip* command from the *iproute* package.
 
   options
-    address address       -- Address (colon delimited) *required*
-    netmask mask          -- Netmask (number of bits, eg 64) 
+    address address       -- Address (colon delimited/netmask) *required*
+    netmask mask          -- Netmask (number of bits, eg 64) *deprecated*
     endpoint address      -- Address of other tunnel endpoint (IPv4 \
                              dotted quad) *required*
     local address         -- Address of the local endpoint (IPv4 \
@@ -252,8 +252,8 @@ method static
     IPv6 addresses.
 
   options
-    address address        -- Address (colon delimited) *required*
-    netmask mask           -- Netmask (number of bits, eg 64) *required*
+    address address        -- Address (colon delimited/netmask) *required*
+    netmask mask           -- Netmask (number of bits, eg 64) *deprecated*
     gateway address        -- Default gateway (colon delimited)
     media type             -- Medium type, driver dependent
     hwaddress address      -- Hardware address or "random"
@@ -264,7 +264,7 @@ method static
 
   up
     /sbin/ifconfig %iface% [[media %media%]] [[link %hwaddress%]] [[mtu %mtu%]] up
-    /sbin/ifconfig %iface% inet6 %address%/%netmask% alias
+    /sbin/ifconfig %iface% inet6 %address%[[/%netmask%]] alias
     [[ /sbin/route add -inet6 ::/0 %gateway% ]]
 
   down
@@ -354,8 +354,8 @@ method static
     IPv6 addresses.
 
   options
-    address address        -- Address (colon delimited) *required*
-    netmask mask           -- Netmask (number of bits, eg 64) *required*
+    address address        -- Address (colon delimited/netmask) *required*
+    netmask mask           -- Netmask (number of bits, eg 64) *deprecated*
     gateway address        -- Default gateway (colon delimited)
     media type             -- Medium type, driver dependent
     hwaddress address      -- Hardware address  (Not yet supported)
