@@ -19,11 +19,11 @@ ping)
 		echo "No WAIT_ONLINE_ADDRESS specified" >&2
 		exit 1
 	fi
-	/bin/ping -q -c 1 -w "WAIT_ONLINE_TIMEOUT" "$WAIT_ONLINE_ADDRESS" >/dev/null
+	/bin/ping -q -c 1 -w "$WAIT_ONLINE_TIMEOUT" "$WAIT_ONLINE_ADDRESS" >/dev/null
 	;;
 
 ping6)
-	/bin/ping6 -q -c 1 -w "WAIT_ONLINE_TIMEOUT" "$WAIT_ONLINE_ADDRESS" >/dev/null
+	/bin/ping6 -q -c 1 -w "$WAIT_ONLINE_TIMEOUT" "$WAIT_ONLINE_ADDRESS" >/dev/null
 	;;
 
 ifup|iface|interface)
