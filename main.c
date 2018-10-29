@@ -456,21 +456,25 @@ static void parse_options(int *argc, char **argv[]) {
 			break;
 
 		switch (c) {
+		case 'a':
+			do_all = true;
+			break;
+
+		case 'h':
+			help(cmds);
+			break;
+
 		case 'i':
 			free(interfaces);
 			interfaces = strdup(optarg);
 			break;
 
-		case 'v':
-			verbose = true;
-			break;
+		case 'l':
+			if (!(cmds == iface_query))
+				usage();
 
-		case 'a':
-			do_all = true;
-			break;
-
-		case 3:
-			allow_class = strdup(optarg);
+			list = true;
+			cmds = iface_list;
 			break;
 
 		case 'n':
@@ -478,36 +482,6 @@ static void parse_options(int *argc, char **argv[]) {
 				usage();
 			no_act = true;
 			no_act_commands = true;
-			break;
-
-		case 1:
-			run_mappings = false;
-			break;
-
-		case 4:
-			run_scripts = false;
-			break;
-
-		case 5:
-			no_loopback = true;
-			break;
-
-		case 2:
-			if ((cmds == iface_list) || (cmds == iface_query))
-				usage();
-			force = true;
-			break;
-
-		case 7:
-			ignore_failures = true;
-			break;
-
-		case 'X':
-			excludeints++;
-			excludeint = realloc(excludeint, excludeints * sizeof *excludeint);
-			if (excludeint == NULL)
-				err(1, "realloc");
-			excludeint[excludeints - 1] = strdup(optarg);
 			break;
 
 		case 'o':
@@ -532,20 +506,42 @@ static void parse_options(int *argc, char **argv[]) {
 				break;
 			}
 
-		case 'l':
-			if (!(cmds == iface_query))
-				usage();
-
-			list = true;
-			cmds = iface_list;
-			break;
-
-		case 'h':
-			help(cmds);
+		case 'v':
+			verbose = true;
 			break;
 
 		case 'V':
 			version();
+			break;
+
+		case 'X':
+			excludeints++;
+			excludeint = realloc(excludeint, excludeints * sizeof *excludeint);
+			if (excludeint == NULL)
+				err(1, "realloc");
+			excludeint[excludeints - 1] = strdup(optarg);
+			break;
+
+		case 1: /* --no-mappings */
+			run_mappings = false;
+			break;
+
+		case 2: /* --force */
+			if ((cmds == iface_list) || (cmds == iface_query))
+				usage();
+			force = true;
+			break;
+
+		case 3: /* --allow */
+			allow_class = strdup(optarg);
+			break;
+
+		case 4: /* --no-scripts */
+			run_scripts = false;
+			break;
+
+		case 5: /* --no-loopback */
+			no_loopback = true;
 			break;
 
 		case 6: /* --state */
@@ -553,6 +549,10 @@ static void parse_options(int *argc, char **argv[]) {
 				usage();
 
 			state_query = true;
+			break;
+
+		case 7: /* --ignore-errors */
+			ignore_failures = true;
 			break;
 
 		case 8: /* --read-environment */
