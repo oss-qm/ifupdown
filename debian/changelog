@@ -8,6 +8,7 @@ ifupdown (0.8.35) UNRELEASED; urgency=medium
   * Deprecate the netmask and broadcast options. Closes: #912220
   * Bump Standards-Version and Build-Depends on debhelper-compat (= 12).
   * Make sure no systemd scripts are restarted on upgrades. Closes: #900269
+  * Use a DUID for DHCPv4 when using dhclient. Closes: #906894
 
  -- Guus Sliepen <guus@debian.org>  Mon, 28 Jan 2019 15:11:05 +0100
 

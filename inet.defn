@@ -98,7 +98,7 @@ method dhcp
 
   up
     [[/sbin/ip link set dev %iface% address %hwaddress%]]
-    /sbin/dhclient -4 -v -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+    /sbin/dhclient -4 -v -i -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
 	[[-e IF_METRIC=%metric%]] \
         if (execable("/sbin/dhclient"))
     /sbin/pump -i %iface% [[-h %hostname%]] [[-l %leasehours%]] \
@@ -112,7 +112,7 @@ method dhcp
         elsif (1)
 
   down
-    /sbin/dhclient -4 -v -r -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+    /sbin/dhclient -4 -v -i -r -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
         if (execable("/sbin/dhclient"))
     /sbin/pump -i %iface% -r \
         elsif (execable("/sbin/pump"))
@@ -284,7 +284,7 @@ method dhcp
 
   up
     [[/sbin/ifconfig %iface% link %hwaddress%]]
-    /sbin/dhclient -4 -v -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+    /sbin/dhclient -4 -v -i -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
 	[[-e IF_METRIC=%metric%]] \
         if (execable("/sbin/dhclient"))
     /sbin/udhcpc -n -p /run/udhcpc.%iface%.pid -i %iface% [[-H %hostname%]] \
@@ -297,7 +297,7 @@ method dhcp
         elsif (1)
 
   down
-    /sbin/dhclient -4 -v -r -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
+    /sbin/dhclient -4 -v -i -r -pf /run/dhclient.%iface%.pid -lf /var/lib/dhcp/dhclient.%iface%.leases -I -df /var/lib/dhcp/dhclient6.%iface%.leases %iface% \
         if (execable("/sbin/dhclient"))
     if test -f /run/udhcpc.%iface%.pid; then kill -USR2 $(/bin/cat /run/udhcpc.%iface%.pid); kill -TERM $(/bin/cat /run/udhcpc.%iface%.pid); fi \
         elsif (execable("/sbin/udhcpc"))
@@ -436,7 +436,7 @@ method dhcp
 
   up
     [[Warning: Option hwaddress: %hwaddress% not yet supported]]
-    /sbin/dhclient -4 -v -pf /run/dhclient.%iface///.%.pid -lf /var/lib/dhcp/dhclient.%iface///.%.leases -I -df /var/lib/dhcp/dhclient6.%iface///.%.leases %iface% \
+    /sbin/dhclient -4 -v -i -pf /run/dhclient.%iface///.%.pid -lf /var/lib/dhcp/dhclient.%iface///.%.leases -I -df /var/lib/dhcp/dhclient6.%iface///.%.leases %iface% \
         if (execable("/sbin/dhclient"))
     /sbin/udhcpc -n -p /run/udhcpc.%iface///.%.pid -i %iface% [[-H %hostname%]] \
            [[-c %client%]] \
@@ -448,7 +448,7 @@ method dhcp
         elsif (1)
 
   down
-    /sbin/dhclient -4 -v -r -pf /run/dhclient.%iface///.%.pid -lf /var/lib/dhcp/dhclient.%iface///.%.leases -I -df /var/lib/dhcp/dhclient6.%iface///.%.leases %iface% \
+    /sbin/dhclient -4 -v -i -r -pf /run/dhclient.%iface///.%.pid -lf /var/lib/dhcp/dhclient.%iface///.%.leases -I -df /var/lib/dhcp/dhclient6.%iface///.%.leases %iface% \
         if (execable("/sbin/dhclient"))
     if test -f /run/udhcpc.%iface///.%.pid; then kill -USR2 $(/bin/cat /run/udhcpc.%iface///.%.pid); kill -TERM $(/bin/cat /run/udhcpc.%iface///.%.pid); fi \
         elsif (execable("/sbin/udhcpc"))
