@@ -17,14 +17,16 @@ endif
 	dh $@
 
 override_dh_installinit:
-	dh_installinit --name=networking --no-start
-	dh_installinit --name=ifupdown-wait-online --no-start --no-scripts
+	dh_installinit --name=networking -r --no-start --no-restart-after-upgrade
+	dh_installinit --name=ifupdown-wait-online -r --no-start --no-restart-after-upgrade --no-scripts
 	install -p -m 0644 debian/networking.defaults $(DESTDIR)/etc/default/networking
-	dh_installinit --name=networking --noscripts
-	dh_installsystemd --no-start --name=networking
-	dh_installsystemd --no-start --name=ifup@
-	dh_installsystemd --no-start --name=ifupdown-pre
-	dh_installsystemd --no-enable --no-start --name=ifupdown-wait-online
+	dh_installinit --name=networking -r --no-start --no-restart-after-upgrade --no-scripts
+
+override_dh_installsystemd:
+	dh_installsystemd --no-start -r --no-restart-after-upgrade --name=networking
+	dh_installsystemd --no-start -r --no-restart-after-upgrade --name=ifup@
+	dh_installsystemd --no-start -r --no-restart-after-upgrade --name=ifupdown-pre
+	dh_installsystemd --no-enable -r --no-start --no-restart-after-upgrade --name=ifupdown-wait-online
 
 override_dh_auto_clean:
 	$(MAKE) clean
