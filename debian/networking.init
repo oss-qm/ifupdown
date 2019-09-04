@@ -99,6 +99,18 @@ check_network_swap() {
 }
 
 ifup_hotplug () {
+    ## this conflicts with /lib/udev/ifupdown-hotplug and causes
+    ## boot to hang several minutes when interface is configured to
+    ## DHCP and doesn't get any DHCP response.
+    ## in that case the udev trigger will try for several minutes
+    ## and keeping the interface locked, while the ifup_hotplug()
+    ## function tries to configure the interface again, causing the
+    ## bootup to stall because of waiting for the lock
+    ##
+    ## IMHO, this is function is completely wrong in case of the
+    ## udev trigger already doing the probing
+    return 0
+
     if [ -d /sys/class/net ]
     then
 	    ifaces=$(for iface in $(ifquery --list --allow=hotplug)

@@ -1,4 +1,10 @@
-ifupdown (0.8.19) unstable; urgency=medium
+ifupdown (0.8.19.1) unstable; urgency=high
+
+  * Fix three years old bug: boot hang when dhcp unreachable. Closes: #838871
+
+ -- Enrico Weigelt, metux IT consult <info@metux.net>  Wed, 04 Jan 2019 15:02:00 +0200
+
+ifupdown (0.8.19.0) unstable; urgency=medium
 
   * Fix exit code of ifquery --state. Closes: #852976
 
